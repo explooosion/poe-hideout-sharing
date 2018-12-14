@@ -11,8 +11,8 @@ import Detail from './routes/Detail';
 
 class App extends Component {
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       db: null,
     };
@@ -137,7 +137,7 @@ class App extends Component {
         <div className="App">
           <Header />
           <Route exact path="/" component={Home} />
-          <Route exact path="/detail" component={Detail} />
+          <Route exact path="/detail/:id" component={Detail} />
         </div>
       </Router>
     );

@@ -1,6 +1,6 @@
 @import '../scss/color';
 
-.home {
+.detail {
   display: flex;
   margin-top: 70px;
 
@@ -23,27 +23,7 @@
       width: 100%;
       height: calc(100vh - 70px - 55px);
       background-color: $light-gray;
-
-      .card-tag {
-        display: flex;
-        align-items: center;
-        margin-right: .5rem;
-        color: $primary;
-
-        span {
-        }
-      }
-
-      .search {
-        margin: 1rem 0;
-      }
     }
   }
 }
 
-
-/* overwrite */
-.p-card-content {
-  display: flex;
-  flex-flow: row-reverse;
-}

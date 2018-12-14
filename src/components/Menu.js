@@ -64,24 +64,27 @@ class Menu extends Component {
     ];
   }
 
-  render() {
-    const data = {
+  getChartData() {
+    return {
       labels: ['A', 'B', 'C'],
       datasets: [
         {
           data: [300, 50, 100],
           backgroundColor: [
-            "#FF6384",
-            "#36A2EB",
-            "#FFCE56",
+            "#ff6384",
+            "#36a2eb",
+            "#ffcE56",
           ],
           hoverBackgroundColor: [
-            "#FF6384",
-            "#36A2EB",
-            "#FFCE56",
+            "#ff6384",
+            "#36a2eb",
+            "#ffce56",
           ],
         }],
     };
+  }
+
+  render() {
     return (
       <div className="menu">
         <h2 className="menu-title">Hideout List</h2>
@@ -111,7 +114,7 @@ class Menu extends Component {
         </div>
         <div className="item">
           <h4 className="item-title">Analysis</h4>
-          <Chart type="doughnut" data={data} />
+          <Chart type="doughnut" data={this.getChartData()} />
         </div>
       </div>
     );

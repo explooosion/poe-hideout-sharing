@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './Home.scss';
 
+import { Link } from 'react-router-dom';
 import { BreadCrumb } from 'primereact/breadcrumb';
 import { Button } from 'primereact/button';
 import { Card } from 'primereact/card';
@@ -29,6 +30,8 @@ class Home extends Component {
       require('../images/home_demo_5.jpg'),
       require('../images/home_demo_2.jpg'),
       require('../images/home_demo_3.jpg'),
+      require('../images/home_demo_5.jpg'),
+      require('../images/home_demo_4.jpg'),
     ];
   }
 
@@ -36,25 +39,27 @@ class Home extends Component {
     return this.imgs.map((img, index) => {
       return (
         <div className="p-lg-3 p-md-6 p-sm-12" key={`card-${index}`}>
-          <Card
-            style={{ cursor: 'pointer' }}
-            title="Default Hideout"
-            subTitle="Robby"
-            header={this.renderCardHeader(index)}
-          >
-            <div className="card-tag">
-              <i className="pi pi-download"></i>
-              <span>{Math.floor(Math.random() * 500)}</span>
-            </div>
-            <div className="card-tag">
-              <i className="pi pi-star"></i>
-              <span>{Math.floor(Math.random() * 300)}</span>
-            </div>
-            <div className="card-tag">
-              <i className="pi pi-eye"></i>
-              <span>{Math.floor(Math.random() * 3000)}</span>
-            </div>
-          </Card>
+          <Link to={`/detail/${index}`}>
+            <Card
+              style={{ cursor: 'pointer' }}
+              title="Default Hideout"
+              subTitle="Robby"
+              header={this.renderCardHeader(index)}
+            >
+              <div className="card-tag">
+                <i className="pi pi-download"></i>
+                <span>{Math.floor(Math.random() * 500)}</span>
+              </div>
+              <div className="card-tag">
+                <i className="pi pi-star"></i>
+                <span>{Math.floor(Math.random() * 300)}</span>
+              </div>
+              <div className="card-tag">
+                <i className="pi pi-eye"></i>
+                <span>{Math.floor(Math.random() * 3000)}</span>
+              </div>
+            </Card>
+          </Link>
         </div>
       );
     });
@@ -83,7 +88,7 @@ class Home extends Component {
   renderBreadCrumbHome() {
     return {
       icon: 'pi pi-home',
-      url: './',
+      url: '/',
     };
   }
 
