@@ -6,6 +6,12 @@
 
 [Path Of Exile](https://www.pathofexile.com/game) Hideout Sharing Website.
 
+---
+
+***This site is under construction.***
+
+---
+
 ## Dev
 
 ```sh
