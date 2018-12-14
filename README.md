@@ -16,21 +16,21 @@
 
 ### Routes
 
-- [] Home (hideout list)
-- [] Detail (:id - hideout)
-- [] About (website info)
-- [] Login (firebase)
-- [] Profile (account)
-- [] Upload (new hideout)
-- [] Favourite (collec hideout)
+- [ ] Home (hideout list)
+- [ ] Detail (:id - hideout)
+- [ ] About (website info)
+- [ ] Login (firebase)
+- [ ] Profile (account)
+- [ ] Upload (new hideout)
+- [ ] Favourite (collec hideout)
 
 ### Feature
 
-- [] i18n
-- [] deploy
-- [] storge
-- [] firebase
-- [] online code viewer
+- [ ] i18n
+- [ ] deploy
+- [ ] storge
+- [ ] firebase
+- [ ] online code viewer
 
 ## Dev
 
