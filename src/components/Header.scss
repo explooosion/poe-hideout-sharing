@@ -1,0 +1,91 @@
+@import '../scss/reset/h';
+@import '../scss/color';
+@import '../scss/layout';
+
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 70px;
+  text-align: left;
+  background-color: #20272a;
+  z-index: 999;
+
+  .menu-button {
+    // display: inline-block;
+    display: none;
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: #fff;
+    width: 70px;
+    height: 70px;
+    font-size: 24px;
+    line-height: 70px;
+    text-align: center;
+    cursor: pointer;
+    -o-transition: background-color .2s;
+    -webkit-transition: background-color .2s;
+    transition: background-color .2s;
+
+    > i {
+      line-height: inherit;
+    }
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    margin-left: 2rem;
+
+    .logo-img {
+      width: 60px;
+    }
+
+    .logo-title {
+      margin-left: 10px;
+      margin-top: 10px;
+      font-size: 24px;
+      font-weight: bold;
+      color: #fff;
+      font-family: fantasy, Tahoma, Geneva, Verdana, sans-serif;
+    }
+  }
+
+  .topbar-menu {
+    list-style-type: none;
+    float: right;
+    margin: 0 2rem 0 0;
+    padding: 0;
+    height: 100%;
+
+    li {
+      display: inline-block;
+      height: 100%;
+
+      a {
+        display: inline-block;
+        min-width: 120px;
+        height: 100%;
+        color: #fff;
+        line-height: 70px;
+        font-size: 20px;
+        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        text-align: center;
+        text-decoration: none;
+        transition: background-color .2s;
+        -o-transition: background-color .2s;
+        -webkit-transition: background-color .2s;
+
+        &:hover {
+          background-color: $gray;
+        }
+      }
+    }
+  }
+}

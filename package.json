@@ -1,0 +1,63 @@
+{
+  "name": "poe-hideout-sharing",
+  "description": "poe-hideout-sharing",
+  "version": "0.1.0",
+  "private": true,
+  "author": {
+    "name": "Robby",
+    "email": "ta7382@gmail.com"
+  },
+  "homepage": "https://github.com/explooosion/poe-hideout-sharing",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/explooosion/poe-hideout-sharing.git"
+  },
+  "bugs": {
+    "url": "https://github.com/explooosion/poe-hideout-sharing/issues"
+  },
+  "license": "MIT",
+  "keywords": [
+    "react",
+    "create",
+    "app"
+  ],
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "dependencies": {
+    "chart.js": "^2.7.3",
+    "classnames": "^2.2.6",
+    "firebase": "^5.7.0",
+    "firebase-admin": "^6.3.0",
+    "primeflex": "^1.0.0-rc.1",
+    "primeicons": "^1.0.0",
+    "primereact": "^2.0.1",
+    "react": "^16.6.0",
+    "react-dom": "^16.6.0",
+    "react-router-dom": "^4.3.1",
+    "react-scripts": "2.1.1",
+    "react-transition-group": "^2.5.1"
+  },
+  "devDependencies": {
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-config-prettier": "^3.0.1",
+    "eslint-plugin-babel": "^5.2.0",
+    "eslint-plugin-compat": "^2.5.1",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jsx-a11y": "^6.1.1",
+    "eslint-plugin-react": "^7.11.1",
+    "node-sass": "^4.11.0"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
+}
