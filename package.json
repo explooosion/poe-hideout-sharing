@@ -2,7 +2,6 @@
   "name": "poe-hideout-sharing",
   "description": "poe-hideout-sharing",
   "version": "0.1.0",
-  "private": true,
   "author": {
     "name": "Robby",
     "email": "ta7382@gmail.com"
@@ -17,9 +16,9 @@
   },
   "license": "MIT",
   "keywords": [
-    "react",
-    "create",
-    "app"
+    "poe",
+    "hideout",
+    "share"
   ],
   "scripts": {
     "start": "react-scripts start",
