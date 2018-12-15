@@ -45,7 +45,7 @@ class Header extends Component {
           </div>
           <ul className="topbar-menu">
             <li><Link to="/">HOME</Link></li>
-            {/* <li><Link to="/about">ABOUT</Link></li> */}
+            <li><Link to="/about">ABOUT</Link></li>
             <li><a href="https://github.com/explooosion/poe-hideout-sharing" target="_blank" rel="noopener noreferrer">GITHUB</a></li>
             <li><Link to="/login">LOGIN</Link></li>
           </ul>
