@@ -1,46 +1,24 @@
-@import '../scss/color';
+@import '../scss/index';
 
 .home {
   display: flex;
-  margin-top: 70px;
+  margin-top: $header-height;
 
-  .content {
-    display: block;
-    width: calc(100vw - 300px);
+  .card-tag {
+    display: flex;
+    align-items: center;
+    margin-right: .5rem;
+    color: $primary;
 
-    .bread {
-      padding: 1rem;
-      text-align: left;
-      border: 0;
-      border-bottom: 1px solid #eee;
-      border-radius: 0;
-    }
-
-    .block {
-      overflow: scroll;
-      display: block;
-      padding: 2rem;
-      width: 100%;
-      height: calc(100vh - 70px - 55px);
-      background-color: $light-gray;
-
-      .card-tag {
-        display: flex;
-        align-items: center;
-        margin-right: .5rem;
-        color: $primary;
-
-        span {
-        }
-      }
-
-      .search {
-        margin: 1rem 0;
-      }
+    span {
+      margin: 0 .15rem 0 .25rem;
     }
   }
-}
 
+  .search {
+    margin: 1rem 0;
+  }
+}
 
 /* overwrite */
 .p-card-content {

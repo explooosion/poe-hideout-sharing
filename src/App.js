@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import './App.scss';
 
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 import firebase from 'firebase';
 
 import Header from './components/Header';
 
 import Home from './routes/Home';
 import Detail from './routes/Detail';
+import About from './routes/About';
 
 class App extends Component {
 
@@ -134,9 +135,10 @@ class App extends Component {
   render() {
     return (
       <Router>
-        <div className="App">
+        <div>
           <Header />
           <Route exact path="/" component={Home} />
+          <Route exact path="/about" component={About} />
           <Route exact path="/detail/:id" component={Detail} />
         </div>
       </Router>

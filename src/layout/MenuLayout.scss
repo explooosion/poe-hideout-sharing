@@ -1,0 +1,47 @@
+@import '../scss/index';
+
+.menu {
+  display: block;
+  padding: 2rem 1.5rem;
+  width: $menu-width;
+  text-align: left;
+  background-color: #fefefe;
+  border-right: 4px solid #fafafa;
+
+  @media only screen and (max-width: $screen-lg) {
+    display: none;
+  }
+
+  .menu-title {
+    margin-bottom: 2rem;
+  }
+
+  .item {
+    position: relative;
+    margin-bottom: 1.5rem;
+
+    .item-title {
+      margin-bottom: .5rem;
+    }
+
+    .item-group {
+      display: flex;
+      justify-content: left;
+      align-items: center;
+
+      img {
+        width: 24px;
+        height: 24px;
+      }
+
+      span {
+        margin-left: .5rem;
+      }
+    }
+  }
+}
+
+/* overwrite */
+.p-dropdown .p-dropdown-panel {
+  top: 30px !important;
+}

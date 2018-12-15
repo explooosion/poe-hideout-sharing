@@ -1,28 +1,71 @@
-@import '../scss/color';
+@import '../scss/index';
 
 .detail {
   display: flex;
-  margin-top: 70px;
+  margin-top: $header-height;
 
-  .content {
-    display: block;
-    width: calc(100vw - 300px);
+  .detail-author {
+    margin: .25rem 0;
+    padding: 0;
+    border: none;
+    color: $gray;
 
-    .bread {
-      padding: 1rem;
-      text-align: left;
-      border: 0;
-      border-bottom: 1px solid #eee;
-      border-radius: 0;
+    a:hover {
+      text-decoration: underline;
     }
 
-    .block {
-      overflow: scroll;
-      display: block;
-      padding: 2rem;
+    .p-toolbar-group-right {
+      display: flex;
+      align-items: center;
+
+      span {
+        margin: 0 .75rem 0 .25rem;
+      }
+    }
+  }
+
+  .detail-title {
+    position: sticky;
+    top: -32px;
+    padding-left: .25rem;
+    color: $dark;
+    background-color: #fff;
+    z-index: 100;
+  }
+
+  .detaild-tabmenu {
+    margin-top: 1.5rem;
+  }
+
+  .detail-content {
+    padding: .5rem 2rem 2rem;
+    background-color: #fff;
+    border: 1px solid #c8c8c8;
+    border-top: none;
+    border-radius: 0 0 3px 3px;
+  }
+
+  .section {
+    margin-bottom: 3rem;
+
+    .section-title {
+      margin: 1rem 0 .5rem;
+      font-weight: normal;
+    }
+  }
+
+  .youtube-container {
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: 56.25%;
+
+    iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
       width: 100%;
-      height: calc(100vh - 70px - 55px);
-      background-color: $light-gray;
+      height: 100%;
     }
   }
 }

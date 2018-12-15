@@ -1,20 +1,22 @@
 import React, { Component } from 'react';
-import './Menu.scss';
+import './HomeMenu.scss';
 
 import { Dropdown } from 'primereact/dropdown';
-// import { MultiSelect } from 'primereact/multiselect';
 import { SelectButton } from 'primereact/selectbutton';
 import { Chart } from 'primereact/chart';
 
+import MenuLayout from '../layout/MenuLayout';
+
 import logo from '../images/logo.svg';
 
-class Menu extends Component {
+class HomeMenu extends Component {
 
   constructor() {
     super();
     this.state = {
       hideout: ['Default'],
       mode: 'Normal',
+      title: 'Hideout List',
     };
   }
 
@@ -30,37 +32,6 @@ class Menu extends Component {
       { label: 'Coastal Hideout', value: 'Coastal' },
       { label: 'Coral Hideout', value: 'Coral' },
       { label: 'Desert Hideout', value: 'Desert' },
-    ];
-  }
-
-  renderHideoutTemplate(option) {
-    return (
-      <div className="p-clearfix item-group">
-        <img alt={option.label} src={logo} />
-        <span>{option.label}</span>
-      </div>
-    );
-  }
-
-  renderHideoutSelectedTemplate(value) {
-    if (value) {
-      return (
-        <div className="p-clearfix item-group">
-          <img src={logo} />
-          <span>{value}</span>
-        </div>
-      );
-    }
-    else {
-      return <span className="my-multiselected-empty-token">Choose</span>
-    }
-  }
-
-  renderMode() {
-    return [
-      { label: 'Easy', value: 'Easy' },
-      { label: 'Normal', value: 'Normal' },
-      { label: 'Hard', value: 'Hard' },
     ];
   }
 
@@ -84,10 +55,40 @@ class Menu extends Component {
     };
   }
 
+  renderHideoutTemplate(option) {
+    return (
+      <div className="p-clearfix item-group">
+        <img alt={option.label} src={logo} />
+        <span>{option.label}</span>
+      </div>
+    );
+  }
+
+  renderHideoutSelectedTemplate(value) {
+    if (value) {
+      return (
+        <div className="p-clearfix item-group">
+          <img alt={value} src={logo} />
+          <span>{value}</span>
+        </div>
+      );
+    }
+    else {
+      return <span className="my-multiselected-empty-token">Choose</span>
+    }
+  }
+
+  renderMode() {
+    return [
+      { label: 'Easy', value: 'Easy' },
+      { label: 'Normal', value: 'Normal' },
+      { label: 'Hard', value: 'Hard' },
+    ];
+  }
+
   render() {
     return (
-      <div className="menu">
-        <h2 className="menu-title">Hideout List</h2>
+      <MenuLayout title={this.state.title}>
         <div className="item">
           <h4 className="item-title">Categories</h4>
           <Dropdown
@@ -116,9 +117,9 @@ class Menu extends Component {
           <h4 className="item-title">Analysis</h4>
           <Chart type="doughnut" data={this.getChartData()} />
         </div>
-      </div>
+      </MenuLayout>
     );
   }
 }
 
-export default Menu;
+export default HomeMenu;

@@ -1,11 +1,9 @@
-@import '../scss/reset/h';
-@import '../scss/color';
-@import '../scss/layout';
+@import '../scss/index';
 
 .menu {
   display: block;
   padding: 2rem 1.5rem;
-  width: 300px;
+  width: $menu-width;
   text-align: left;
   background-color: #fefefe;
   border-right: 4px solid #fafafa;

@@ -1,0 +1,27 @@
+@import '../scss/index';
+
+.content {
+  display: block;
+  width: calc(100vw - #{$menu-width});
+
+  @media only screen and (max-width: $screen-lg) {
+    width: 100%;
+  }
+
+  .bread {
+    padding: 1rem;
+    text-align: left;
+    border: 0;
+    border-bottom: 1px solid #eee;
+    border-radius: 0;
+  }
+
+  .block {
+    overflow: scroll;
+    display: block;
+    padding: 2rem;
+    width: 100%;
+    height: calc(100vh - #{$header-height} - #{$bread-height});
+    background-color: $light-gray;
+  }
+}

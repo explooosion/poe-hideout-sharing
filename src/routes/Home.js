@@ -2,37 +2,56 @@ import React, { Component } from 'react';
 import './Home.scss';
 
 import { Link } from 'react-router-dom';
-import { BreadCrumb } from 'primereact/breadcrumb';
 import { Button } from 'primereact/button';
 import { Card } from 'primereact/card';
 import { ProgressBar } from 'primereact/progressbar';
+import { Paginator } from 'primereact/paginator';
 
-import Menu from '../components/Menu';
+import { FaHeart, FaEye, FaDownload } from 'react-icons/fa';
+
+import ContentLayout from '../layout/ContentLayout';
+import HomeMenu from '../components/HomeMenu';
 
 class Home extends Component {
 
   constructor() {
     super();
+    this.state = {
+      first: 0,
+      rows: 10,
+      breadcrumb: [
+        { label: 'Categories', url: '/' },
+      ],
+    }
+
     this.imgs = [
+      require('../images/home_demo_gif_2.gif'),
+      require('../images/home_demo_3.jpg'),
+      require('../images/home_demo_gif_1.gif'),
+      require('../images/home_demo_gif_2.gif'),
+      require('../images/home_demo_gif_1.gif'),
+      require('../images/home_demo_gif_2.gif'),
+      require('../images/home_demo_4.jpg'),
+      require('../images/home_demo_2.jpg'),
+      require('../images/home_demo_gif_1.gif'),
+      require('../images/home_demo_5.jpg'),
+      require('../images/home_demo_gif_1.gif'),
+      require('../images/home_demo_4.jpg'),
+      require('../images/home_demo_2.jpg'),
+      require('../images/home_demo_gif_2.gif'),
       require('../images/home_demo_2.jpg'),
       require('../images/home_demo_3.jpg'),
-      require('../images/home_demo_4.jpg'),
       require('../images/home_demo_5.jpg'),
-      require('../images/home_demo_4.jpg'),
-      require('../images/home_demo_2.jpg'),
-      require('../images/home_demo_4.jpg'),
-      require('../images/home_demo_2.jpg'),
-      require('../images/home_demo_3.jpg'),
-      require('../images/home_demo_5.jpg'),
-      require('../images/home_demo_2.jpg'),
-      require('../images/home_demo_4.jpg'),
-      require('../images/home_demo_2.jpg'),
-      require('../images/home_demo_5.jpg'),
-      require('../images/home_demo_2.jpg'),
-      require('../images/home_demo_3.jpg'),
-      require('../images/home_demo_5.jpg'),
-      require('../images/home_demo_4.jpg'),
+      require('../images/home_demo_gif_1.gif'),
     ];
+  }
+
+  onPageChange(event) {
+    console.log(event);
+    this.setState({
+      first: event.first,
+      rows: event.rows,
+    });
   }
 
   renderCards() {
@@ -47,15 +66,15 @@ class Home extends Component {
               header={this.renderCardHeader(index)}
             >
               <div className="card-tag">
-                <i className="pi pi-download"></i>
+                <FaDownload />
                 <span>{Math.floor(Math.random() * 500)}</span>
               </div>
               <div className="card-tag">
-                <i className="pi pi-star"></i>
+                <FaHeart />
                 <span>{Math.floor(Math.random() * 300)}</span>
               </div>
               <div className="card-tag">
-                <i className="pi pi-eye"></i>
+                <FaEye />
                 <span>{Math.floor(Math.random() * 3000)}</span>
               </div>
             </Card>
@@ -78,39 +97,19 @@ class Home extends Component {
     );
   }
 
-  renderBreadCrumbItems() {
-    return [
-      { label: 'Categories' },
-      // { label: 'Hideout', url: '#' },
-    ];
-  }
-
-  renderBreadCrumbHome() {
-    return {
-      icon: 'pi pi-home',
-      url: '/',
-    };
-  }
-
   render() {
     return (
       <div className="home">
-        <Menu />
-        <div className="content">
-          <BreadCrumb
-            className="bread"
-            model={this.renderBreadCrumbItems()}
-            home={this.renderBreadCrumbHome()}
-          />
-          <div className="block">
-            <div className="p-grid">
-              {this.renderCards()}
-            </div>
-            <div className="p-grid search">
-              <ProgressBar className="p-col" mode="indeterminate" style={{ height: '8px' }}></ProgressBar>
-            </div>
+        <HomeMenu />
+        <ContentLayout breadcrumb={this.state.breadcrumb}>
+          <div className="p-grid">
+            {this.renderCards()}
           </div>
-        </div>
+          <Paginator first={this.state.first} rows={this.state.rows} totalRecords={120} rowsPerPageOptions={[10, 20, 30]} onPageChange={e => this.onPageChange(e)}></Paginator>
+          <div className="p-grid search">
+            <ProgressBar className="p-col" mode="indeterminate" style={{ height: '8px' }}></ProgressBar>
+          </div>
+        </ContentLayout>
       </div>
     );
   }
