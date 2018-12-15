@@ -1,14 +1,25 @@
 import React, { Component } from 'react';
 import './App.scss';
 
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { createStore, applyMiddleware } from 'redux';
+import { Switch, BrowserRouter as Router, Route } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import thunk from 'redux-thunk';
 import firebase from 'firebase';
+
+import reducers from './reducers';
 
 import Header from './components/Header';
 
 import Home from './routes/Home';
 import Detail from './routes/Detail';
 import About from './routes/About';
+import Login from './routes/Login';
+
+const store = createStore(
+  reducers,
+  applyMiddleware(thunk)
+);
 
 class App extends Component {
 
@@ -134,14 +145,19 @@ class App extends Component {
 
   render() {
     return (
-      <Router>
-        <div>
-          <Header />
-          <Route exact path="/" component={Home} />
-          <Route exact path="/about" component={About} />
-          <Route exact path="/detail/:id" component={Detail} />
-        </div>
-      </Router>
+      <Provider store={store}>
+        <Router>
+          <div>
+            <Header />
+            <Switch>
+              <Route exact path="/" component={Home} />
+              <Route exact path="/about" component={About} />
+              <Route exact path="/login" component={Login} />
+              <Route exact path="/detail/:id" component={Detail} />
+            </Switch>
+          </div>
+        </Router>
+      </Provider>
     );
   }
 }

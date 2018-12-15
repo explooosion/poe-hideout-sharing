@@ -17,6 +17,10 @@
 - react
 - react-icons
 - react-router-dom
+- redux
+- react-redux
+- react-thunk
+- prop-types
 - node-scss
 - firebase
   - authentication
