@@ -19,7 +19,10 @@
 - react-router-dom
 - node-scss
 - firebase
-- chart.js
+  - authentication
+  - database
+  - hosting
+  - storage
 - prime
   - primereact
   - primeflex
