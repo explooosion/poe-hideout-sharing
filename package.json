@@ -6,6 +6,7 @@
     "name": "Robby",
     "email": "ta7382@gmail.com"
   },
+  "homepage": "https://poe-hideout.firebaseapp.com",
   "repository": {
     "type": "git",
     "url": "https://github.com/explooosion/poe-hideout-sharing.git"
@@ -21,7 +22,7 @@
   ],
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "react-scripts build && rm -rf firebase/build && mv build firebase/build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
