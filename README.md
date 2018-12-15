@@ -4,13 +4,26 @@
 
 # POE Hideout Sharing
 
-[Path Of Exile](https://www.pathofexile.com/game) Hideout Sharing Website.
-
 ---
 
 ***This site is under construction.***
 
 ---
+
+[Path Of Exile](https://www.pathofexile.com/game) Hideout Sharing Website.
+
+## Dependencies
+
+- react
+- react-icons
+- react-router-dom
+- node-scss
+- firebase
+- chart.js
+- prime
+  - primereact
+  - primeflex
+  - Primeicons
 
 ## ToDo
 
@@ -26,11 +39,13 @@
 
 ### Feature
 
+- [ ] Logo
 - [ ] i18n
-- [ ] deploy
-- [ ] storge
-- [ ] firebase
-- [ ] online code viewer
+- [ ] Deploy
+- [ ] Storge
+- [ ] Firebase
+- [ ] Online Code Viewer
+- [ ] Code Highlight
 
 ## Dev
 
