@@ -12,26 +12,6 @@
 
 [Path Of Exile](https://www.pathofexile.com/game) Hideout Sharing Website.
 
-## Dependencies
-
-- react
-- react-icons
-- react-router-dom
-- redux
-- react-redux
-- react-thunk
-- prop-types
-- node-scss
-- firebase
-  - authentication
-  - database
-  - hosting
-  - storage
-- prime
-  - primereact
-  - primeflex
-  - Primeicons
-
 ## ToDo
 
 ### Routes
@@ -67,6 +47,26 @@ yarn # npm install
 ```sh
 yarn start # npm start
 ```
+
+## Dependencies
+
+- react
+- react-icons
+- react-router-dom
+- redux
+- react-redux
+- react-thunk
+- prop-types
+- node-scss
+- firebase
+  - authentication
+  - database
+  - hosting
+  - storage
+- prime
+  - primereact
+  - primeflex
+  - Primeicons
 
 ## License
 

@@ -6,9 +6,9 @@ export const increaseCounter = num => ({
 })
 
 export const increaseCounterAsync = num => {
-  return (dispatch) => {
+  return dispatch => {
     setTimeout(() => {
-      dispatch(increaseCounter(1));
+      dispatch(increaseCounter(num));
     }, 1000);
   };
 }
@@ -19,18 +19,7 @@ export const addTodo = text => ({
   text,
 })
 
-export const setVisibilityFilter = filter => ({
-  type: 'SET_VISIBILITY_FILTER',
-  filter,
-})
-
 export const toggleTodo = id => ({
   type: 'TOGGLE_TODO',
   id,
 })
-
-export const VisibilityFilters = {
-  SHOW_ALL: 'SHOW_ALL',
-  SHOW_COMPLETED: 'SHOW_COMPLETED',
-  SHOW_ACTIVE: 'SHOW_ACTIVE',
-}
