@@ -1,15 +1,18 @@
 import React, { Component } from 'react';
 import './Detail.scss';
 
+import { connect } from 'react-redux';
+import { FaHeart, FaEye, FaDownload } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
+import { Redirect } from 'react-router';
+// import PropTypes from 'prop-types';
+
 import { Button } from 'primereact/button';
 import { Toolbar } from 'primereact/toolbar';
 import { DeferredContent } from 'primereact/deferredcontent';
 import { Growl } from "primereact/growl";
 import { SplitButton } from 'primereact/splitbutton';
 import { TabMenu } from 'primereact/tabmenu';
-
-import { FaHeart, FaEye, FaDownload } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
 
 import ContentLayout from '../layout/ContentLayout';
 import DetailMenu from '../components/DetailMenu';
@@ -18,9 +21,12 @@ class Detail extends Component {
 
   constructor(props) {
     super(props);
+    this.dispatch = props.dispatch;
     const { id } = this.props.match.params;
+    const hideout = props.hideouts.Lists.find(list => list.id === id);
+
     this.state = {
-      id: id,
+      hideout: hideout,
       tabmenu: [
         { label: 'Images', icon: 'pi pi-images' },
         { label: 'Code', icon: 'pi pi-fw pi-file' },
@@ -29,7 +35,7 @@ class Detail extends Component {
       activeItem: null,
       breadcrumb: [
         { label: 'hideouts', url: '/' },
-        { label: `#${id}` },
+        { label: `${id}` },
       ],
     }
   }
@@ -43,26 +49,31 @@ class Detail extends Component {
     return [
       {
         label: 'FaceBook',
-        icon: 'pi pi-star-o',
+        // icon: 'pi pi-star-o',
         command: (e) => {
           this.growl.show({ severity: 'info', summary: 'Title', detail: 'Share FaceBook' });
         },
       },
       {
         label: 'Google',
-        icon: 'pi pi-star-o',
+        // icon: 'pi pi-star-o',
         command: (e) => {
           this.growl.show({ severity: 'warn', summary: 'Title', detail: 'Share Google' });
         },
       },
       {
         label: 'Twitter',
-        icon: 'pi pi-star-o',
+        // icon: 'pi pi-star-o',
         command: (e) => {
           this.growl.show({ severity: 'error', summary: 'Title', detail: 'Share Twitter' });
         },
       },
     ];
+  }
+
+  renderTitle() {
+    const { title, type } = this.state.hideout;
+    return <h2>【{type}】{title}</h2>;
   }
 
   renderHideouts() {
@@ -125,6 +136,9 @@ class Detail extends Component {
   }
 
   render() {
+    if (!this.state.hideout) return <Redirect to="/" />;
+
+    const { views, download, favorite } = this.state.hideout;
     return (
       <article className="detail">
         <DetailMenu />
@@ -135,16 +149,16 @@ class Detail extends Component {
             </summary>
             <div className="p-toolbar-group-right">
               <FaEye />
-              <span>{Math.floor(Math.random() * 3000)}</span>
+              <span>{views}</span>
               <FaHeart />
-              <span>{Math.floor(Math.random() * 300)}</span>
+              <span>{download}</span>
               <FaDownload />
-              <span>{Math.floor(Math.random() * 500)}</span>
+              <span>{favorite}</span>
             </div>
           </Toolbar>
           <Toolbar className="detail-title">
             <div className="p-toolbar-group-left">
-              <h2>【Default】My Hideout Demo</h2>
+              {this.renderTitle()}
             </div>
             <div className="p-toolbar-group-right">
               <Button label="Download" icon="pi pi-download" style={{ marginRight: '.25em' }} />
@@ -162,4 +176,12 @@ class Detail extends Component {
   }
 }
 
-export default Detail;
+Detail.propTypes = {}
+
+const mapStateToProps = state => {
+  return {
+    hideouts: state.hideouts,
+  }
+}
+
+export default connect(mapStateToProps)(Detail);

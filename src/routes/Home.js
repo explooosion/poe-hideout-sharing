@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import './Home.scss';
 
 import { Link } from 'react-router-dom';
-import { FaHeart, FaEye, FaDownload } from 'react-icons/fa';
+import { FaHeart, FaEye, FaDownload, FaPencilAlt } from 'react-icons/fa';
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 
 import { Button } from 'primereact/button';
 import { Card } from 'primereact/card';
-import { ProgressBar } from 'primereact/progressbar';
+// import { ProgressBar } from 'primereact/progressbar';
 import { Paginator } from 'primereact/paginator';
 
 import ContentLayout from '../layout/ContentLayout';
@@ -74,25 +74,27 @@ class Home extends Component {
   renderCards() {
     return this.state.hideouts.map((hideout, index) => {
       return (
-        <div className="p-lg-3 p-md-6 p-sm-12" key={`card-${index}`}>
-          <Link to={`/detail/${index}`}>
+        <div className="p-xl-3 p-lg-4 p-md-6 p-sm-12" key={`card-${index}-${hideout.id}`}>
+          <Link to={`/detail/${hideout.id}`}>
             <Card
               style={{ cursor: 'pointer' }}
-              title={hideout.type}
+              title={hideout.title}
               subTitle={hideout.author}
-              header={this.renderCardHeader(hideout.img)}
+              header={this.renderCardHeader(hideout)}
             >
-              <div className="card-tag">
-                <FaDownload />
-                <span>{hideout.download}</span>
-              </div>
-              <div className="card-tag">
-                <FaHeart />
-                <span>{hideout.favorite}</span>
-              </div>
-              <div className="card-tag">
-                <FaEye />
-                <span>{hideout.views}</span>
+              <div className="card-counts">
+                <div>
+                  <FaEye />
+                  <span>{hideout.views}</span>
+                </div>
+                <div>
+                  <FaDownload />
+                  <span>{hideout.download}</span>
+                </div>
+                <div>
+                  <FaHeart />
+                  <span>{hideout.favorite}</span>
+                </div>
               </div>
             </Card>
           </Link>
@@ -101,7 +103,9 @@ class Home extends Component {
     });
   }
 
-  renderCardHeader(img) {
+  renderCardHeader(hideout) {
+    const { img } = hideout;
+    // return <div className="card-img" style={{ backgroundImage: `url(${img})` }}></div>;
     return <img alt={img} title={img} src={img} />;
   }
 

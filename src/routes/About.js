@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './About.scss';
 
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { increaseCounter } from '../actions';
 

@@ -1,6 +1,9 @@
+import uuid from 'uuid/v1';
+
 /* eslint-disable global-require */
 const Lists = [
   {
+    id: uuid(),
     title: 'Hideout_1',
     author: 'Robby',
     type: 'Backstreet',
@@ -10,6 +13,7 @@ const Lists = [
     favorite: Math.floor(Math.random() * 300),
   },
   {
+    id: uuid(),
     title: 'Hideout_2',
     author: 'Jack',
     type: 'Arboreal',
@@ -19,6 +23,7 @@ const Lists = [
     favorite: Math.floor(Math.random() * 300),
   },
   {
+    id: uuid(),
     title: 'Hideout_3',
     author: 'Robby',
     type: 'Arboreal',
@@ -28,6 +33,7 @@ const Lists = [
     favorite: Math.floor(Math.random() * 300),
   },
   {
+    id: uuid(),
     title: 'Hideout_4',
     author: 'Jack',
     type: 'Arboreal',
@@ -37,6 +43,7 @@ const Lists = [
     favorite: Math.floor(Math.random() * 300),
   },
   {
+    id: uuid(),
     title: 'Hideout_5',
     author: 'Kevin',
     type: 'Backstreet',
@@ -46,6 +53,7 @@ const Lists = [
     favorite: Math.floor(Math.random() * 300),
   },
   {
+    id: uuid(),
     title: 'Hideout_6',
     author: 'Kevin',
     type: 'Arboreal',
@@ -55,6 +63,7 @@ const Lists = [
     favorite: Math.floor(Math.random() * 300),
   },
   {
+    id: uuid(),
     title: 'Hideout_7',
     author: 'Kevin',
     type: 'Arboreal',
@@ -64,6 +73,7 @@ const Lists = [
     favorite: Math.floor(Math.random() * 300),
   },
   {
+    id: uuid(),
     title: 'Hideout_8',
     author: 'Kevin',
     type: 'Arboreal',
@@ -73,6 +83,7 @@ const Lists = [
     favorite: Math.floor(Math.random() * 300),
   },
   {
+    id: uuid(),
     title: 'Hideout_8',
     author: 'Robby',
     type: 'Arboreal',
@@ -82,6 +93,7 @@ const Lists = [
     favorite: Math.floor(Math.random() * 300),
   },
   {
+    id: uuid(),
     title: 'Hideout_9',
     author: 'Jack',
     type: 'Backstreet',
@@ -91,6 +103,7 @@ const Lists = [
     favorite: Math.floor(Math.random() * 300),
   },
   {
+    id: uuid(),
     title: 'Hideout_10',
     author: 'Jason',
     type: 'Arboreal',
@@ -100,6 +113,7 @@ const Lists = [
     favorite: Math.floor(Math.random() * 300),
   },
   {
+    id: uuid(),
     title: 'Hideout_11',
     author: 'Jason',
     type: 'Arboreal',
@@ -109,6 +123,7 @@ const Lists = [
     favorite: Math.floor(Math.random() * 300),
   },
   {
+    id: uuid(),
     title: 'Hideout_12',
     author: 'Robby',
     type: 'Arboreal',
@@ -118,6 +133,7 @@ const Lists = [
     favorite: Math.floor(Math.random() * 300),
   },
   {
+    id: uuid(),
     title: 'Hideout_13',
     author: 'Jack',
     type: 'Backstreet',
@@ -127,6 +143,7 @@ const Lists = [
     favorite: Math.floor(Math.random() * 300),
   },
   {
+    id: uuid(),
     title: 'Hideout_14',
     author: 'Robby',
     type: 'Backstreet',

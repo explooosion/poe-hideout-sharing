@@ -4,11 +4,31 @@
   display: flex;
   margin-top: $header-height;
 
-  .card-tag {
+  .card-title {
     display: flex;
-    align-items: center;
-    margin-right: .5rem;
-    color: $primary;
+  }
+  // .card-img {
+  //   position: relative;
+  //   height: 150px;
+  //   background-position: center;
+  //   background-repeat: no-repeat;
+  //   background-size: 100%;
+  //   transition: all .3s ease-in-out;
+
+  //   &:hover {
+  //     background-size: 120%;
+  //   }
+  // }
+
+  .card-counts {
+    display: flex;
+
+    div {
+      display: flex;
+      align-items: center;
+      margin-right: .5rem;
+      color: $primary;
+    }
 
     span {
       margin: 0 .15rem 0 .25rem;
@@ -25,3 +45,4 @@
   display: flex;
   flex-flow: row-reverse;
 }
+

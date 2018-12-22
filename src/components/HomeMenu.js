@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import './HomeMenu.scss';
 
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import { Dropdown } from 'primereact/dropdown';
 import { SelectButton } from 'primereact/selectbutton';
-import { Chart } from 'primereact/chart';
+// import { Chart } from 'primereact/chart';
 
 import MenuLayout from '../layout/MenuLayout';
 
@@ -134,10 +134,14 @@ class HomeMenu extends Component {
           >
           </SelectButton>
         </div>
-        <div className="item">
-          <h4 className="item-title">Analysis</h4>
-          <Chart type="doughnut" data={this.getChartData()} />
-        </div>
+        {
+          /*
+          <div className="item">
+            <h4 className="item-title">Analysis</h4>
+            <Chart type="doughnut" data={this.getChartData()} />
+          </div>
+          */
+        }
       </MenuLayout>
     );
   }
