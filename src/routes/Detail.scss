@@ -25,12 +25,15 @@
   }
 
   .detail-title {
-    position: sticky;
-    top: -32px;
     padding-left: .25rem;
     color: $dark;
     background-color: #fff;
     z-index: 100;
+
+    @media only screen and (min-width: $screen-xl) {
+      position: sticky;
+      top: -32px;
+    }
   }
 
   .detaild-tabmenu {
