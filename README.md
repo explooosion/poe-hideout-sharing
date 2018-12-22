@@ -68,6 +68,10 @@ yarn start # npm start
   - primeflex
   - Primeicons
 
+## Credit
+
+- [http://poedb.tw](http://poedb.tw)
+
 ## License
 
 [MIT](http://opensource.org/licenses/MIT)
