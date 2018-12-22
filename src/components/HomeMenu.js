@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import './HomeMenu.scss';
 
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import { Dropdown } from 'primereact/dropdown';
 import { SelectButton } from 'primereact/selectbutton';
 import { Chart } from 'primereact/chart';
@@ -11,28 +13,30 @@ import logo from '../images/logo.svg';
 
 class HomeMenu extends Component {
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
+    this.dispatch = props.dispatch;
+    const { Type } = props.hideouts;
     this.state = {
-      hideout: ['Default'],
-      mode: 'Normal',
+      download: '',
+      views: '',
+      favorite: '',
       title: 'Hideout List',
+      types: Type,
+      type: '',
     };
   }
 
-  getHideouts() {
-    return [
-      { label: 'Default Hideout', value: 'Default' },
-      { label: 'Arboreal Hideout', value: 'Arboreal' },
-      { label: 'Backstreet Hideout', value: 'Backstreet' },
-      { label: 'Baleful Hideout', value: 'Baleful' },
-      { label: 'Battle-scarred Hideout', value: 'Battle-scarred' },
-      { label: 'Brutal Hideout', value: 'Brutal' },
-      { label: `Cartographer's Hideout`, value: `Cartographer's` },
-      { label: 'Coastal Hideout', value: 'Coastal' },
-      { label: 'Coral Hideout', value: 'Coral' },
-      { label: 'Desert Hideout', value: 'Desert' },
-    ];
+  onSortChange(state) {
+    this.setState(state);
+    const key = Object.keys(state)[0];
+    this.props.onSortChange(key, state[key]);
+  }
+
+  onFilterChange(state) {
+    this.setState(state);
+    const key = Object.keys(state)[0];
+    this.props.onFilterChange(key, state[key]);
   }
 
   getChartData() {
@@ -58,7 +62,7 @@ class HomeMenu extends Component {
   renderHideoutTemplate(option) {
     return (
       <div className="p-clearfix item-group">
-        <img alt={option.label} src={logo} />
+        <img alt={option.label} src={option.img} />
         <span>{option.label}</span>
       </div>
     );
@@ -78,11 +82,10 @@ class HomeMenu extends Component {
     }
   }
 
-  renderMode() {
+  renderSelectButton() {
     return [
-      { label: 'Easy', value: 'Easy' },
-      { label: 'Normal', value: 'Normal' },
-      { label: 'Hard', value: 'Hard' },
+      { label: 'Increment', value: 'Increment' },
+      { label: 'Decrement', value: 'Decrement' },
     ];
   }
 
@@ -90,26 +93,44 @@ class HomeMenu extends Component {
     return (
       <MenuLayout title={this.state.title}>
         <div className="item">
-          <h4 className="item-title">Categories</h4>
+          <h4 className="item-title">Hideout Type</h4>
           <Dropdown
             style={{ width: '100%' }}
-            value={this.state.hideout}
-            options={this.getHideouts()}
-            onChange={e => { this.setState({ hideout: e.value }) }}
+            value={this.state.type}
+            options={this.state.types}
+            onChange={(e) => this.onFilterChange({ type: e.value })}
             filter={true}
             filterPlaceholder="Filter..."
-            placeholder="Select hideout"
+            placeholder="Select type"
             itemTemplate={this.renderHideoutTemplate}
+            showClear={true}
           // selectedItemTemplate={this.renderHideoutSelectedTemplate}
           />
         </div>
         <div className="item">
-          <h4 className="item-title">Level</h4>
+          <h4 className="item-title">Download</h4>
           <SelectButton
-            value={this.state.mode}
-            options={this.renderMode()}
-            onChange={(e) =>
-              this.setState({ mode: e.value })}
+            value={this.state.download}
+            options={this.renderSelectButton()}
+            onChange={(e) => this.onSortChange({ download: e.value })}
+          >
+          </SelectButton>
+        </div>
+        <div className="item">
+          <h4 className="item-title">Views</h4>
+          <SelectButton
+            value={this.state.views}
+            options={this.renderSelectButton()}
+            onChange={(e) => this.onSortChange({ views: e.value })}
+          >
+          </SelectButton>
+        </div>
+        <div className="item">
+          <h4 className="item-title">Favorite</h4>
+          <SelectButton
+            value={this.state.favorite}
+            options={this.renderSelectButton()}
+            onChange={(e) => this.onSortChange({ favorite: e.value })}
           >
           </SelectButton>
         </div>
@@ -122,4 +143,12 @@ class HomeMenu extends Component {
   }
 }
 
-export default HomeMenu;
+HomeMenu.propTypes = {}
+
+const mapStateToProps = state => {
+  return {
+    hideouts: state.hideouts,
+  }
+}
+
+export default connect(mapStateToProps)(HomeMenu);

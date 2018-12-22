@@ -2,48 +2,65 @@ import React, { Component } from 'react';
 import './Home.scss';
 
 import { Link } from 'react-router-dom';
+import { FaHeart, FaEye, FaDownload } from 'react-icons/fa';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+
 import { Button } from 'primereact/button';
 import { Card } from 'primereact/card';
 import { ProgressBar } from 'primereact/progressbar';
 import { Paginator } from 'primereact/paginator';
-
-import { FaHeart, FaEye, FaDownload } from 'react-icons/fa';
 
 import ContentLayout from '../layout/ContentLayout';
 import HomeMenu from '../components/HomeMenu';
 
 class Home extends Component {
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
+    this.dispatch = props.dispatch;
+    const { Lists } = props.hideouts;
     this.state = {
       first: 0,
       rows: 10,
       breadcrumb: [
-        { label: 'Categories', url: '/' },
+        { label: 'hideouts', url: '/' },
       ],
+      hideouts: Lists || [],
     }
+  }
 
-    this.imgs = [
-      require('../images/home_demo_gif_2.gif'),
-      require('../images/home_demo_3.jpg'),
-      require('../images/home_demo_gif_1.gif'),
-      require('../images/home_demo_gif_2.gif'),
-      require('../images/home_demo_gif_1.gif'),
-      require('../images/home_demo_gif_2.gif'),
-      require('../images/home_demo_4.jpg'),
-      require('../images/home_demo_2.jpg'),
-      require('../images/home_demo_gif_1.gif'),
-      require('../images/home_demo_5.jpg'),
-      require('../images/home_demo_gif_1.gif'),
-      require('../images/home_demo_4.jpg'),
-      require('../images/home_demo_2.jpg'),
-      require('../images/home_demo_gif_2.gif'),
-      require('../images/home_demo_2.jpg'),
-      require('../images/home_demo_3.jpg'),
-      require('../images/home_demo_5.jpg'),
-      require('../images/home_demo_gif_1.gif'),
-    ];
+  /**
+   * Sort hideouts
+   * @param {string} key
+   * @param {string} value
+   */
+  onSortChange(key, value) {
+    const hideouts = this.state.hideouts;
+    this.setState({
+      hideouts: value === 'Increment'
+        ? hideouts.sort((a, b) => {
+          return a[key] - b[key];
+        })
+        : hideouts.sort((a, b) => {
+          return b[key] - a[key];
+        }),
+    });
+  }
+
+  /**
+   * Filter hideouts
+   * @param {string} key
+   * @param {string} value
+   */
+  onFilterChange(key, value) {
+    const { Lists } = this.props.hideouts;
+    this.setState({
+      hideouts: Lists.filter(hideout => {
+        if (value) return hideout[key] === value;
+        return hideout[key];
+      }),
+    });
   }
 
   onPageChange(event) {
@@ -55,27 +72,27 @@ class Home extends Component {
   }
 
   renderCards() {
-    return this.imgs.map((img, index) => {
+    return this.state.hideouts.map((hideout, index) => {
       return (
         <div className="p-lg-3 p-md-6 p-sm-12" key={`card-${index}`}>
           <Link to={`/detail/${index}`}>
             <Card
               style={{ cursor: 'pointer' }}
-              title="Default Hideout"
-              subTitle="Robby"
-              header={this.renderCardHeader(index)}
+              title={hideout.type}
+              subTitle={hideout.author}
+              header={this.renderCardHeader(hideout.img)}
             >
               <div className="card-tag">
                 <FaDownload />
-                <span>{Math.floor(Math.random() * 500)}</span>
+                <span>{hideout.download}</span>
               </div>
               <div className="card-tag">
                 <FaHeart />
-                <span>{Math.floor(Math.random() * 300)}</span>
+                <span>{hideout.favorite}</span>
               </div>
               <div className="card-tag">
                 <FaEye />
-                <span>{Math.floor(Math.random() * 3000)}</span>
+                <span>{hideout.views}</span>
               </div>
             </Card>
           </Link>
@@ -84,8 +101,8 @@ class Home extends Component {
     });
   }
 
-  renderCardHeader(num) {
-    return <img alt={`demo${num}`} src={this.imgs[num]} />;
+  renderCardHeader(img) {
+    return <img alt={img} title={img} src={img} />;
   }
 
   renderCardFooter() {
@@ -100,19 +117,35 @@ class Home extends Component {
   render() {
     return (
       <div className="home">
-        <HomeMenu />
+        <HomeMenu
+          onSortChange={(key, value) => this.onSortChange(key, value)}
+          onFilterChange={(key, value) => this.onFilterChange(key, value)}
+        />
         <ContentLayout breadcrumb={this.state.breadcrumb}>
           <div className="p-grid">
             {this.renderCards()}
           </div>
+          <br />
           <Paginator first={this.state.first} rows={this.state.rows} totalRecords={120} rowsPerPageOptions={[10, 20, 30]} onPageChange={e => this.onPageChange(e)}></Paginator>
-          <div className="p-grid search">
-            <ProgressBar className="p-col" mode="indeterminate" style={{ height: '8px' }}></ProgressBar>
-          </div>
+          {
+            /*
+            <div className="p-grid search">
+              <ProgressBar className="p-col" mode="indeterminate" style={{ height: '8px' }}></ProgressBar>
+            </div>
+            */
+          }
         </ContentLayout>
       </div>
     );
   }
 }
 
-export default Home;
+Home.propTypes = {}
+
+const mapStateToProps = state => {
+  return {
+    hideouts: state.hideouts,
+  }
+}
+
+export default connect(mapStateToProps)(Home);

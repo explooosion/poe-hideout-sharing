@@ -1,5 +1,10 @@
 let nextTodoId = 0
 
+export const getHideouts = args => ({
+  type: 'GET_HIDEOUTS',
+  args: args,
+});
+
 export const increaseCounter = num => ({
   type: 'INCREASE_COUNTER',
   num: num,

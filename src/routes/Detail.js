@@ -28,7 +28,7 @@ class Detail extends Component {
       ],
       activeItem: null,
       breadcrumb: [
-        { label: 'Categories', url: '/' },
+        { label: 'hideouts', url: '/' },
         { label: `#${id}` },
       ],
     }
