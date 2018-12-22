@@ -17,9 +17,9 @@ class Header extends Component {
       visible: false,
       items: [
         { label: 'Home', icon: 'pi pi-fw pi-home', command: () => { window.location.pathname = '/'; } },
-        // { label: 'About', icon: 'pi pi-fw pi-info', command: () => { window.location.pathname = '/about'; } },
+        { label: 'About', icon: 'pi pi-fw pi-info', command: () => { /* window.location.pathname = '/about'; */ } },
         { label: 'Github', icon: 'pi pi-fw pi-star', command: () => { window.open('https://github.com/explooosion/poe-hideout-sharing'); } },
-        { label: 'Login', icon: 'pi pi-fw pi-globe', command: () => { window.location.pathname = '/login'; } },
+        // { label: 'Login', icon: 'pi pi-fw pi-globe', command: () => { window.location.pathname = '/login'; } },
       ],
     };
   }
@@ -45,9 +45,10 @@ class Header extends Component {
           </div>
           <ul className="topbar-menu">
             <li><Link to="/">HOME</Link></li>
-            <li><Link to="/about">ABOUT</Link></li>
+            <li><Link to="/">ABOUT</Link></li>
+            { /* <li><Link to="/about">ABOUT</Link></li> */ }
             <li><a href="https://github.com/explooosion/poe-hideout-sharing" target="_blank" rel="noopener noreferrer">GITHUB</a></li>
-            <li><Link to="/login">LOGIN</Link></li>
+            { /* <li><Link to="/login">LOGIN</Link></li> */ }
           </ul>
         </header>
         <Sidebar visible={this.state.visible} onHide={e => this.setState({ visible: false })}>
