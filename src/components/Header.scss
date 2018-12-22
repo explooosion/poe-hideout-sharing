@@ -75,11 +75,21 @@
       display: none;
     }
 
-    li {
+    > li {
       display: inline-block;
       height: 100%;
 
-      a {
+      .flag-group {
+        display: flex;
+        justify-content: left;
+        align-items: center;
+
+        .flag-name {
+          margin-left: 5px;
+        }
+      }
+
+      > a {
         display: inline-block;
         min-width: 120px;
         height: 100%;

@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { FaHeart, FaEye, FaDownload, FaPencilAlt } from 'react-icons/fa';
 import { connect } from 'react-redux';
 // import PropTypes from 'prop-types';
+import { withNamespaces } from 'react-i18next';
 
 import { Button } from 'primereact/button';
 import { Card } from 'primereact/card';
@@ -119,6 +120,7 @@ class Home extends Component {
   }
 
   render() {
+    const { t } = this.props;
     return (
       <div className="home">
         <HomeMenu
@@ -152,4 +154,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps)(Home);
+export default withNamespaces()(connect(mapStateToProps)(Home));

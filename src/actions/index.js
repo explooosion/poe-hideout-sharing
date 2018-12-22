@@ -1,5 +1,10 @@
 let nextTodoId = 0
 
+export const setLocal = locale => ({
+  type: 'SET_LOCALE',
+  locale: locale,
+});
+
 export const getHideouts = args => ({
   type: 'GET_HIDEOUTS',
   args: args,
@@ -18,6 +23,7 @@ export const increaseCounterAsync = num => {
   };
 }
 
+// DEMO ===========================
 export const addTodo = text => ({
   type: 'ADD_TODO',
   id: nextTodoId++,
@@ -28,3 +34,4 @@ export const toggleTodo = id => ({
   type: 'TOGGLE_TODO',
   id,
 })
+// DEMO ===========================
