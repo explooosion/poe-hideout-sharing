@@ -3,7 +3,6 @@ import './Login.scss';
 
 // import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { increaseCounterAsync } from '../actions';
 
 import MasterLayout from '../layout/MasterLayout';
 
@@ -22,11 +21,7 @@ class Login extends Component {
     return (
       <MasterLayout>
         <div className="login">
-          <h1
-            onClick={e => {
-              this.dispatch(increaseCounterAsync(1));
-            }}
-          >
+          <h1>
             Login
           </h1>
           <h2>{this.props.counter}</h2>
@@ -39,9 +34,7 @@ class Login extends Component {
 Login.propTypes = {}
 
 const mapStateToProps = state => {
-  return {
-    counter: state.counter,
-  }
+  return {}
 }
 
 export default connect(mapStateToProps)(Login);
