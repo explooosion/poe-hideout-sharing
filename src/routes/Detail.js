@@ -17,6 +17,7 @@ import { TabMenu } from 'primereact/tabmenu';
 import ContentLayout from '../layout/ContentLayout';
 import DetailMenu from '../components/DetailMenu';
 
+
 class Detail extends Component {
 
   constructor(props) {
@@ -32,7 +33,7 @@ class Detail extends Component {
         { label: 'Code', icon: 'pi pi-fw pi-file' },
         { label: 'Edit', icon: 'pi pi-fw pi-pencil' },
       ],
-      activeItem: null,
+      activeItem: 0,
       breadcrumb: [
         { label: 'hideouts', url: '/' },
         { label: `${id}` },
@@ -41,8 +42,12 @@ class Detail extends Component {
   }
 
   onImageLoad() {
-    console.log('load success');
+    // console.log('load success');
     // this.growl.show({ severity: 'success', summary: 'Image Initialized', detail: 'Scroll down to load the datatable' });
+  }
+
+  onTabChange(value) {
+    this.setState({ activeItem: value });
   }
 
   getShareButtonItems() {
@@ -76,25 +81,53 @@ class Detail extends Component {
     return <h2>【{type}】{title}</h2>;
   }
 
-  renderHideouts() {
+  renderDetail() {
+    const { label } = this.state.activeItem;
+    switch (label) {
+      case 'Image': return this.renderImages();
+      case 'Code': return this.renderCode();
+      case 'Edit': return this.renderEdit();
+      default: return this.renderImages();
+    }
+  }
+
+  renderCode() {
+    return (
+      <div className="detail-content">
+        <section className="section">
+          <h3 className="section-title">renderCode</h3>
+        </section>
+      </div>
+    )
+  }
+
+  renderEdit() {
+    return (
+      <div className="detail-content">
+        <section className="section">
+          <h3 className="section-title">renderEdit</h3>
+        </section>
+      </div>
+    )
+  }
+
+  renderImages() {
     const { photos } = this.state.hideout;
     return (
       <div className="detail-content">
-        <h1>
-          {
-            photos.map((photo, index) => {
-              const { title } = photo;
-              return (
-                <DeferredContent onLoad={() => this.onImageLoad()} key={`content-${index}`}>
-                  <section className="section">
-                    <h3 className="section-title">{title}</h3>
-                    {this.renderHideoutContent(photo)}
-                  </section>
-                </DeferredContent>
-              );
-            })
-          }
-        </h1>
+        {
+          photos.map((photo, index) => {
+            const { title } = photo;
+            return (
+              <DeferredContent onLoad={() => this.onImageLoad()} key={`content-${index}`}>
+                <section className="section">
+                  <h3 className="section-title">{title}</h3>
+                  {this.renderImageContent(photo)}
+                </section>
+              </DeferredContent>
+            );
+          })
+        }
       </div>
     );
   }
@@ -103,7 +136,7 @@ class Detail extends Component {
    * Render Hideout Content
    * @param {photo} object
    */
-  renderHideoutContent(photo) {
+  renderImageContent(photo) {
     const { type, url, alt } = photo;
     switch (type) {
       case 'image':
@@ -124,7 +157,7 @@ class Detail extends Component {
     const { views, download, favorite } = this.state.hideout;
     return (
       <article className="detail">
-        <DetailMenu />
+        <DetailMenu hideout={this.state.hideout} />
         <ContentLayout breadcrumb={this.state.breadcrumb}>
           <Toolbar className="detail-author">
             <summary className="p-toolbar-group-left">
@@ -150,9 +183,9 @@ class Detail extends Component {
               <SplitButton icon="pi pi-share-alt" className="p-button-warning" onClick={this.save} model={this.getShareButtonItems()}></SplitButton>
             </div>
           </Toolbar>
-          <TabMenu className="detaild-tabmenu" model={this.state.tabmenu} activeItem={this.state.activeItem} onTabChange={(e) => this.setState({ activeItem: e.value })} />
+          <TabMenu className="detaild-tabmenu" model={this.state.tabmenu} activeItem={this.state.activeItem} onTabChange={(e) => this.onTabChange(e.value)} />
           <Growl ref={(el) => this.growl = el} />
-          {this.renderHideouts()}
+          {this.renderDetail()}
         </ContentLayout>
       </article>
     );
