@@ -77,62 +77,45 @@ class Detail extends Component {
   }
 
   renderHideouts() {
+    const { photos } = this.state.hideout;
     return (
       <div className="detail-content">
-        <DeferredContent onLoad={() => this.onImageLoad()}>
-          <section className="section">
-            <h3 className="section-title">GIF</h3>
-            <img alt="" src={require('../images/home_demo_gif_1.gif')} width="100%" />
-          </section>
-        </DeferredContent>
-        <DeferredContent onLoad={() => this.onImageLoad()}>
-          <section className="section">
-            <h3 className="section-title">GIF</h3>
-            <img alt="" src={require('../images/home_demo_gif_2.gif')} width="100%" />
-          </section>
-        </DeferredContent>
-        <DeferredContent>
-          <section className="section">
-            <h3 className="section-title">YOUTUBE</h3>
-            <div className="youtube-container">
-              <iframe title="share" src="https://www.youtube.com/embed/V3QVyJAN3yM?rel=0" frameBorder="0" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
-            </div>
-          </section>
-        </DeferredContent>
-        <DeferredContent>
-          <section className="section">
-            <h3 className="section-title">YOUTUBE</h3>
-            <div className="youtube-container">
-              <iframe title="share" src="https://www.youtube.com/embed/DDx1fysX5oo?rel=0" frameBorder="0" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
-            </div>
-          </section>
-        </DeferredContent>
-        <DeferredContent onLoad={() => this.onImageLoad()}>
-          <section className="section">
-            <h3 className="section-title">Title</h3>
-            <img alt="" src={require('../images/home_demo_2.jpg')} width="100%" />
-          </section>
-        </DeferredContent>
-        <DeferredContent onLoad={() => this.onImageLoad()}>
-          <section className="section">
-            <h3 className="section-title">JPG</h3>
-            <img alt="" src={require('../images/home_demo_3.jpg')} width="100%" />
-          </section>
-        </DeferredContent>
-        <DeferredContent onLoad={() => this.onImageLoad()}>
-          <section className="section">
-            <h3 className="section-title">JPG</h3>
-            <img alt="" src={require('../images/home_demo_4.jpg')} width="100%" />
-          </section>
-        </DeferredContent>
-        <DeferredContent onLoad={() => this.onImageLoad()}>
-          <section className="section">
-            <h3 className="section-title">JPG</h3>
-            <img alt="" src={require('../images/home_demo_5.jpg')} width="100%" />
-          </section>
-        </DeferredContent>
+        <h1>
+          {
+            photos.map((photo, index) => {
+              const { title } = photo;
+              return (
+                <DeferredContent onLoad={() => this.onImageLoad()} key={`content-${index}`}>
+                  <section className="section">
+                    <h3 className="section-title">{title}</h3>
+                    {this.renderHideoutContent(photo)}
+                  </section>
+                </DeferredContent>
+              );
+            })
+          }
+        </h1>
       </div>
     );
+  }
+
+  /**
+   * Render Hideout Content
+   * @param {photo} object
+   */
+  renderHideoutContent(photo) {
+    const { type, url, alt } = photo;
+    switch (type) {
+      case 'image':
+        return <img alt={alt || url} title={alt || url} src={require(`../images/${url}`)} width="100%" />;
+      case 'youtube':
+        return (
+          <div className="youtube-container">
+            <iframe title="share" src={url} frameBorder="0" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
+          </div>
+        );
+      default: return null;
+    }
   }
 
   render() {

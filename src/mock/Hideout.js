@@ -11,6 +11,48 @@ const Lists = [
     download: Math.floor(Math.random() * 500),
     views: Math.floor(Math.random() * 3000),
     favorite: Math.floor(Math.random() * 300),
+    photos: [
+      {
+        url: 'home_demo_gif_1.gif',
+        type: 'image',
+        title: 'GIF',
+      },
+      {
+        url: 'home_demo_gif_2.gif',
+        type: 'image',
+        title: 'GIF',
+      },
+      {
+        url: 'https://www.youtube.com/embed/V3QVyJAN3yM?rel=0',
+        type: 'youtube',
+        title: 'YouTube',
+      },
+      {
+        url: 'https://www.youtube.com/embed/DDx1fysX5oo?rel=0',
+        type: 'youtube',
+        title: 'YouTube',
+      },
+      {
+        url: 'home_demo_2.jpg',
+        type: 'image',
+        title: 'Image',
+      },
+      {
+        url: 'home_demo_3.jpg',
+        type: 'image',
+        title: 'Image',
+      },
+      {
+        url: 'home_demo_4.jpg',
+        type: 'image',
+        title: 'Image',
+      },
+      {
+        url: 'home_demo_5.jpg',
+        type: 'image',
+        title: 'Image',
+      },
+    ],
   },
   {
     id: uuid(),
@@ -21,6 +63,48 @@ const Lists = [
     download: Math.floor(Math.random() * 500),
     views: Math.floor(Math.random() * 3000),
     favorite: Math.floor(Math.random() * 300),
+    photos: [
+      {
+        url: 'home_demo_gif_1.gif',
+        type: 'image',
+        title: 'GIF',
+      },
+      {
+        url: 'home_demo_gif_2.gif',
+        type: 'image',
+        title: 'GIF',
+      },
+      {
+        url: 'https://www.youtube.com/embed/V3QVyJAN3yM?rel=0',
+        type: 'youtube',
+        title: 'YouTube',
+      },
+      {
+        url: 'https://www.youtube.com/embed/DDx1fysX5oo?rel=0',
+        type: 'youtube',
+        title: 'YouTube',
+      },
+      {
+        url: 'home_demo_2.jpg',
+        type: 'image',
+        title: 'Image',
+      },
+      {
+        url: 'home_demo_3.jpg',
+        type: 'image',
+        title: 'Image',
+      },
+      {
+        url: 'home_demo_4.jpg',
+        type: 'image',
+        title: 'Image',
+      },
+      {
+        url: 'home_demo_5.jpg',
+        type: 'image',
+        title: 'Image',
+      },
+    ],
   },
   {
     id: uuid(),
@@ -31,6 +115,48 @@ const Lists = [
     download: Math.floor(Math.random() * 500),
     views: Math.floor(Math.random() * 3000),
     favorite: Math.floor(Math.random() * 300),
+    photos: [
+      {
+        url: 'home_demo_gif_1.gif',
+        type: 'image',
+        title: 'GIF',
+      },
+      {
+        url: 'home_demo_gif_2.gif',
+        type: 'image',
+        title: 'GIF',
+      },
+      {
+        url: 'https://www.youtube.com/embed/V3QVyJAN3yM?rel=0',
+        type: 'youtube',
+        title: 'YouTube',
+      },
+      {
+        url: 'https://www.youtube.com/embed/DDx1fysX5oo?rel=0',
+        type: 'youtube',
+        title: 'YouTube',
+      },
+      {
+        url: 'home_demo_2.jpg',
+        type: 'image',
+        title: 'Image',
+      },
+      {
+        url: 'home_demo_3.jpg',
+        type: 'image',
+        title: 'Image',
+      },
+      {
+        url: 'home_demo_4.jpg',
+        type: 'image',
+        title: 'Image',
+      },
+      {
+        url: 'home_demo_5.jpg',
+        type: 'image',
+        title: 'Image',
+      },
+    ],
   },
   {
     id: uuid(),
@@ -41,6 +167,48 @@ const Lists = [
     download: Math.floor(Math.random() * 500),
     views: Math.floor(Math.random() * 3000),
     favorite: Math.floor(Math.random() * 300),
+    photos: [
+      {
+        url: 'home_demo_gif_1.gif',
+        type: 'image',
+        title: 'GIF',
+      },
+      {
+        url: 'home_demo_gif_2.gif',
+        type: 'image',
+        title: 'GIF',
+      },
+      {
+        url: 'https://www.youtube.com/embed/V3QVyJAN3yM?rel=0',
+        type: 'youtube',
+        title: 'YouTube',
+      },
+      {
+        url: 'https://www.youtube.com/embed/DDx1fysX5oo?rel=0',
+        type: 'youtube',
+        title: 'YouTube',
+      },
+      {
+        url: 'home_demo_2.jpg',
+        type: 'image',
+        title: 'Image',
+      },
+      {
+        url: 'home_demo_3.jpg',
+        type: 'image',
+        title: 'Image',
+      },
+      {
+        url: 'home_demo_4.jpg',
+        type: 'image',
+        title: 'Image',
+      },
+      {
+        url: 'home_demo_5.jpg',
+        type: 'image',
+        title: 'Image',
+      },
+    ],
   },
   {
     id: uuid(),
@@ -51,6 +219,48 @@ const Lists = [
     download: Math.floor(Math.random() * 500),
     views: Math.floor(Math.random() * 3000),
     favorite: Math.floor(Math.random() * 300),
+    photos: [
+      {
+        url: 'home_demo_gif_1.gif',
+        type: 'image',
+        title: 'GIF',
+      },
+      {
+        url: 'home_demo_gif_2.gif',
+        type: 'image',
+        title: 'GIF',
+      },
+      {
+        url: 'https://www.youtube.com/embed/V3QVyJAN3yM?rel=0',
+        type: 'youtube',
+        title: 'YouTube',
+      },
+      {
+        url: 'https://www.youtube.com/embed/DDx1fysX5oo?rel=0',
+        type: 'youtube',
+        title: 'YouTube',
+      },
+      {
+        url: 'home_demo_2.jpg',
+        type: 'image',
+        title: 'Image',
+      },
+      {
+        url: 'home_demo_3.jpg',
+        type: 'image',
+        title: 'Image',
+      },
+      {
+        url: 'home_demo_4.jpg',
+        type: 'image',
+        title: 'Image',
+      },
+      {
+        url: 'home_demo_5.jpg',
+        type: 'image',
+        title: 'Image',
+      },
+    ],
   },
   {
     id: uuid(),
@@ -61,6 +271,48 @@ const Lists = [
     download: Math.floor(Math.random() * 500),
     views: Math.floor(Math.random() * 3000),
     favorite: Math.floor(Math.random() * 300),
+    photos: [
+      {
+        url: 'home_demo_gif_1.gif',
+        type: 'image',
+        title: 'GIF',
+      },
+      {
+        url: 'home_demo_gif_2.gif',
+        type: 'image',
+        title: 'GIF',
+      },
+      {
+        url: 'https://www.youtube.com/embed/V3QVyJAN3yM?rel=0',
+        type: 'youtube',
+        title: 'YouTube',
+      },
+      {
+        url: 'https://www.youtube.com/embed/DDx1fysX5oo?rel=0',
+        type: 'youtube',
+        title: 'YouTube',
+      },
+      {
+        url: 'home_demo_2.jpg',
+        type: 'image',
+        title: 'Image',
+      },
+      {
+        url: 'home_demo_3.jpg',
+        type: 'image',
+        title: 'Image',
+      },
+      {
+        url: 'home_demo_4.jpg',
+        type: 'image',
+        title: 'Image',
+      },
+      {
+        url: 'home_demo_5.jpg',
+        type: 'image',
+        title: 'Image',
+      },
+    ],
   },
   {
     id: uuid(),
@@ -71,6 +323,48 @@ const Lists = [
     download: Math.floor(Math.random() * 500),
     views: Math.floor(Math.random() * 3000),
     favorite: Math.floor(Math.random() * 300),
+    photos: [
+      {
+        url: 'home_demo_gif_1.gif',
+        type: 'image',
+        title: 'GIF',
+      },
+      {
+        url: 'home_demo_gif_2.gif',
+        type: 'image',
+        title: 'GIF',
+      },
+      {
+        url: 'https://www.youtube.com/embed/V3QVyJAN3yM?rel=0',
+        type: 'youtube',
+        title: 'YouTube',
+      },
+      {
+        url: 'https://www.youtube.com/embed/DDx1fysX5oo?rel=0',
+        type: 'youtube',
+        title: 'YouTube',
+      },
+      {
+        url: 'home_demo_2.jpg',
+        type: 'image',
+        title: 'Image',
+      },
+      {
+        url: 'home_demo_3.jpg',
+        type: 'image',
+        title: 'Image',
+      },
+      {
+        url: 'home_demo_4.jpg',
+        type: 'image',
+        title: 'Image',
+      },
+      {
+        url: 'home_demo_5.jpg',
+        type: 'image',
+        title: 'Image',
+      },
+    ],
   },
   {
     id: uuid(),
@@ -81,6 +375,48 @@ const Lists = [
     download: Math.floor(Math.random() * 500),
     views: Math.floor(Math.random() * 3000),
     favorite: Math.floor(Math.random() * 300),
+    photos: [
+      {
+        url: 'home_demo_gif_1.gif',
+        type: 'image',
+        title: 'GIF',
+      },
+      {
+        url: 'home_demo_gif_2.gif',
+        type: 'image',
+        title: 'GIF',
+      },
+      {
+        url: 'https://www.youtube.com/embed/V3QVyJAN3yM?rel=0',
+        type: 'youtube',
+        title: 'YouTube',
+      },
+      {
+        url: 'https://www.youtube.com/embed/DDx1fysX5oo?rel=0',
+        type: 'youtube',
+        title: 'YouTube',
+      },
+      {
+        url: 'home_demo_2.jpg',
+        type: 'image',
+        title: 'Image',
+      },
+      {
+        url: 'home_demo_3.jpg',
+        type: 'image',
+        title: 'Image',
+      },
+      {
+        url: 'home_demo_4.jpg',
+        type: 'image',
+        title: 'Image',
+      },
+      {
+        url: 'home_demo_5.jpg',
+        type: 'image',
+        title: 'Image',
+      },
+    ],
   },
   {
     id: uuid(),
@@ -91,6 +427,48 @@ const Lists = [
     download: Math.floor(Math.random() * 500),
     views: Math.floor(Math.random() * 3000),
     favorite: Math.floor(Math.random() * 300),
+    photos: [
+      {
+        url: 'home_demo_gif_1.gif',
+        type: 'image',
+        title: 'GIF',
+      },
+      {
+        url: 'home_demo_gif_2.gif',
+        type: 'image',
+        title: 'GIF',
+      },
+      {
+        url: 'https://www.youtube.com/embed/V3QVyJAN3yM?rel=0',
+        type: 'youtube',
+        title: 'YouTube',
+      },
+      {
+        url: 'https://www.youtube.com/embed/DDx1fysX5oo?rel=0',
+        type: 'youtube',
+        title: 'YouTube',
+      },
+      {
+        url: 'home_demo_2.jpg',
+        type: 'image',
+        title: 'Image',
+      },
+      {
+        url: 'home_demo_3.jpg',
+        type: 'image',
+        title: 'Image',
+      },
+      {
+        url: 'home_demo_4.jpg',
+        type: 'image',
+        title: 'Image',
+      },
+      {
+        url: 'home_demo_5.jpg',
+        type: 'image',
+        title: 'Image',
+      },
+    ],
   },
   {
     id: uuid(),
@@ -101,6 +479,48 @@ const Lists = [
     download: Math.floor(Math.random() * 500),
     views: Math.floor(Math.random() * 3000),
     favorite: Math.floor(Math.random() * 300),
+    photos: [
+      {
+        url: 'home_demo_gif_1.gif',
+        type: 'image',
+        title: 'GIF',
+      },
+      {
+        url: 'home_demo_gif_2.gif',
+        type: 'image',
+        title: 'GIF',
+      },
+      {
+        url: 'https://www.youtube.com/embed/V3QVyJAN3yM?rel=0',
+        type: 'youtube',
+        title: 'YouTube',
+      },
+      {
+        url: 'https://www.youtube.com/embed/DDx1fysX5oo?rel=0',
+        type: 'youtube',
+        title: 'YouTube',
+      },
+      {
+        url: 'home_demo_2.jpg',
+        type: 'image',
+        title: 'Image',
+      },
+      {
+        url: 'home_demo_3.jpg',
+        type: 'image',
+        title: 'Image',
+      },
+      {
+        url: 'home_demo_4.jpg',
+        type: 'image',
+        title: 'Image',
+      },
+      {
+        url: 'home_demo_5.jpg',
+        type: 'image',
+        title: 'Image',
+      },
+    ],
   },
   {
     id: uuid(),
@@ -111,6 +531,48 @@ const Lists = [
     download: Math.floor(Math.random() * 500),
     views: Math.floor(Math.random() * 3000),
     favorite: Math.floor(Math.random() * 300),
+    photos: [
+      {
+        url: 'home_demo_gif_1.gif',
+        type: 'image',
+        title: 'GIF',
+      },
+      {
+        url: 'home_demo_gif_2.gif',
+        type: 'image',
+        title: 'GIF',
+      },
+      {
+        url: 'https://www.youtube.com/embed/V3QVyJAN3yM?rel=0',
+        type: 'youtube',
+        title: 'YouTube',
+      },
+      {
+        url: 'https://www.youtube.com/embed/DDx1fysX5oo?rel=0',
+        type: 'youtube',
+        title: 'YouTube',
+      },
+      {
+        url: 'home_demo_2.jpg',
+        type: 'image',
+        title: 'Image',
+      },
+      {
+        url: 'home_demo_3.jpg',
+        type: 'image',
+        title: 'Image',
+      },
+      {
+        url: 'home_demo_4.jpg',
+        type: 'image',
+        title: 'Image',
+      },
+      {
+        url: 'home_demo_5.jpg',
+        type: 'image',
+        title: 'Image',
+      },
+    ],
   },
   {
     id: uuid(),
@@ -121,6 +583,48 @@ const Lists = [
     download: Math.floor(Math.random() * 500),
     views: Math.floor(Math.random() * 3000),
     favorite: Math.floor(Math.random() * 300),
+    photos: [
+      {
+        url: 'home_demo_gif_1.gif',
+        type: 'image',
+        title: 'GIF',
+      },
+      {
+        url: 'home_demo_gif_2.gif',
+        type: 'image',
+        title: 'GIF',
+      },
+      {
+        url: 'https://www.youtube.com/embed/V3QVyJAN3yM?rel=0',
+        type: 'youtube',
+        title: 'YouTube',
+      },
+      {
+        url: 'https://www.youtube.com/embed/DDx1fysX5oo?rel=0',
+        type: 'youtube',
+        title: 'YouTube',
+      },
+      {
+        url: 'home_demo_2.jpg',
+        type: 'image',
+        title: 'Image',
+      },
+      {
+        url: 'home_demo_3.jpg',
+        type: 'image',
+        title: 'Image',
+      },
+      {
+        url: 'home_demo_4.jpg',
+        type: 'image',
+        title: 'Image',
+      },
+      {
+        url: 'home_demo_5.jpg',
+        type: 'image',
+        title: 'Image',
+      },
+    ],
   },
   {
     id: uuid(),
@@ -131,6 +635,48 @@ const Lists = [
     download: Math.floor(Math.random() * 500),
     views: Math.floor(Math.random() * 3000),
     favorite: Math.floor(Math.random() * 300),
+    photos: [
+      {
+        url: 'home_demo_gif_1.gif',
+        type: 'image',
+        title: 'GIF',
+      },
+      {
+        url: 'home_demo_gif_2.gif',
+        type: 'image',
+        title: 'GIF',
+      },
+      {
+        url: 'https://www.youtube.com/embed/V3QVyJAN3yM?rel=0',
+        type: 'youtube',
+        title: 'YouTube',
+      },
+      {
+        url: 'https://www.youtube.com/embed/DDx1fysX5oo?rel=0',
+        type: 'youtube',
+        title: 'YouTube',
+      },
+      {
+        url: 'home_demo_2.jpg',
+        type: 'image',
+        title: 'Image',
+      },
+      {
+        url: 'home_demo_3.jpg',
+        type: 'image',
+        title: 'Image',
+      },
+      {
+        url: 'home_demo_4.jpg',
+        type: 'image',
+        title: 'Image',
+      },
+      {
+        url: 'home_demo_5.jpg',
+        type: 'image',
+        title: 'Image',
+      },
+    ],
   },
   {
     id: uuid(),
@@ -141,6 +687,48 @@ const Lists = [
     download: Math.floor(Math.random() * 500),
     views: Math.floor(Math.random() * 3000),
     favorite: Math.floor(Math.random() * 300),
+    photos: [
+      {
+        url: 'home_demo_gif_1.gif',
+        type: 'image',
+        title: 'GIF',
+      },
+      {
+        url: 'home_demo_gif_2.gif',
+        type: 'image',
+        title: 'GIF',
+      },
+      {
+        url: 'https://www.youtube.com/embed/V3QVyJAN3yM?rel=0',
+        type: 'youtube',
+        title: 'YouTube',
+      },
+      {
+        url: 'https://www.youtube.com/embed/DDx1fysX5oo?rel=0',
+        type: 'youtube',
+        title: 'YouTube',
+      },
+      {
+        url: 'home_demo_2.jpg',
+        type: 'image',
+        title: 'Image',
+      },
+      {
+        url: 'home_demo_3.jpg',
+        type: 'image',
+        title: 'Image',
+      },
+      {
+        url: 'home_demo_4.jpg',
+        type: 'image',
+        title: 'Image',
+      },
+      {
+        url: 'home_demo_5.jpg',
+        type: 'image',
+        title: 'Image',
+      },
+    ],
   },
   {
     id: uuid(),
@@ -151,6 +739,48 @@ const Lists = [
     download: Math.floor(Math.random() * 500),
     views: Math.floor(Math.random() * 3000),
     favorite: Math.floor(Math.random() * 300),
+    photos: [
+      {
+        url: 'home_demo_gif_1.gif',
+        type: 'image',
+        title: 'GIF',
+      },
+      {
+        url: 'home_demo_gif_2.gif',
+        type: 'image',
+        title: 'GIF',
+      },
+      {
+        url: 'https://www.youtube.com/embed/V3QVyJAN3yM?rel=0',
+        type: 'youtube',
+        title: 'YouTube',
+      },
+      {
+        url: 'https://www.youtube.com/embed/DDx1fysX5oo?rel=0',
+        type: 'youtube',
+        title: 'YouTube',
+      },
+      {
+        url: 'home_demo_2.jpg',
+        type: 'image',
+        title: 'Image',
+      },
+      {
+        url: 'home_demo_3.jpg',
+        type: 'image',
+        title: 'Image',
+      },
+      {
+        url: 'home_demo_4.jpg',
+        type: 'image',
+        title: 'Image',
+      },
+      {
+        url: 'home_demo_5.jpg',
+        type: 'image',
+        title: 'Image',
+      },
+    ],
   },
 ];
 

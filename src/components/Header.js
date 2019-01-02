@@ -80,7 +80,7 @@ class Header extends Component {
             { /* <li><Link to="/about">ABOUT</Link></li> */}
             <li><a href="https://github.com/explooosion/poe-hideout-sharing" target="_blank" rel="noopener noreferrer">{this.t('HeaderGithub')}</a></li>
             { /* <li><Link to="/login">LOGIN</Link></li> */}
-            <li>
+            <li className="locale-menu">
               <Dropdown
                 value={this.state.locale}
                 options={this.state.locales}

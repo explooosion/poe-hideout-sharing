@@ -37,11 +37,13 @@ class ContentLayout extends Component {
     return (
       <Fragment>
         <div className="content">
+          {/*
           <BreadCrumb
             className="bread"
             model={this.renderBreadCrumbItems()}
             home={this.renderBreadCrumbHome()}
           />
+          */}
           <div className="block">
 
             {this.renderChildren()}
