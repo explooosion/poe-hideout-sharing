@@ -75,6 +75,7 @@ class Header extends Component {
             <Button className="p-button-secondary" icon="pi pi-bars" onClick={(event) => this.menu.toggle(event)} />
           </div>
           <ul className="topbar-menu">
+            <li><Link to="/create">{this.t('HeaderCreate')}</Link></li>
             <li><Link to="/">{this.t('HeaderHome')}</Link></li>
             <li><Link to="/">{this.t('HeaderAbout')}</Link></li>
             { /* <li><Link to="/about">ABOUT</Link></li> */}

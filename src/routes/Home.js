@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './Home.scss';
 
-import { Link, BrowserRouter } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { FaHeart, FaEye, FaDownload, FaPencilAlt } from 'react-icons/fa';
 import { connect } from 'react-redux';
 // import PropTypes from 'prop-types';
@@ -125,13 +125,14 @@ class Home extends Component {
   renderCardHeader(hideout) {
     const { img } = hideout;
     // return <div className="card-img" style={{ backgroundImage: `url(${img})` }}></div>;
-    return (
-      <div className="lazy-image">
-        <img className="card-image lazy-image-before loaded" src={img} />
-        <div style={{ paddingBottom: '56%' }}></div>
-        <img className="card-image lazy-image-after" alt={img} title={img} src={img} />
-      </div>
-    );
+    return <img className="card-image" alt={img} title={img} src={img} />;
+    // return (
+    //   <div className="lazy-image">
+    //     <img className="card-image lazy-image-before loaded" src={img} />
+    //     <div style={{ paddingBottom: '56%' }}></div>
+    //     <img className="card-image lazy-image-after" alt={img} title={img} src={img} />
+    //   </div>
+    // );
   }
 
   renderCardFooter() {

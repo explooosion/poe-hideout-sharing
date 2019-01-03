@@ -15,6 +15,7 @@ import Home from './routes/Home';
 import Detail from './routes/Detail';
 import About from './routes/About';
 import Login from './routes/Login';
+import Create from './routes/Create';
 
 const store = createStore(
   reducers,
@@ -153,6 +154,7 @@ class App extends Component {
               <Route exact path="/" component={Home} />
               <Route exact path="/about" component={About} />
               <Route exact path="/login" component={Login} />
+              <Route exact path="/create" component={Create} />
               <Route exact path="/detail/:id" component={Detail} />
             </Switch>
           </div>

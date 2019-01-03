@@ -88,3 +88,9 @@
   flex-flow: row-reverse;
 }
 
+.p-card-title,
+.p-card-subtitle {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

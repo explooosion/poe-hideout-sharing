@@ -1,0 +1,66 @@
+@import '../scss/index';
+
+.create {
+  display: flex;
+  justify-content: center;
+  margin: 0 auto;
+  width: 100%;
+  height: calc(100vh - #{$header-height});
+  background-color: $light-gray;
+
+  .create-group {
+    margin-top: 2rem;
+    padding: 3rem 0 2rem;
+    text-align: center;
+    background-color: #fff;
+
+    label {
+      text-align: left;
+    }
+
+    .create-title {
+      margin-bottom: 1.5rem;
+      color: $gray;
+    }
+  }
+
+  .create-control {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin: 3rem auto 0;
+    padding-top: 1.8rem;
+    max-width: 500px;
+    border-top: 2px solid $light-gray;
+
+    @media only screen and (max-width: $screen-md) {
+      flex-flow: column;
+      padding-top: .25rem;
+
+      a {
+        margin-top: 1rem;
+        width: 100%;
+      }
+    }
+
+    .create-control-button {
+      width: 200px;
+      height: 40px;
+
+      @media only screen and (max-width: $screen-md) {
+        margin-top: 1rem;
+        width: 100%;
+      }
+    }
+  }
+}
+
+/* overwrite */
+.p-menuitem-link:focus {
+  box-shadow: none !important;
+}
+
+.p-grid {
+  margin: .75rem auto;
+  max-width: 600px;
+}
