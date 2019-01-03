@@ -58,7 +58,7 @@
   .mobile-menu {
     display: none;
 
-    @media only screen and (max-width: $screen-md) {
+    @media only screen and (max-width: $screen-lg) {
       display: inline;
       margin-right: 1rem;
     }
@@ -71,7 +71,7 @@
     padding: 0;
     height: 100%;
 
-    @media only screen and (max-width: $screen-md) {
+    @media only screen and (max-width: $screen-lg) {
       display: none;
     }
 

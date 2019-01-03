@@ -3,7 +3,7 @@ import './Header.scss';
 
 import { withNamespaces } from 'react-i18next';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 
 import { Sidebar } from 'primereact/sidebar';
 import { Button } from 'primereact/button';
@@ -23,7 +23,8 @@ class Header extends Component {
     this.state = {
       visible: false,
       items: [
-        { label: 'Home', icon: 'pi pi-fw pi-home', command: () => { window.location.pathname = '/'; } },
+        { label: 'Create', icon: 'pi pi-fw pi-plus', command: () => this.props.history.push('/create') },
+        { label: 'Home', icon: 'pi pi-fw pi-home', command: () => this.props.history.push('/') },
         { label: 'About', icon: 'pi pi-fw pi-info', command: () => { /* window.location.pathname = '/about'; */ } },
         { label: 'Github', icon: 'pi pi-fw pi-star', command: () => { window.open('https://github.com/explooosion/poe-hideout-sharing'); } },
         // { label: 'Login', icon: 'pi pi-fw pi-globe', command: () => { window.location.pathname = '/login'; } },
@@ -108,4 +109,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default withNamespaces()(connect(mapStateToProps)(Header));
+export default withNamespaces()(connect(mapStateToProps)(withRouter(Header)));
