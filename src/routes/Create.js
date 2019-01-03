@@ -33,6 +33,7 @@ class Create extends Component {
       description: 'This is a simple hideout.',
       version: 1,
       thumbnail: thumbnail,
+      finishTimer: 5,
     }
   }
 
@@ -44,7 +45,22 @@ class Create extends Component {
     } else {
       step = value;
     };
-    if (step === this.state.steps.length - 1) this.growl.show({ severity: 'success', summary: 'Success Publish', detail: this.state.title });
+
+    // If Publish Success
+    if (step === this.state.steps.length - 1) {
+      this.growl.show({ severity: 'success', summary: 'Success Publish', detail: this.state.title });
+      this.timer = setInterval(() => {
+        if (this.state.finishTimer <= 0) {
+          clearInterval(this.timer);
+          this.props.history.push('/');
+        } else {
+          this.setState({
+            finishTimer: this.state.finishTimer - 1,
+          });
+        };
+      }, 1000);
+    }
+
     this.setState({ step: step });
   }
 
@@ -135,7 +151,7 @@ class Create extends Component {
             <h1 className="create-title">Publish!</h1>
             <div className="create-control">
               <Link to='/'>
-                <Button label="Check It Out" className="p-button-raised create-control-button" />
+                <Button label={`Finish (${this.state.finishTimer})`} className="p-button-raised create-control-button" onClick={(e) => clearInterval(this.timer)} />
               </Link>
             </div>
           </div>
