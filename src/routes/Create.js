@@ -9,8 +9,12 @@ import { Steps } from 'primereact/steps';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { Spinner } from 'primereact/spinner';
+import { FileUpload } from 'primereact/fileupload';
+import { Growl } from 'primereact/growl';
 
 import MasterLayout from '../layout/MasterLayout';
+
+import thumbnail from '../images/default-thumbnail.jpg';
 
 class Create extends Component {
 
@@ -21,13 +25,14 @@ class Create extends Component {
       steps: [
         { label: 'Title' },
         { label: 'Detail' },
-        { label: 'File' },
+        { label: 'Publish' },
         { label: 'Finish' },
       ],
       step: 0,
-      title: '',
-      description: '',
+      title: 'My-New-Hideout',
+      description: 'This is a simple hideout.',
       version: 1,
+      thumbnail: thumbnail,
     }
   }
 
@@ -39,6 +44,7 @@ class Create extends Component {
     } else {
       step = value;
     };
+    if (step === this.state.steps.length - 1) this.growl.show({ severity: 'success', summary: 'Success Publish', detail: this.state.title });
     this.setState({ step: step });
   }
 
@@ -61,58 +67,76 @@ class Create extends Component {
         return (
           <div className="create-group">
             <h1 className="create-title">What is your hideout name?</h1>
-            <div className="p-grid p-justify-center">
-              <InputText className="p-col-10" value={this.state.title} onChange={(e) => this.setState({ title: e.target.value })} placeholder="Please Input your hideout name." autoFocus />
+            <div className="p-grid p-justify-center group-title">
+              <InputText className="p-col-11 form-title" value={this.state.title} onChange={(e) => this.setState({ title: e.target.value })} placeholder="Please Input your hideout name." autoFocus />
             </div>
             <div className="create-control">
               <Link to='/'>
                 <Button label="Cancel" className="p-button-secondary p-button-raised create-control-button" />
               </Link>
-              <Button label="Next" className="p-button-raised create-control-button" onClick={(e) => this.onNext()} />
+              <Button label="Next" icon="pi pi-arrow-right" iconPos="right" className="p-button-raised create-control-button" onClick={(e) => this.onNext()} />
             </div>
           </div>
         );
       case 1:
         return (
           <div className="create-group">
-            <h1 className="create-title">Hideout Detail</h1>
+            <h1 className="create-title">{this.state.title}</h1>
             <div className="p-grid p-justify-center">
-              <InputText id="txtTitle" className="p-col-10" value={this.state.title} onChange={(e) => this.setState({ title: e.target.value })} placeholder="Please Input your hideout name." />
+              <div className="p-col-3">
+                <label htmlFor="txtDescription">Description:</label>
+              </div>
+              <div className="p-col-8">
+                <InputText id="txtDescription" value={this.state.description} onChange={(e) => this.setState({ description: e.target.value })} placeholder="Please Input your hideout description." autoFocus />
+              </div>
             </div>
-            <br />
-            <div className="p-grid p-justify-center">
-              <label className="p-col-3" htmlFor="txtDescription">Description:</label>
-              <InputText id="txtDescription" className="p-col-8" value={this.state.description} onChange={(e) => this.setState({ description: e.target.value })} placeholder="Please Input your hideout description." autoFocus />
-            </div>
-            <div className="p-grid p-justify-center">
-              <label className="p-col-3" htmlFor="txtVersion">Version:</label>
+            <div className="p-grid p-justify-center group-version">
+              <div className="p-col-3">
+                <label htmlFor="txtVersion">Version:</label>
+              </div>
               <div className="p-col-8">
                 <Spinner id="txtVersion" keyfilter="int" min={1} max={100} step={1} value={this.state.version} onChange={(e) => this.setState({ version: e.target.value })} placeholder="Please Input your hideout version." />
               </div>
             </div>
+            <div className="p-grid p-justify-center group-thumbnail">
+              <div className="p-col-3">
+                <label htmlFor="txtThumbnail">Thumbnail:</label>
+                <small>( jpg | png | gif )</small>
+              </div>
+              <div className="p-col-8">
+                <InputText className="form-thumbnail" id="txtThumbnail" value={this.state.thumbnail} onChange={(e) => this.setState({ thumbnail: e.target.value })} placeholder="Please Input your hideout thumbnail url." />
+                <img src={this.state.thumbnail} />
+                <a href="https://imgur.com/" target="_blank" rel="noopener noreferrer">Need to upload?</a>
+              </div>
+            </div>
             <div className="create-control">
-              <Button label="Previous" className="p-button-secondary p-button-raised create-control-button" onClick={(e) => this.onPrev()} />
-              <Button label="Next" className="p-button-raised create-control-button" onClick={(e) => this.onNext()} />
+              <Button label="Previous" icon="pi pi-arrow-left" iconPos="left" className="p-button-secondary p-button-raised create-control-button" onClick={(e) => this.onPrev()} />
+              <Button label="Next" icon="pi pi-arrow-right" iconPos="right" className="p-button-raised create-control-button" onClick={(e) => this.onNext()} />
             </div>
           </div>
         );
       case 2:
         return (
           <div className="create-group">
-            <h1 className="create-title">Step3</h1>
+            <h1 className="create-title">Upload hideout file.</h1>
+            <br />
+            <div className="p-grid p-justify-center">
+              <FileUpload name="demo" url="./upload" accept=".hideout"></FileUpload>
+            </div>
             <div className="create-control">
-              <Button label="Previous" className="p-button-secondary p-button-raised create-control-button" onClick={(e) => this.onPrev()} />
-              <Button label="Next" className="p-button-raised create-control-button" onClick={(e) => this.onNext()} />
+              <Button label="Previous" icon="pi pi-arrow-left" iconPos="left" className="p-button-secondary p-button-raised create-control-button" onClick={(e) => this.onPrev()} />
+              <Button label="Submit" icon="pi pi-arrow-right" iconPos="right" className="p-button-raised create-control-button" onClick={(e) => this.onNext()} />
             </div>
           </div>
         );
       case 3:
         return (
           <div className="create-group">
-            <h1 className="create-title">Step4</h1>
+            <h1 className="create-title">Publish!</h1>
             <div className="create-control">
-              <Button label="Previous" className="p-button-secondary p-button-raised create-control-button" onClick={(e) => this.onPrev()} />
-              <Button label="Next" className="p-button-raised create-control-button" onClick={(e) => this.onNext()} />
+              <Link to='/'>
+                <Button label="Check It Out" className="p-button-raised create-control-button" />
+              </Link>
             </div>
           </div>
         );
@@ -124,10 +148,11 @@ class Create extends Component {
       <MasterLayout>
         <div className="create">
           <div className="container">
-            <Steps model={this.state.steps} activeIndex={this.state.step} onSelect={(e) => this.onNext(e.index)} readOnly={false} />
+            <Steps className="create-steps" model={this.state.steps} activeIndex={this.state.step} onSelect={(e) => this.onNext(e.index)} readOnly={true} />
             {this.renderSteps()}
           </div>
         </div>
+        <Growl ref={(el) => this.growl = el} />
       </MasterLayout>
     );
   }

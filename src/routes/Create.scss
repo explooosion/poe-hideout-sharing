@@ -1,26 +1,62 @@
 @import '../scss/index';
 
 .create {
+  position: relative;
   display: flex;
   justify-content: center;
+  overflow-x: scroll;
   margin: 0 auto;
   width: 100%;
   height: calc(100vh - #{$header-height});
   background-color: $light-gray;
 
+  .create-steps {
+  }
+
   .create-group {
-    margin-top: 2rem;
-    padding: 3rem 0 2rem;
-    text-align: center;
+    margin: .5rem 0 2rem;
+    padding: 2rem 0;
     background-color: #fff;
 
-    label {
-      text-align: left;
+    .create-title {
+      margin-bottom: 1rem;
+      text-align: center;
+      color: $gray;
     }
 
-    .create-title {
-      margin-bottom: 1.5rem;
-      color: $gray;
+    input {
+      width: 100%;
+    }
+
+    .p-col-3 {
+      line-height: 30px;
+    }
+
+    .p-col-8 {
+      padding-left: 0;
+    }
+
+    .group-title {
+      .form-title {
+        height: 40px;
+        font-size: 1.2rem;
+      }
+    }
+
+    .group-thumbnail {
+      small {
+        display: block;
+        color: $danger;
+      }
+
+      .form-thumbnail {
+        width: 100%;
+        margin-bottom: .5rem;
+
+        & + img {
+          width: 100%;
+        }
+      }
     }
   }
 
