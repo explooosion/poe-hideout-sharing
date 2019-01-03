@@ -80,17 +80,18 @@
   .search {
     margin: 1rem 0;
   }
-}
 
-/* overwrite */
-.p-card-content {
-  display: flex;
-  flex-flow: row-reverse;
-}
 
-.p-card-title,
-.p-card-subtitle {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  /* overwrite */
+  .p-card-content {
+    display: flex;
+    flex-flow: row-reverse;
+  }
+
+  .p-card-title,
+  .p-card-subtitle {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 }

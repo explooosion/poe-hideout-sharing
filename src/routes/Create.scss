@@ -53,14 +53,14 @@
       }
     }
   }
-}
 
-/* overwrite */
-.p-menuitem-link:focus {
-  box-shadow: none !important;
-}
+  /* overwrite */
+  .p-menuitem-link:focus {
+    box-shadow: none !important;
+  }
 
-.p-grid {
-  margin: .75rem auto;
-  max-width: 600px;
+  .p-grid {
+    margin: .75rem auto;
+    max-width: 600px;
+  }
 }

@@ -1,18 +1,21 @@
 @import '../scss/index';
 
-.list {
-  .item:last-child {
-    margin: 0;
-  }
+.detail-menu {
+  .list {
+    .item:last-child {
+      margin: 0;
+    }
 
-  .item-title {
-    padding: .4rem;
-    background-color: $gray;
-    color: #fff;
-    border-radius: .25rem;
-  }
+    .item-title {
+      padding: .4rem;
+      background-color: $gray;
+      color: #fff;
+      border-radius: .25rem;
+    }
 
-  .item-value {
-    padding: .25rem .4rem;
+    .item-value {
+      padding: .25rem .4rem;
+    }
   }
 }
+
