@@ -87,7 +87,6 @@ class Header extends Component {
                 value={this.state.locale}
                 options={this.state.locales}
                 onChange={(e) => this.onChangeLanguage(e.value)}
-                placeholder="Select a City"
                 itemTemplate={this.renderHideoutTemplate}
               />
             </li>
