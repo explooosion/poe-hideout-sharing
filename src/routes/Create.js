@@ -7,14 +7,16 @@ import { Link } from 'react-router-dom';
 
 import { Steps } from 'primereact/steps';
 import { InputText } from 'primereact/inputtext';
+import { SelectButton } from 'primereact/selectbutton';
 import { Button } from 'primereact/button';
 import { Spinner } from 'primereact/spinner';
 import { FileUpload } from 'primereact/fileupload';
 import { Growl } from 'primereact/growl';
+import { Dialog } from 'primereact/dialog';
 
 import MasterLayout from '../layout/MasterLayout';
 
-import thumbnail from '../images/default-thumbnail.jpg';
+const defaultModelImg = 'https://via.placeholder.com/392x220?text=Path+Of+Exile';
 
 class Create extends Component {
 
@@ -25,15 +27,24 @@ class Create extends Component {
       steps: [
         { label: 'Title' },
         { label: 'Detail' },
-        { label: 'Publish' },
+        { label: 'Upload' },
         { label: 'Finish' },
       ],
       step: 0,
       title: 'My-New-Hideout',
       description: 'This is a simple hideout.',
       version: 1,
-      thumbnail: thumbnail,
+      thumbnail: 'https://imgur.com/A5iSyj1.jpg',
       finishTimer: 5,
+      screenshotModel: false,
+      screenshotModelUrl: '',
+      screenshotModelImg: defaultModelImg,
+      screenshotList: [],
+      screenshotModelType: 'image',
+      screenshotModelTypes: [
+        { label: 'Image', value: 'image' },
+        { label: 'Youtube', value: 'youtube' },
+      ],
     }
   }
 
@@ -73,6 +84,34 @@ class Create extends Component {
       step = value;
     };
     this.setState({ step: step });
+  }
+
+  onScreenshotModelUrlChange(url) {
+    console.log(url)
+    const URL = url === '' ? defaultModelImg : url;
+    this.setState({
+      screenshotModelUrl: url,
+      screenshotModelImg: URL,
+    });
+  }
+
+  onAddScreenshot() {
+    const list = this.state.screenshotList;
+    const url = this.state.screenshotModelType === 'youtube'
+      ? `https://www.youtube.com/embed/${this.state.screenshotModelUrl}?rel=0`
+      : this.state.screenshotModelUrl;
+
+    list.push({
+      url: url,
+      type: this.state.screenshotModelType,
+    });
+    this.setState({
+      screenshotModel: false,
+      screenshotModelUrl: '',
+      screenshotModelType: 'image',
+      screenshotModelImg: defaultModelImg,
+      screenshotList: list,
+    });
   }
 
   renderSteps() {
@@ -125,6 +164,74 @@ class Create extends Component {
                 <a href="https://imgur.com/" target="_blank" rel="noopener noreferrer">Need to upload?</a>
               </div>
             </div>
+            <div className="p-grid p-justify-center group-screenshot">
+              <div className="p-col-3">
+                <label htmlFor="txtThumbnail">Screenshot:</label>
+              </div>
+              <div className="p-col-8">
+                <Button label="Add" icon="pi pi-plus" iconPos="left" className="p-button-raised" onClick={(e) => this.setState({ screenshotModel: true })} />
+                <Button label="Reset" icon="pi pi-replay" iconPos="left" className="p-button-secondary p-button-raised" onClick={(e) => this.setState({ screenshotList: [] })} />
+                <Dialog
+                  className="screenshot-model"
+                  header="Add Screenshot"
+                  visible={this.state.screenshotModel}
+                  footer={this.renderModelFooter()}
+                  modal={true}
+                  onHide={(e) => this.setState({ screenshotModel: false })}
+                  dismissableMask={true}
+                >
+                  <div className="model-row">
+                    <label htmlFor="txtScreenshotUrl">Type:</label>
+                    <SelectButton
+                      style={{ marginTop: '.25rem' }}
+                      value={this.state.screenshotModelType}
+                      options={this.state.screenshotModelTypes}
+                      onChange={(e) => this.setState({ screenshotModelType: e.value, screenshotModelUrl: '', screenshotModelImg: defaultModelImg })}
+                    >
+                    </SelectButton>
+                    <label htmlFor="txtScreenshotUrl">Url or Youtube ID:</label>
+                    <InputText id="txtScreenshotUrl" value={this.state.screenshotModelUrl} onChange={(e) => this.onScreenshotModelUrlChange(e.target.value)} />
+                    <label htmlFor="txtScreenshotUrl">*.Example</label>
+                    <span>Imgur: <b>https://imgur.com/A5iSyj1.jpg</b></span>
+                    <span>Youtube: https://www.youtube.com/watch?v=<b>DDx1fysX5oo</b></span>
+                  </div>
+
+                  <div className="model-row">
+                    {
+                      this.state.screenshotModelType === 'image'
+                        ? (
+                          <img className="form-screenshot" src={this.state.screenshotModelImg} />
+                        )
+                        : (
+                          <div className="youtube-container">
+                            <iframe title="share" src={`https://www.youtube.com/embed/${this.state.screenshotModelImg}?rel=0`} frameBorder="0" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
+                          </div>
+                        )
+                    }
+                  </div>
+                </Dialog>
+              </div>
+            </div>
+            <div className="p-grid p-justify-center group-preview">
+              <div className="p-col-11">
+                {
+                  this.state.screenshotList.map(({ type, url }, index) => {
+                    const KEY = `screenshot-${index}`;
+                    switch (type) {
+                      case 'image':
+                        return (<img key={KEY} src={url} />);
+                      case 'youtube':
+                        return (
+                          <div key={KEY} className="youtube-container">
+                            <iframe title="share" src={url} frameBorder="0" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
+                          </div>
+                        );
+                      default: return;
+                    }
+                  })
+                }
+              </div>
+            </div>
             <div className="create-control">
               <Button label="Previous" icon="pi pi-arrow-left" iconPos="left" className="p-button-secondary p-button-raised create-control-button" onClick={(e) => this.onPrev()} />
               <Button label="Next" icon="pi pi-arrow-right" iconPos="right" className="p-button-raised create-control-button" onClick={(e) => this.onNext()} />
@@ -157,6 +264,10 @@ class Create extends Component {
           </div>
         );
     }
+  }
+
+  renderModelFooter() {
+    return <Button label="Add" className="p-button-raised model-add" onClick={(e) => this.onAddScreenshot()} />;
   }
 
   render() {

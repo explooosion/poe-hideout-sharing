@@ -20,37 +20,30 @@ const Lists = [
       {
         url: 'home_demo_gif_1.gif',
         type: 'image',
-
       },
       {
         url: 'home_demo_gif_2.gif',
         type: 'image',
-
       },
       {
         url: 'https://www.youtube.com/embed/V3QVyJAN3yM?rel=0',
         type: 'youtube',
-
       },
       {
         url: 'https://www.youtube.com/embed/DDx1fysX5oo?rel=0',
         type: 'youtube',
-
       },
       {
         url: 'home_demo_2.jpg',
         type: 'image',
-
       },
       {
         url: 'home_demo_3.jpg',
         type: 'image',
-
       },
       {
         url: 'home_demo_4.jpg',
         type: 'image',
-
       },
       {
         url: 'home_demo_5.jpg',
