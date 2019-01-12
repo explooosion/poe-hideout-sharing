@@ -117,11 +117,9 @@ class Detail extends Component {
       <div className="detail-content">
         {
           photos.map((photo, index) => {
-            const { title } = photo;
             return (
               <DeferredContent onLoad={() => this.onImageLoad()} key={`content-${index}`}>
                 <section className="section">
-                  <h3 className="section-title">{title}</h3>
                   {this.renderImageContent(photo)}
                 </section>
               </DeferredContent>
