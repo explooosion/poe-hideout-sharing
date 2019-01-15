@@ -4,6 +4,8 @@ import './Create.scss';
 // import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import uuid from 'uuid/v1';
+import faker from 'faker';
 
 import { Steps } from 'primereact/steps';
 import { InputText } from 'primereact/inputtext';
@@ -16,7 +18,14 @@ import { Dialog } from 'primereact/dialog';
 
 import MasterLayout from '../layout/MasterLayout';
 
+import HideoutList from '../interface/HideoutList';
+import HideoutScreenshot from '../interface/HideoutScreenshot';
+
+import Firebase from '../service/Firebase';
+
 const defaultModelImg = 'https://via.placeholder.com/392x220?text=Path+Of+Exile';
+
+const firebase = new Firebase();
 
 class Create extends Component {
 
@@ -59,17 +68,47 @@ class Create extends Component {
 
     // If Publish Success
     if (step === this.state.steps.length - 1) {
-      this.growl.show({ severity: 'success', summary: 'Success Publish', detail: this.state.title });
-      this.timer = setInterval(() => {
-        if (this.state.finishTimer <= 0) {
-          clearInterval(this.timer);
-          this.props.history.push('/');
-        } else {
-          this.setState({
-            finishTimer: this.state.finishTimer - 1,
-          });
-        };
-      }, 1000);
+
+      // create list here
+      const List = new HideoutList();
+      List.title = this.state.title;
+      List.id = uuid();
+      List.description = this.state.description;
+
+      // fake
+      List.author = 'Robby';
+
+      // fake
+      List.type = 'Backstreet';
+
+      List.thumbnail = this.state.thumbnail;
+      List.favour = Math.floor(Math.random() * 10000000);
+      List.version = 1;
+      List.update = new Date();
+      List.create = new Date();
+
+      // fake
+      List.download = Math.floor(Math.random() * 500);
+      List.views = Math.floor(Math.random() * 3000);
+      List.favorite = Math.floor(Math.random() * 300);
+
+      List.screenshots = this.state.screenshotList;
+
+      // add hideout
+      firebase.onSetHideouts(List);
+
+      // Redirect To Home Pages
+      // this.growl.show({ severity: 'success', summary: 'Success Publish', detail: this.state.title });
+      // this.timer = setInterval(() => {
+      //   if (this.state.finishTimer <= 0) {
+      //     clearInterval(this.timer);
+      //     this.props.history.push('/');
+      //   } else {
+      //     this.setState({
+      //       finishTimer: this.state.finishTimer - 1,
+      //     });
+      //   };
+      // }, 1000);
     }
 
     this.setState({ step: step });
@@ -87,7 +126,6 @@ class Create extends Component {
   }
 
   onScreenshotModelUrlChange(url) {
-    console.log(url)
     const URL = url === '' ? defaultModelImg : url;
     this.setState({
       screenshotModelUrl: url,
@@ -101,10 +139,9 @@ class Create extends Component {
       ? `https://www.youtube.com/embed/${this.state.screenshotModelUrl}?rel=0`
       : this.state.screenshotModelUrl;
 
-    list.push({
-      url: url,
-      type: this.state.screenshotModelType,
-    });
+    const screenshot = new HideoutScreenshot(url, this.state.screenshotModelType);
+    list.push(screenshot.toJSON());
+
     this.setState({
       screenshotModel: false,
       screenshotModelUrl: '',
@@ -178,7 +215,7 @@ class Create extends Component {
                   footer={this.renderModelFooter()}
                   modal={true}
                   onHide={(e) => this.setState({ screenshotModel: false })}
-                  dismissableMask={true}
+                /* dismissableMask={true} */
                 >
                   <div className="model-row">
                     <label htmlFor="txtScreenshotUrl">Type:</label>
@@ -199,9 +236,7 @@ class Create extends Component {
                   <div className="model-row">
                     {
                       this.state.screenshotModelType === 'image'
-                        ? (
-                          <img className="form-screenshot" src={this.state.screenshotModelImg} />
-                        )
+                        ? (<img className="form-screenshot" src={this.state.screenshotModelImg} />)
                         : (
                           <div className="youtube-container">
                             <iframe title="share" src={`https://www.youtube.com/embed/${this.state.screenshotModelImg}?rel=0`} frameBorder="0" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>

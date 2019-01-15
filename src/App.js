@@ -33,44 +33,44 @@ class App extends Component {
 
   componentDidMount() {
 
-    const config = {
-      apiKey: 'AIzaSyCE2_Ln7-2_II4flCTrvT5xuS_bYjBQt40',
-      authDomain: 'poe-hideout.firebaseapp.com',
-      databaseURL: "https://poe-hideout.firebaseio.com/",
-    };
-    const defaultApp = firebase.initializeApp(config);
+    // const config = {
+    //   apiKey: 'AIzaSyCE2_Ln7-2_II4flCTrvT5xuS_bYjBQt40',
+    //   authDomain: 'poe-hideout.firebaseapp.com',
+    //   databaseURL: "https://poe-hideout.firebaseio.com/",
+    // };
+    // const defaultApp = firebase.initializeApp(config);
 
-    const db = defaultApp.database();
-    const starCountRef = db.ref('users');
-    starCountRef.on('value', snapshot => {
-      console.info('snapshot', snapshot.val());
-    });
+    // const db = defaultApp.database();
+    // const starCountRef = db.ref('users');
+    // starCountRef.on('value', snapshot => {
+    //   console.info('snapshot', snapshot.val());
+    // });
 
-    this.setState({
-      db,
-    });
+    // this.setState({
+    //   db,
+    // });
 
     // this.CreateUser('robby@gmail.com', '123456');
     // this.SignIn('robby@gmail.com', '123456');
     // this.Logout();
 
-    this.Logout();
+    // this.Logout();
 
-    firebase.auth().onAuthStateChanged(user => {
-      if (user != null) {
-        console.log('auth', firebase.auth().currentUser);
-        user.providerData.forEach(profile => {
-          console.log('Sign-in provider: ', profile.providerId);
-          console.log('Provider-specific UID: ', profile.uid);
-          console.log('Name: ', profile.displayName);
-          console.log('Email: ', profile.email);
-          console.log('Photo URL: ', profile.photoURL);
-        });
-        // this.UpdateUser({
-        //   displayName: String(user.providerData[0].email).split('@')[0],
-        // });
-      }
-    });
+    // firebase.auth().onAuthStateChanged(user => {
+    //   if (user != null) {
+    //     console.log('auth', firebase.auth().currentUser);
+    //     user.providerData.forEach(profile => {
+    //       console.log('Sign-in provider: ', profile.providerId);
+    //       console.log('Provider-specific UID: ', profile.uid);
+    //       console.log('Name: ', profile.displayName);
+    //       console.log('Email: ', profile.email);
+    //       console.log('Photo URL: ', profile.photoURL);
+    //     });
+    //     // this.UpdateUser({
+    //     //   displayName: String(user.providerData[0].email).split('@')[0],
+    //     // });
+    //   }
+    // });
   }
 
   CreateUser(email, password) {
@@ -129,8 +129,8 @@ class App extends Component {
   SetData() {
     const { db } = this.state;
     db.ref('users/robby').set({
-      username: 'robby',
-      email: 'robby@gmail.com',
+      username: 'Sandy',
+      email: 'sandy@gmail.com',
     });
 
     // this.db.ref('users/sandy').set({

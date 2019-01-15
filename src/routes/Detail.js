@@ -17,6 +17,7 @@ import { TabMenu } from 'primereact/tabmenu';
 import ContentLayout from '../layout/ContentLayout';
 import DetailMenu from '../components/DetailMenu';
 
+import HideoutList from '../interface/HideoutList';
 
 class Detail extends Component {
 
@@ -24,7 +25,8 @@ class Detail extends Component {
     super(props);
     this.dispatch = props.dispatch;
     const { id } = this.props.match.params;
-    const hideout = props.hideouts.Lists.find(list => list.id === id);
+    let hideout = HideoutList;
+    hideout = props.hideouts.Lists.find(list => list.id === id);
 
     this.state = {
       hideout: hideout,
@@ -112,15 +114,15 @@ class Detail extends Component {
   }
 
   renderImages() {
-    const { photos } = this.state.hideout;
+    const { screenshots } = this.state.hideout;
     return (
       <div className="detail-content">
         {
-          photos.map((photo, index) => {
+          screenshots.map((screenshot, index) => {
             return (
               <DeferredContent onLoad={() => this.onImageLoad()} key={`content-${index}`}>
                 <section className="section">
-                  {this.renderImageContent(photo)}
+                  {this.renderImageContent(screenshot)}
                 </section>
               </DeferredContent>
             );
@@ -132,10 +134,10 @@ class Detail extends Component {
 
   /**
    * Render Hideout Content
-   * @param {photo} object
+   * @param {screenshot} object
    */
-  renderImageContent(photo) {
-    const { type, url, alt } = photo;
+  renderImageContent(screenshot) {
+    const { type, url, alt } = screenshot;
     switch (type) {
       case 'image':
         return <img alt={alt || url} title={alt || url} src={require(`../images/${url}`)} width="100%" />;

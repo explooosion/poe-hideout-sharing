@@ -8,7 +8,7 @@ const Lists = [
     title: faker.fake('{{name.lastName}}') + ' Hideout #' + faker.random.number(),
     author: faker.fake('{{name.firstName}}'),
     type: 'Backstreet',
-    img: require('../images/home_demo_gif_2.gif'),
+    thumbnail: require('../images/home_demo_gif_2.gif'),
     favour: Math.floor(Math.random() * 10000000),
     version: 1,
     update: '2019.01.01',
@@ -16,7 +16,7 @@ const Lists = [
     download: Math.floor(Math.random() * 500),
     views: Math.floor(Math.random() * 3000),
     favorite: Math.floor(Math.random() * 300),
-    photos: [
+    screenshots: [
       {
         url: 'home_demo_gif_1.gif',
         type: 'image',
@@ -57,7 +57,7 @@ const Lists = [
     title: faker.fake('{{name.lastName}}') + ' Hideout #' + faker.random.number(),
     author: faker.fake('{{name.firstName}}'),
     type: 'Arboreal',
-    img: require('../images/home_demo_3.jpg'),
+    thumbnail: require('../images/home_demo_3.jpg'),
     favour: Math.floor(Math.random() * 10000000),
     version: '1.0.1',
     update: '2019.01.02',
@@ -65,7 +65,7 @@ const Lists = [
     download: Math.floor(Math.random() * 500),
     views: Math.floor(Math.random() * 3000),
     favorite: Math.floor(Math.random() * 300),
-    photos: [
+    screenshots: [
       {
         url: 'home_demo_gif_1.gif',
         type: 'image',
@@ -113,7 +113,7 @@ const Lists = [
     title: faker.fake('{{name.lastName}}') + ' Hideout #' + faker.random.number(),
     author: faker.fake('{{name.firstName}}'),
     type: 'Arboreal',
-    img: require('../images/home_demo_gif_1.gif'),
+    thumbnail: require('../images/home_demo_gif_1.gif'),
     download: Math.floor(Math.random() * 500),
     views: Math.floor(Math.random() * 3000),
     favorite: Math.floor(Math.random() * 300),
@@ -121,7 +121,7 @@ const Lists = [
     version: '2.0.0',
     update: '2018.12.15',
     create: '2018.11.25',
-    photos: [
+    screenshots: [
       {
         url: 'home_demo_gif_1.gif',
         type: 'image',
@@ -168,7 +168,7 @@ const Lists = [
     title: faker.fake('{{name.lastName}}') + ' Hideout #' + faker.random.number(),
     author: faker.fake('{{name.firstName}}'),
     type: 'Arboreal',
-    img: require('../images/home_demo_2.jpg'),
+    thumbnail: require('../images/home_demo_2.jpg'),
     favour: Math.floor(Math.random() * 10000000),
     version: '1.1.0',
     update: '2018.12.05',
@@ -176,7 +176,7 @@ const Lists = [
     download: Math.floor(Math.random() * 500),
     views: Math.floor(Math.random() * 3000),
     favorite: Math.floor(Math.random() * 300),
-    photos: [
+    screenshots: [
       {
         url: 'home_demo_gif_1.gif',
         type: 'image',
@@ -224,7 +224,7 @@ const Lists = [
     title: faker.fake('{{name.lastName}}') + ' Hideout #' + faker.random.number(),
     author: faker.fake('{{name.firstName}}'),
     type: 'Backstreet',
-    img: require('../images/home_demo_5.jpg'),
+    thumbnail: require('../images/home_demo_5.jpg'),
     favour: Math.floor(Math.random() * 10000000),
     version: 1,
     update: '2019.01.01',
@@ -232,7 +232,7 @@ const Lists = [
     download: Math.floor(Math.random() * 500),
     views: Math.floor(Math.random() * 3000),
     favorite: Math.floor(Math.random() * 300),
-    photos: [
+    screenshots: [
       {
         url: 'home_demo_gif_1.gif',
         type: 'image',
@@ -280,7 +280,7 @@ const Lists = [
     title: faker.fake('{{name.lastName}}') + ' Hideout #' + faker.random.number(),
     author: faker.fake('{{name.firstName}}'),
     type: 'Arboreal',
-    img: require('../images/home_demo_4.jpg'),
+    thumbnail: require('../images/home_demo_4.jpg'),
     favour: Math.floor(Math.random() * 10000000),
     version: '1.1.0',
     update: '2019.01.01',
@@ -288,7 +288,7 @@ const Lists = [
     download: Math.floor(Math.random() * 500),
     views: Math.floor(Math.random() * 3000),
     favorite: Math.floor(Math.random() * 300),
-    photos: [
+    screenshots: [
       {
         url: 'home_demo_gif_1.gif',
         type: 'image',
@@ -336,7 +336,7 @@ const Lists = [
     title: faker.fake('{{name.lastName}}') + ' Hideout #' + faker.random.number(),
     author: faker.fake('{{name.firstName}}'),
     type: 'Arboreal',
-    img: require('../images/home_demo_gif_2.gif'),
+    thumbnail: require('../images/home_demo_gif_2.gif'),
     favour: Math.floor(Math.random() * 10000000),
     version: 1,
     update: '2019.01.01',
@@ -344,7 +344,7 @@ const Lists = [
     download: Math.floor(Math.random() * 500),
     views: Math.floor(Math.random() * 3000),
     favorite: Math.floor(Math.random() * 300),
-    photos: [
+    screenshots: [
       {
         url: 'home_demo_gif_1.gif',
         type: 'image',
@@ -392,7 +392,7 @@ const Lists = [
     title: faker.fake('{{name.lastName}}') + ' Hideout #' + faker.random.number(),
     author: faker.fake('{{name.firstName}}'),
     type: 'Arboreal',
-    img: require('../images/home_demo_2.jpg'),
+    thumbnail: require('../images/home_demo_2.jpg'),
     favour: Math.floor(Math.random() * 10000000),
     version: 1,
     update: '2018.12.14',
@@ -400,7 +400,7 @@ const Lists = [
     download: Math.floor(Math.random() * 500),
     views: Math.floor(Math.random() * 3000),
     favorite: Math.floor(Math.random() * 300),
-    photos: [
+    screenshots: [
       {
         url: 'home_demo_gif_1.gif',
         type: 'image',
@@ -448,7 +448,7 @@ const Lists = [
     title: faker.fake('{{name.lastName}}') + ' Hideout #' + faker.random.number(),
     author: faker.fake('{{name.firstName}}'),
     type: 'Arboreal',
-    img: require('../images/home_demo_2.jpg'),
+    thumbnail: require('../images/home_demo_2.jpg'),
     favour: Math.floor(Math.random() * 10000000),
     version: 1,
     update: '2019.01.01',
@@ -456,7 +456,7 @@ const Lists = [
     download: Math.floor(Math.random() * 500),
     views: Math.floor(Math.random() * 3000),
     favorite: Math.floor(Math.random() * 300),
-    photos: [
+    screenshots: [
       {
         url: 'home_demo_gif_1.gif',
         type: 'image',
@@ -504,7 +504,7 @@ const Lists = [
     title: faker.fake('{{name.lastName}}') + ' Hideout #' + faker.random.number(),
     author: faker.fake('{{name.firstName}}'),
     type: 'Backstreet',
-    img: require('../images/home_demo_gif_1.gif'),
+    thumbnail: require('../images/home_demo_gif_1.gif'),
     favour: Math.floor(Math.random() * 10000000),
     version: 1,
     update: '2019.01.01',
@@ -512,7 +512,7 @@ const Lists = [
     download: Math.floor(Math.random() * 500),
     views: Math.floor(Math.random() * 3000),
     favorite: Math.floor(Math.random() * 300),
-    photos: [
+    screenshots: [
       {
         url: 'home_demo_gif_1.gif',
         type: 'image',
@@ -560,7 +560,7 @@ const Lists = [
     title: faker.fake('{{name.lastName}}') + ' Hideout #' + faker.random.number(),
     author: faker.fake('{{name.firstName}}'),
     type: 'Arboreal',
-    img: require('../images/home_demo_gif_2.gif'),
+    thumbnail: require('../images/home_demo_gif_2.gif'),
     favour: Math.floor(Math.random() * 10000000),
     version: 1,
     update: '2019.01.01',
@@ -568,7 +568,7 @@ const Lists = [
     download: Math.floor(Math.random() * 500),
     views: Math.floor(Math.random() * 3000),
     favorite: Math.floor(Math.random() * 300),
-    photos: [
+    screenshots: [
       {
         url: 'home_demo_gif_1.gif',
         type: 'image',
@@ -616,7 +616,7 @@ const Lists = [
     title: faker.fake('{{name.lastName}}') + ' Hideout #' + faker.random.number(),
     author: faker.fake('{{name.firstName}}'),
     type: 'Arboreal',
-    img: require('../images/home_demo_5.jpg'),
+    thumbnail: require('../images/home_demo_5.jpg'),
     favour: Math.floor(Math.random() * 10000000),
     version: 1,
     update: '2019.01.01',
@@ -624,7 +624,7 @@ const Lists = [
     download: Math.floor(Math.random() * 500),
     views: Math.floor(Math.random() * 3000),
     favorite: Math.floor(Math.random() * 300),
-    photos: [
+    screenshots: [
       {
         url: 'home_demo_gif_1.gif',
         type: 'image',
@@ -672,7 +672,7 @@ const Lists = [
     title: faker.fake('{{name.lastName}}') + ' Hideout #' + faker.random.number(),
     author: faker.fake('{{name.firstName}}'),
     type: 'Arboreal',
-    img: require('../images/home_demo_gif_2.gif'),
+    thumbnail: require('../images/home_demo_gif_2.gif'),
     favour: Math.floor(Math.random() * 10000000),
     version: 1,
     update: '2019.01.01',
@@ -680,7 +680,7 @@ const Lists = [
     download: Math.floor(Math.random() * 500),
     views: Math.floor(Math.random() * 3000),
     favorite: Math.floor(Math.random() * 300),
-    photos: [
+    screenshots: [
       {
         url: 'home_demo_gif_1.gif',
         type: 'image',
@@ -728,7 +728,7 @@ const Lists = [
     title: faker.fake('{{name.lastName}}') + ' Hideout #' + faker.random.number(),
     author: faker.fake('{{name.firstName}}'),
     type: 'Backstreet',
-    img: require('../images/home_demo_2.jpg'),
+    thumbnail: require('../images/home_demo_2.jpg'),
     favour: Math.floor(Math.random() * 10000000),
     version: 1,
     update: '2019.01.01',
@@ -736,7 +736,7 @@ const Lists = [
     download: Math.floor(Math.random() * 500),
     views: Math.floor(Math.random() * 3000),
     favorite: Math.floor(Math.random() * 300),
-    photos: [
+    screenshots: [
       {
         url: 'home_demo_gif_1.gif',
         type: 'image',
@@ -784,7 +784,7 @@ const Lists = [
     title: faker.fake('{{name.lastName}}') + ' Hideout #' + faker.random.number(),
     author: faker.fake('{{name.firstName}}'),
     type: 'Backstreet',
-    img: require('../images/home_demo_5.jpg'),
+    thumbnail: require('../images/home_demo_5.jpg'),
     favour: Math.floor(Math.random() * 10000000),
     version: 1,
     update: '2019.12.29',

@@ -81,7 +81,6 @@ class Home extends Component {
   }
 
   onPageChange(event) {
-    console.log(event);
     this.setState({
       first: event.first,
       rows: event.rows,
@@ -123,9 +122,9 @@ class Home extends Component {
   }
 
   renderCardHeader(hideout) {
-    const { img } = hideout;
+    const { thumbnail } = hideout;
     // return <div className="card-img" style={{ backgroundImage: `url(${img})` }}></div>;
-    return <img className="card-image" alt={img} title={img} src={img} />;
+    return <img className="card-image" alt={thumbnail} title={thumbnail} src={thumbnail} />;
     // return (
     //   <div className="lazy-image">
     //     <img className="card-image lazy-image-before loaded" src={img} />
