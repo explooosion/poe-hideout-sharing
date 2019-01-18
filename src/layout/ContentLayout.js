@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import './ContentLayout.scss';
 
-import { BreadCrumb } from 'primereact/breadcrumb';
+// import { BreadCrumb } from 'primereact/breadcrumb';
 
 class ContentLayout extends Component {
   constructor(props) {

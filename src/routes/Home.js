@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './Home.scss';
 
 import { Link } from 'react-router-dom';
-import { FaHeart, FaEye, FaDownload, FaPencilAlt } from 'react-icons/fa';
+import { FaHeart, FaEye, FaDownload } from 'react-icons/fa';
 import { connect } from 'react-redux';
 // import PropTypes from 'prop-types';
 import { withNamespaces } from 'react-i18next';
@@ -144,7 +144,6 @@ class Home extends Component {
   }
 
   render() {
-    const { t } = this.props;
     return (
       <div className="home">
         <HomeMenu

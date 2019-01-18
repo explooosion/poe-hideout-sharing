@@ -2,10 +2,6 @@ import React, { Component, Fragment } from 'react';
 import './MasterLayout.scss';
 
 class MasterLayout extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   renderChildren() {
     const { children, type } = this.props;
     const layoutClassName = type ? `layout-${type} ` : '';

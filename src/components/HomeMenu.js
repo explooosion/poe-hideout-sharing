@@ -102,7 +102,7 @@ class HomeMenu extends Component {
 
   onSelectChange(state) {
     this.setState(state);
-    const key = Object.keys(state)[0];
+    // const key = Object.keys(state)[0];
     // this.props.onFilterChange(key, state[key]);
   }
 
