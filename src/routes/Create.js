@@ -78,21 +78,36 @@ class Create extends Component {
       case 1: // Detail
         if (this.state.description.length === 0) {
           valid = false;
-
-        }
-        if (this.state.description.length === 0) {
-          valid = false;
           console.error('Missing description.');
         }
+        if (this.state.version <= 0) {
+          valid = false;
+          console.error('Missing version.');
+        }
+        if (this.state.thumbnail.length === 0) {
+          valid = false;
+          console.error('Missing thumbnail.');
+        }
+        if (this.state.screenshotList.length === 0) {
+          valid = false;
+          console.error('Missing screenshots.');
+        }
         break;
-      default: break;
+      case 2: // Upload
+        if (this.state.file === null) {
+          valid = false;
+          console.error('Missing file.');
+        }
+        break;
+      default: valid = false; break;
     }
 
+    // onNext or onPrev event
     if (!valid) return;
     step = step >= 3 ? 3 : step + 1;
     this.setState({ step: step });
 
-    // If publish success
+    // onPublish event
     if (step === this.state.steps.length - 1)
       await this.onPublish();
   }
@@ -111,9 +126,8 @@ class Create extends Component {
   async onPublish() {
     // Upload file
     const { status, fileName } = await storage.uploadHideout(this.state.file);
-    console.log('upload-status', status);
-    console.log('upload-fileName', fileName);
-    if (!status) return;
+    console.log(status, fileName);
+    if (!status) return console.error('upload faild');
 
     // Create list
     const List = new HideoutList();
@@ -134,34 +148,30 @@ class Create extends Component {
     List.fileName = fileName;
 
     // Check payload
-    let valid = false;
+    let valid = true;
     Object.keys(List).forEach(key => {
-      console.info('key:', key);
       if (List[key].length === 0) {
         valid = false;
         console.warn('Invalid:', key);
       }
     });
 
-    // Add hideout
-    if (valid) {
-      const result = await db.onSetHideouts(List);
-      console.log('Upload result', result);
-    }
+    // Add or update hideout
+    if (valid) await db.onSetHideouts(List);
 
     // // Redirect to home pages
-    // this.growl.show({ severity: 'success', summary: 'Success Publish', detail: this.state.title });
-    // // Animation
-    // this.timer = setInterval(() => {
-    //   if (this.state.finishTimer <= 0) {
-    //     clearInterval(this.timer);
-    //     this.props.history.push('/');
-    //   } else {
-    //     this.setState({
-    //       finishTimer: this.state.finishTimer - 1,
-    //     });
-    //   };
-    // }, 1000);
+    this.growl.show({ severity: 'success', summary: 'Success Publish', detail: this.state.title });
+    // Animation
+    this.timer = setInterval(() => {
+      if (this.state.finishTimer <= 0) {
+        clearInterval(this.timer);
+        this.props.history.push('/');
+      } else {
+        this.setState({
+          finishTimer: this.state.finishTimer - 1,
+        });
+      };
+    }, 1000);
   }
 
   onScreenshotModelUrlChange(url) {
@@ -200,12 +210,17 @@ class Create extends Component {
   }
 
   onValid(data) {
-    console.log(typeof data, data);
     let valid = true;
     switch (typeof data) {
       case 'string': valid = data.length > 0; break;
-      case 'numer': valid = data > 0; break;
-      default: break;
+      case 'number': valid = data > 0; break;
+      case 'object':
+        if (data !== null) {
+          valid = data.length > 0 || data.size > 0;
+          break;
+        }
+        valid = false; break; // for file upload
+      default: valid = false; console.warn(data, typeof data); break;
     }
     return valid
       ? { display: 'none' }
@@ -222,7 +237,7 @@ class Create extends Component {
             <h1 className="create-title">What is your hideout name?</h1>
             <div className="p-grid p-justify-center group-title">
               <InputText className="p-col-11 form-title" value={this.state.title} onChange={(e) => this.setState({ title: e.target.value })} placeholder="Please Input your hideout name." autoFocus />
-              <span className="form-valid" style={this.onValid(this.state.title)}>Please input title.</span>
+              <span className="form-valid" style={this.onValid(this.state.title)}>Please set the a title.</span>
             </div>
             <div className="create-control">
               <Link to='/'>
@@ -242,7 +257,7 @@ class Create extends Component {
               </div>
               <div className="p-col-8">
                 <InputText id="txtDescription" value={this.state.description} onChange={(e) => this.setState({ description: e.target.value })} placeholder="Please Input your hideout description." autoFocus />
-                <span className="form-valid" style={this.onValid(this.state.description)}>Please input description.</span>
+                <span className="form-valid" style={this.onValid(this.state.description)}>Please set the description.</span>
               </div>
             </div>
             <div className="p-grid p-justify-center group-version">
@@ -251,7 +266,7 @@ class Create extends Component {
               </div>
               <div className="p-col-8">
                 <Spinner id="txtVersion" keyfilter="int" min={1} max={100} step={1} value={this.state.version} onChange={(e) => this.setState({ version: e.target.value })} placeholder="Please Input your hideout version." />
-                <span className="form-valid" style={this.onValid(this.state.version)}>Please input version.</span>
+                <span className="form-valid" style={this.onValid(this.state.version)}>Please set the version.</span>
               </div>
             </div>
             <div className="p-grid p-justify-center group-thumbnail">
@@ -261,7 +276,7 @@ class Create extends Component {
               </div>
               <div className="p-col-8">
                 <InputText className="form-thumbnail" id="txtThumbnail" value={this.state.thumbnail} onChange={(e) => this.setState({ thumbnail: e.target.value })} placeholder="Please Input your hideout thumbnail url." />
-                <span className="form-valid" style={this.onValid(this.state.thumbnail)}>Please input thumbnail.</span>
+                <span className="form-valid" style={this.onValid(this.state.thumbnail)}>Please set the thumbnail.</span>
                 <img src={this.state.thumbnail} alt={this.state.thumbnail} />
                 <a href="https://imgur.com/" target="_blank" rel="noopener noreferrer">Need to upload?</a>
               </div>
@@ -314,6 +329,7 @@ class Create extends Component {
             </div>
             <div className="p-grid p-justify-center group-preview">
               <div className="p-col-11">
+                <span className="form-valid" style={this.onValid(this.state.screenshotList)}>Please add screenshotLists.</span>
                 {
                   this.state.screenshotList.map(({ type, url }, index) => {
                     const KEY = `screenshot-${index}`;
@@ -355,6 +371,7 @@ class Create extends Component {
               >
                 <div className="files-title">Drop files here or click to upload</div>
                 <p style={{ color: '#f00', textAlign: 'center' }}>{this.state.fileChoose}</p>
+                <span className="form-valid" style={this.onValid(this.state.file)}>Please choose the file.</span>
               </Files>
             </div>
             <div className="create-control">

@@ -48,7 +48,7 @@ class Database {
    * @param {HideoutList} hideout
    */
   async onSetHideouts(hideout) {
-    return this.db.ref(`hideouts/${hideout.id}`).set(hideout).then(result => { return result });
+    await this.db.ref(`hideouts/${hideout.id}`).set(hideout);
   }
 
 }
