@@ -21,16 +21,16 @@
 - [ ] About (website info)
 - [ ] Login (firebase)
 - [ ] Profile (account)
-- [ ] Upload (new hideout)
+- [x] Upload (new hideout)
 - [ ] Favourite (collec hideout)
 
 ### Feature
 
 - [ ] Logo
-- [ ] i18n
-- [ ] Deploy
-- [ ] Storge
-- [ ] Firebase
+- [x] i18n
+- [x] Deploy
+- [x] Storge
+- [x] Firebase
 - [ ] Online Code Viewer
 - [ ] Code Highlight
 
