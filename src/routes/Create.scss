@@ -1,5 +1,14 @@
 @import '../scss/index';
 
+.form-valid {
+  display: block;
+  padding: .25rem;
+  width: 100%;
+  text-align: left;
+  color: $danger;
+  font-size: 0.8rem;
+}
+
 .create {
   position: relative;
   display: flex;
@@ -53,7 +62,7 @@
         width: 100%;
         margin-bottom: .5rem;
 
-        & + img {
+        & ~ img {
           width: 100%;
         }
       }
@@ -117,6 +126,23 @@
           left: 0;
           width: 100%;
           height: 100%;
+        }
+      }
+    }
+
+    .group-upload {
+      .files-dropzone {
+        cursor: pointer;
+
+        .files-title {
+          padding: 2rem;
+          border: 1px solid $dark;
+          background-color: $light-gray;
+          border-radius: .5rem;
+
+          &:hover {
+            color: $gray;
+          }
         }
       }
     }

@@ -75,11 +75,9 @@ class HideoutList {
   screenshots = [HideoutScreenshot];
 
   /**
-   * file link
+   * file name
    */
-  file = '';
-
-  constructor() { }
+  fileName = '';
 
   /**
    * Convert to json
@@ -100,7 +98,7 @@ class HideoutList {
       views: this.views,
       favorite: this.favorite,
       screenshots: [],
-      file: this.file,
+      fileName: this.fileName,
     }
   }
 }

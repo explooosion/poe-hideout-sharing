@@ -1,29 +1,13 @@
-import firebase from 'firebase';
+import { db } from './config';
+// import HideoutList from '../interface/HideoutList';
 
-import HideoutList from '../interface/HideoutList';
-
-class Firebase {
-
-  apiKey = 'AIzaSyCE2_Ln7-2_II4flCTrvT5xuS_bYjBQt40';
-
-  authDomain = 'poe-hideout.firebaseapp.com';
-
-  databaseURL = 'https://poe-hideout.firebaseio.com/';
+class Database {
 
   constructor() {
-    this.defaultApp = firebase.initializeApp(this.config);
-    this.db = this.defaultApp.database();
+    this.db = db;
 
     this.onUsersSnapshot();
     this.onHideoutsSnapshot();
-  }
-
-  get config() {
-    return {
-      apiKey: this.apiKey,
-      authDomain: this.authDomain,
-      databaseURL: this.databaseURL,
-    };
   }
 
   /**
@@ -63,10 +47,10 @@ class Firebase {
    * Update hideout data
    * @param {HideoutList} hideout
    */
-  onSetHideouts(hideout) {
-    this.db.ref(`hideouts/${hideout.id}`).set(hideout);
+  async onSetHideouts(hideout) {
+    return this.db.ref(`hideouts/${hideout.id}`).set(hideout).then(result => { return result });
   }
 
 }
 
-export default Firebase;
+export default Database;
