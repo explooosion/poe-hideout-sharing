@@ -6,8 +6,14 @@ class MasterLayout extends Component {
     const { children, type } = this.props;
     const layoutClassName = type ? `layout-${type} ` : '';
     return React.Children.map(children, child => {
-      const { className: childClassName = '' } = child.props;
-      const className = `${layoutClassName}${childClassName}`;
+      let className;
+      try {
+        const { className: childClassName = '' } = child.props;
+        className = `${layoutClassName}${childClassName}`;
+      } catch (e) {
+        console.warn('renderChildren', e);
+        className = `${layoutClassName}`;
+      }
       return React.cloneElement(child, { className });
     });
   }

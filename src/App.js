@@ -1,18 +1,9 @@
 import React, { Component } from 'react';
 import './App.scss';
 
-import { createStore, applyMiddleware } from 'redux';
 import { Switch, BrowserRouter as Router, Route } from 'react-router-dom';
-import { Provider } from 'react-redux';
-import thunk from 'redux-thunk';
-
-import firebase from 'firebase/app';
-import 'firebase/auth';
-import 'firebase/firestore';
-import 'firebase/database';
-import 'firebase/storage';
-
-import reducers from './reducers';
+import { connect } from 'react-redux';
+// import { withNamespaces } from 'react-i18next';
 
 import Header from './components/Header';
 
@@ -22,18 +13,13 @@ import About from './routes/About';
 import Login from './routes/Login';
 import Create from './routes/Create';
 
-const store = createStore(
-  reducers,
-  applyMiddleware(thunk)
-);
-
 class App extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      db: null,
-    };
+    this.dispatch = props.dispatch;
+    const { database } = this.props.firebase;
+    database.onHideoutsSnapshot(this.dispatch);
   }
 
   componentDidMount() {
@@ -78,95 +64,103 @@ class App extends Component {
     // });
   }
 
-  CreateUser(email, password) {
-    firebase.auth().createUserWithEmailAndPassword(email, password)
-      .catch(({ code, message }) => {
-        console.error(code);
-        console.error(message);
-      });
-  }
+  // CreateUser(email, password) {
+  //   firebase.auth().createUserWithEmailAndPassword(email, password)
+  //     .catch(({ code, message }) => {
+  //       console.error(code);
+  //       console.error(message);
+  //     });
+  // }
 
-  UpdateUser(payload) {
-    const user = firebase.auth().currentUser;
-    user.updateProfile(payload)
-      .then(res => console.log('success', res))
-      .catch(error => console.log('update error', error));
-  }
+  // UpdateUser(payload) {
+  //   const user = firebase.auth().currentUser;
+  //   user.updateProfile(payload)
+  //     .then(res => console.log('success', res))
+  //     .catch(error => console.log('update error', error));
+  // }
 
-  SignInByGoogle() {
-    const provider = new firebase.auth.GoogleAuthProvider();
-    provider.addScope('https://www.googleapis.com/auth/contacts.readonly');
-    firebase.auth().useDeviceLanguage();
+  // SignInByGoogle() {
+  //   const provider = new firebase.auth.GoogleAuthProvider();
+  //   provider.addScope('https://www.googleapis.com/auth/contacts.readonly');
+  //   firebase.auth().useDeviceLanguage();
 
-    // firebase.auth().signInWithPopup(provider);
-    firebase.auth().signInWithRedirect(provider).then(result => {
-      const token = result.credential.accessToken;
-      const user = result.user;
-      console.log(user, token);
-    }).catch(error => {
-      console.error(error);
-      // var errorCode = error.code;
-      // var errorMessage = error.message;
-      // // The email of the user's account used.
-      // var email = error.email;
-      // // The firebase.auth.AuthCredential type that was used.
-      // var credential = error.credential;
-      // ...
-    });
-  }
+  //   // firebase.auth().signInWithPopup(provider);
+  //   firebase.auth().signInWithRedirect(provider).then(result => {
+  //     const token = result.credential.accessToken;
+  //     const user = result.user;
+  //     console.log(user, token);
+  //   }).catch(error => {
+  //     console.error(error);
+  //     // var errorCode = error.code;
+  //     // var errorMessage = error.message;
+  //     // // The email of the user's account used.
+  //     // var email = error.email;
+  //     // // The firebase.auth.AuthCredential type that was used.
+  //     // var credential = error.credential;
+  //     // ...
+  //   });
+  // }
 
-  SignIn(email, password) {
-    firebase.auth().signInWithEmailAndPassword(email, password)
-      .catch(({ code, message }) => {
-        console.error(code);
-        console.error(message);
-      });
-  }
+  // SignIn(email, password) {
+  //   firebase.auth().signInWithEmailAndPassword(email, password)
+  //     .catch(({ code, message }) => {
+  //       console.error(code);
+  //       console.error(message);
+  //     });
+  // }
 
-  Logout() {
-    firebase.auth().signOut().then(() => {
-      // console.log('Sign-out successful.');
-    }).catch(error => {
-      console.error('Sign-out error happened.', error);
-    });
-  }
+  // Logout() {
+  //   firebase.auth().signOut().then(() => {
+  //     // console.log('Sign-out successful.');
+  //   }).catch(error => {
+  //     console.error('Sign-out error happened.', error);
+  //   });
+  // }
 
-  SetData() {
-    const { db } = this.state;
-    db.ref('users/robby').set({
-      username: 'Sandy',
-      email: 'sandy@gmail.com',
-    });
+  // SetData() {
+  //   const { db } = this.state;
+  //   db.ref('users/robby').set({
+  //     username: 'Sandy',
+  //     email: 'sandy@gmail.com',
+  //   });
 
-    // this.db.ref('users/sandy').set({
-    //   username: 'sandy',
-    //   email: 'sandy@mail.com',
-    // });
+  // this.db.ref('users/sandy').set({
+  //   username: 'sandy',
+  //   email: 'sandy@mail.com',
+  // });
 
-    // this.db.ref('users/kevin').set({
-    //   username: 'kevin',
-    //   email: 'kevin@mail.com',
-    // });
-  }
+  // this.db.ref('users/kevin').set({
+  //   username: 'kevin',
+  //   email: 'kevin@mail.com',
+  // });
+  // }
 
   render() {
     return (
-      <Provider store={store}>
-        <Router>
-          <div>
-            <Header />
-            <Switch>
-              <Route exact path="/" component={Home} />
-              <Route exact path="/about" component={About} />
-              <Route exact path="/login" component={Login} />
-              <Route exact path="/create" component={Create} />
-              <Route exact path="/detail/:id" component={Detail} />
-            </Switch>
-          </div>
-        </Router>
-      </Provider>
+      <Router>
+        <div>
+          <Header />
+          <Switch>
+            <Route exact path="/" component={Home} />
+            <Route exact path="/about" component={About} />
+            <Route exact path="/login" component={Login} />
+            <Route exact path="/create" component={Create} />
+            <Route exact path="/detail/:id" component={Detail} />
+          </Switch>
+        </div>
+      </Router>
     );
   }
 }
 
-export default App;
+App.propTypes = {}
+
+const mapStateToProps = state => {
+  return {
+    hideouts: state.hideouts,
+    firebase: state.firebase,
+  }
+}
+
+// export default withNamespaces()(connect(mapStateToProps)(App));
+export default connect(mapStateToProps)(App);

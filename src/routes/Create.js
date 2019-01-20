@@ -6,6 +6,8 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Files from 'react-files';
 import uuid from 'uuid/v1';
+import moment from 'moment';
+
 // import faker from 'faker';
 
 import { Steps } from 'primereact/steps';
@@ -15,6 +17,7 @@ import { Button } from 'primereact/button';
 import { Spinner } from 'primereact/spinner';
 import { Growl } from 'primereact/growl';
 import { Dialog } from 'primereact/dialog';
+import { ProgressBar } from 'primereact/progressbar';
 
 // layout
 import MasterLayout from '../layout/MasterLayout';
@@ -23,20 +26,16 @@ import MasterLayout from '../layout/MasterLayout';
 import HideoutList from '../interface/HideoutList';
 import HideoutScreenshot from '../interface/HideoutScreenshot';
 
-// service
-import Database from '../service/Database';
-import Storage from '../service/Storage';
-
 const defaultModelImg = 'https://via.placeholder.com/392x220?text=Path+Of+Exile';
-
-const db = new Database();
-const storage = new Storage();
 
 class Create extends Component {
 
   constructor(props) {
     super(props);
     this.dispatch = props.dispatch;
+    this.database = this.props.firebase.database;
+    this.storage = this.props.firebase.storage;
+
     this.state = {
       steps: [
         { label: 'Title' },
@@ -61,55 +60,66 @@ class Create extends Component {
       ],
       file: null,
       fileChoose: '',
+      fileProgressShow: false,
     }
   }
 
   async onNext() {
     // STEP FROM 0 TO 3
-    let valid = true;
     let step = this.state.step;
+
+    // onNext or onPrev event
+    if (!this.onNextCheck(step)) return;
+    step = step >= 3 ? 3 : step + 1;
+
+    // onPublish event
+    if (step === this.state.steps.length - 1)
+      await this.onPublish();
+
+    // Wait for onNextCheck or onPublish
+    this.setState({ step: step });
+  }
+
+  onNextCheck(step) {
+    let valid = true;
     switch (step) {
       case 0: // Title
         if (this.state.title.length === 0) {
           valid = false;
-          console.error('Missing title.');
+          this.growl.show({ severity: 'warn', summary: 'Oops!', detail: 'Missing title.' });
         }
         break;
       case 1: // Detail
         if (this.state.description.length === 0) {
           valid = false;
-          console.error('Missing description.');
+          this.growl.show({ severity: 'warn', summary: 'Oops!', detail: 'Missing description.' });
         }
         if (this.state.version <= 0) {
           valid = false;
-          console.error('Missing version.');
+          this.growl.show({ severity: 'warn', summary: 'Oops!', detail: 'Missing version.' });
         }
         if (this.state.thumbnail.length === 0) {
           valid = false;
-          console.error('Missing thumbnail.');
+          this.growl.show({ severity: 'warn', summary: 'Oops!', detail: 'Missing thumbnail.' });
         }
         if (this.state.screenshotList.length === 0) {
           valid = false;
-          console.error('Missing screenshots.');
+          this.growl.show({ severity: 'warn', summary: 'Oops!', detail: 'Missing screenshots.' });
         }
         break;
       case 2: // Upload
         if (this.state.file === null) {
           valid = false;
-          console.error('Missing file.');
+          this.growl.show({ severity: 'warn', summary: 'Oops!', detail: 'Missing description.' });
         }
         break;
-      default: valid = false; break;
+      default:
+        valid = false;
+        console.warn('Can not check step value.');
+        this.growl.show({ severity: 'warn', summary: 'Oops!', detail: 'Missing something...' });
+        break;
     }
-
-    // onNext or onPrev event
-    if (!valid) return;
-    step = step >= 3 ? 3 : step + 1;
-    this.setState({ step: step });
-
-    // onPublish event
-    if (step === this.state.steps.length - 1)
-      await this.onPublish();
+    return valid;
   }
 
   onPrev(value) {
@@ -124,10 +134,16 @@ class Create extends Component {
   }
 
   async onPublish() {
-    // Upload file
-    const { status, fileName } = await storage.uploadHideout(this.state.file);
-    console.log(status, fileName);
-    if (!status) return console.error('upload faild');
+    // Check payload
+    let valid = true;
+
+    this.setState({ fileProgressShow: true });
+    const { status, fileName } = await this.storage.uploadHideout(this.state.file);
+    console.info(status, fileName);
+    if (!status) {
+      valid = false;
+      console.error('upload faild');
+    }
 
     // Create list
     const List = new HideoutList();
@@ -136,42 +152,51 @@ class Create extends Component {
     List.description = this.state.description;
     List.author = 'Robby';    // fake
     List.type = 'Backstreet'; // fake
+
     List.thumbnail = this.state.thumbnail;
     List.favour = Math.floor(Math.random() * 10000000);
     List.version = 1;
-    List.update = new Date();
-    List.create = new Date();
+
+    const date = moment();
+    List.update = date.format('MMMM DD YYYY, h:mm:ss a');
+    List.create = date.format('MMMM DD YYYY, h:mm:ss a');
+    List.timestamp = date.format('X');
+
     List.download = Math.floor(Math.random() * 500);  // Fake
     List.views = Math.floor(Math.random() * 3000);    // Fake
     List.favorite = Math.floor(Math.random() * 300);  // Fake
+
     List.screenshots = this.state.screenshotList;
     List.fileName = fileName;
 
-    // Check payload
-    let valid = true;
     Object.keys(List).forEach(key => {
       if (List[key].length === 0) {
         valid = false;
         console.warn('Invalid:', key);
+        this.growl.show({ severity: 'warn', summary: 'Oops!', detail: `Missing ${key}` });
       }
     });
 
     // Add or update hideout
-    if (valid) await db.onSetHideouts(List);
+    if (valid) {
+      console.log('push', List);
+      await this.database.onSetHideouts(List);
+      this.growl.show({ severity: 'success', summary: 'Success Publish', detail: this.state.title });
 
-    // // Redirect to home pages
-    this.growl.show({ severity: 'success', summary: 'Success Publish', detail: this.state.title });
-    // Animation
-    this.timer = setInterval(() => {
-      if (this.state.finishTimer <= 0) {
-        clearInterval(this.timer);
-        this.props.history.push('/');
-      } else {
-        this.setState({
-          finishTimer: this.state.finishTimer - 1,
-        });
-      };
-    }, 1000);
+      // // Redirect to home pages
+      this.timer = setInterval(() => {
+        if (this.state.finishTimer <= 0) {
+          clearInterval(this.timer);
+          this.props.history.push('/');
+        } else {
+          this.setState({
+            finishTimer: this.state.finishTimer - 1,
+          });
+        };
+      }, 1000);
+    } else {
+      this.setState({ fileProgressShow: false });
+    }
   }
 
   onScreenshotModelUrlChange(url) {
@@ -183,6 +208,11 @@ class Create extends Component {
   }
 
   onAddScreenshot() {
+    if (this.state.screenshotModelUrl.length === 0) {
+      this.growl.show({ severity: 'warn', summary: 'Oops!', detail: 'Missing url or youtube id.' });
+      return;
+    };
+
     const list = this.state.screenshotList;
     const url = this.state.screenshotModelType === 'youtube'
       ? `https://www.youtube.com/embed/${this.state.screenshotModelUrl}?rel=0`
@@ -209,6 +239,10 @@ class Create extends Component {
     console.error('error code ' + error.code + ': ' + error.message, file);
   }
 
+  /**
+   * Form validation class
+   * @param {any} data
+   */
   onValid(data) {
     let valid = true;
     switch (typeof data) {
@@ -286,8 +320,8 @@ class Create extends Component {
                 <label htmlFor="txtThumbnail">Screenshot:</label>
               </div>
               <div className="p-col-8">
-                <Button label="Add" icon="pi pi-plus" iconPos="left" className="p-button-raised" onClick={(e) => this.setState({ screenshotModel: true })} />
-                <Button label="Reset" icon="pi pi-replay" iconPos="left" className="p-button-secondary p-button-raised" onClick={(e) => this.setState({ screenshotList: [] })} />
+                <Button label="Add" icon="pi pi-plus" iconPos="left" className="p-button-raised" onClick={() => this.setState({ screenshotModel: true })} />
+                <Button label="Reset" icon="pi pi-replay" iconPos="left" className="p-button-secondary p-button-raised" onClick={() => this.setState({ screenshotList: [] })} />
                 <Dialog
                   className="screenshot-model"
                   header="Add Screenshot"
@@ -308,6 +342,7 @@ class Create extends Component {
                     </SelectButton>
                     <label htmlFor="txtScreenshotUrl">Url or Youtube ID:</label>
                     <InputText id="txtScreenshotUrl" value={this.state.screenshotModelUrl} onChange={(e) => this.onScreenshotModelUrlChange(e.target.value)} />
+                    <span className="form-valid" style={this.onValid(this.state.screenshotModelUrl)}>Please set the url or youtube id.</span>
                     <label htmlFor="txtScreenshotUrl">*.Example</label>
                     <span>Imgur: <b>https://imgur.com/A5iSyj1.jpg</b></span>
                     <span>Youtube: https://www.youtube.com/watch?v=<b>DDx1fysX5oo</b></span>
@@ -371,7 +406,8 @@ class Create extends Component {
               >
                 <div className="files-title">Drop files here or click to upload</div>
                 <p style={{ color: '#f00', textAlign: 'center' }}>{this.state.fileChoose}</p>
-                <span className="form-valid" style={this.onValid(this.state.file)}>Please choose the file.</span>
+                <span className="form-valid" style={Object.assign({}, this.onValid(this.state.file), { textAlign: 'center' })}>Please choose the file.</span>
+                {this.state.fileProgressShow ? <ProgressBar mode="indeterminate" style={{ height: '10px' }} /> : null}
               </Files>
             </div>
             <div className="create-control">
@@ -416,7 +452,10 @@ class Create extends Component {
 Create.propTypes = {}
 
 const mapStateToProps = state => {
-  return {}
+  return {
+    hideouts: state.hideouts,
+    firebase: state.firebase,
+  }
 }
 
 export default connect(mapStateToProps)(Create);

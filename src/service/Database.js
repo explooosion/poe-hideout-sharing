@@ -1,13 +1,14 @@
 import { db } from './config';
 // import HideoutList from '../interface/HideoutList';
+import { setHideouts } from '../actions';
 
 class Database {
 
+  hideouts = [];
+
   constructor() {
     this.db = db;
-
-    this.onUsersSnapshot();
-    this.onHideoutsSnapshot();
+    // this.onUsersSnapshot();
   }
 
   /**
@@ -24,11 +25,16 @@ class Database {
   /**
    * Hideouts handler
    */
-  onHideoutsSnapshot() {
+  onHideoutsSnapshot(dispatch) {
+    const SORTKEY = 'timestamp';
     this.dbHideouts = this.db.ref('hideouts');
     this.dbHideouts.on('value', snapshot => {
-      this.hideouts = snapshot.val();
-      console.info('hideouts', snapshot.val());
+      const datas = snapshot.val() || [];
+      this.hideouts = Object.keys(datas)
+        .map(key => datas[key])
+        .sort((a, b) => (a[SORTKEY] < b[SORTKEY]) ? 1 : ((b[SORTKEY] < a[SORTKEY]) ? -1 : 0));
+      console.info('snapshot', this.hideouts);
+      dispatch(setHideouts(this.hideouts));
     });
   }
 

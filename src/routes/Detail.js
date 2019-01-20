@@ -26,7 +26,7 @@ class Detail extends Component {
     this.dispatch = props.dispatch;
     const { id } = this.props.match.params;
     let hideout = HideoutList;
-    hideout = props.hideouts.Lists.find(list => list.id === id);
+    hideout = this.props.hideouts.Lists.find(list => list.id === id);
 
     this.state = {
       hideout: hideout,
@@ -140,7 +140,9 @@ class Detail extends Component {
     const { type, url, alt } = screenshot;
     switch (type) {
       case 'image':
-        return <img alt={alt || url} title={alt || url} src={require(`../images/${url}`)} width="100%" />;
+        // Use debug local img
+        // return <img alt={alt || url} title={alt || url} src={require(`../images/${url}`)} width="100%" />;
+        return <img alt={alt || url} title={alt || url} src={url} width="100%" />;
       case 'youtube':
         return (
           <div className="youtube-container">
@@ -154,14 +156,14 @@ class Detail extends Component {
   render() {
     if (!this.state.hideout) return <Redirect to="/" />;
 
-    const { views, download, favorite } = this.state.hideout;
+    const { views, download, favorite, author } = this.state.hideout;
     return (
       <article className="detail">
         <DetailMenu hideout={this.state.hideout} />
         <ContentLayout breadcrumb={this.state.breadcrumb}>
           <Toolbar className="detail-author">
             <summary className="p-toolbar-group-left">
-              Posted by <Link to="/">Robby</Link> 20 hours ago
+              Posted by <Link to="/">{author}</Link> 20 hours ago
             </summary>
             <div className="p-toolbar-group-right">
               <FaEye />
@@ -197,6 +199,7 @@ Detail.propTypes = {}
 const mapStateToProps = state => {
   return {
     hideouts: state.hideouts,
+    firebase: state.firebase,
   }
 }
 

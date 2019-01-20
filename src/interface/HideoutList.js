@@ -80,6 +80,11 @@ class HideoutList {
   fileName = '';
 
   /**
+   * timestamp
+   */
+  timestamp = null;
+
+  /**
    * Convert to json
    */
   toJSON() {
@@ -99,6 +104,7 @@ class HideoutList {
       favorite: this.favorite,
       screenshots: [],
       fileName: this.fileName,
+      timestamp: this.timestamp,
     }
   }
 }

@@ -36,6 +36,7 @@
     "i18next": "^13.1.4",
     "i18next-browser-languagedetector": "^2.2.4",
     "js-cookie": "^2.2.0",
+    "moment": "^2.23.0",
     "primeflex": "^1.0.0-rc.1",
     "primeicons": "^1.0.0",
     "primereact": "^3.0.0-rc.1",

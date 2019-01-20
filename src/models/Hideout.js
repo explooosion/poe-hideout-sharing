@@ -116,7 +116,7 @@ const Type = [
   },
 ];
 
-export const Hideout = {
+export default {
   Lists,
   Type,
 };

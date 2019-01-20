@@ -9,7 +9,7 @@ import { withNamespaces } from 'react-i18next';
 
 import { Button } from 'primereact/button';
 import { Card } from 'primereact/card';
-// import { ProgressBar } from 'primereact/progressbar';
+import { ProgressBar } from 'primereact/progressbar';
 import { Paginator } from 'primereact/paginator';
 import { DeferredContent } from 'primereact/deferredcontent';
 
@@ -21,21 +21,20 @@ class Home extends Component {
   constructor(props) {
     super(props);
     this.dispatch = props.dispatch;
-    const { Lists } = props.hideouts;
+    const { Lists } = this.props.hideouts;
     this.state = {
       first: 0,
       rows: 10,
       breadcrumb: [
         { label: 'hideouts', url: '/' },
       ],
-      hideouts: Lists || [],
+      hideouts: Lists,
     }
     this.props.history.listen(() => this.onlazyLoadImage());
   }
 
   componentDidMount() {
     setTimeout(() => this.onlazyLoadImage());
-    // window.addEventListener('load', this.onlazyLoadImage.bind(this));
   }
 
   componentDidUpdate() {
@@ -87,8 +86,9 @@ class Home extends Component {
     });
   }
 
-  renderCards() {
-    return this.state.hideouts.map((hideout, index) => {
+  renderCards(lists = []) {
+    // Use debug
+    return lists.map((hideout, index) => {
       return (
         <div className="p-xl-3 p-lg-4 p-md-6 p-sm-12" key={`card-${index}-${hideout.id}`}>
           <DeferredContent>
@@ -123,15 +123,7 @@ class Home extends Component {
 
   renderCardHeader(hideout) {
     const { thumbnail } = hideout;
-    // return <div className="card-img" style={{ backgroundImage: `url(${img})` }}></div>;
     return <img className="card-image" alt={thumbnail} title={thumbnail} src={thumbnail} />;
-    // return (
-    //   <div className="lazy-image">
-    //     <img className="card-image lazy-image-before loaded" src={img} />
-    //     <div style={{ paddingBottom: '56%' }}></div>
-    //     <img className="card-image lazy-image-after" alt={img} title={img} src={img} />
-    //   </div>
-    // );
   }
 
   renderCardFooter() {
@@ -144,6 +136,7 @@ class Home extends Component {
   }
 
   render() {
+    const { Lists } = this.props.hideouts;
     return (
       <div className="home">
         <HomeMenu
@@ -151,17 +144,17 @@ class Home extends Component {
           onFilterChange={(key, value) => this.onFilterChange(key, value)}
         />
         <ContentLayout breadcrumb={this.state.breadcrumb}>
-          <div className="p-grid">
-            {this.renderCards()}
-          </div>
-          <br />
-          <Paginator first={this.state.first} rows={this.state.rows} totalRecords={120} rowsPerPageOptions={[10, 20, 30]} onPageChange={e => this.onPageChange(e)}></Paginator>
           {
-            /*
-            <div className="p-grid search">
-              <ProgressBar className="p-col" mode="indeterminate" style={{ height: '8px' }}></ProgressBar>
-            </div>
-            */
+            Lists.length === 0
+              ? <ProgressBar mode="indeterminate" style={{ height: '10px' }} />
+              :
+              (
+                <div>
+                  <div className="p-grid">{this.renderCards(Lists)}</div>
+                  <br />
+                  <Paginator first={this.state.first} rows={this.state.rows} totalRecords={120} rowsPerPageOptions={[10, 20, 30]} onPageChange={e => this.onPageChange(e)}></Paginator>
+                </div>
+              )
           }
         </ContentLayout>
       </div>
@@ -174,6 +167,7 @@ Home.propTypes = {}
 const mapStateToProps = state => {
   return {
     hideouts: state.hideouts,
+    firebase: state.firebase,
   }
 }
 
