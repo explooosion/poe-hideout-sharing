@@ -35,7 +35,7 @@ class HideoutList {
   thumbnail = '';
 
   /**
-   * Favour
+   * Hideout Favour
    */
   favour = 0;
 

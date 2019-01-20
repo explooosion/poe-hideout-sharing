@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { FaHeart, FaEye, FaDownload } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { Redirect } from 'react-router';
+import moment from 'moment';
 // import PropTypes from 'prop-types';
 
 import { Button } from 'primereact/button';
@@ -13,6 +14,7 @@ import { DeferredContent } from 'primereact/deferredcontent';
 import { Growl } from "primereact/growl";
 import { SplitButton } from 'primereact/splitbutton';
 import { TabMenu } from 'primereact/tabmenu';
+import { Fieldset } from 'primereact/fieldset';
 
 import ContentLayout from '../layout/ContentLayout';
 import DetailMenu from '../components/DetailMenu';
@@ -156,14 +158,14 @@ class Detail extends Component {
   render() {
     if (!this.state.hideout) return <Redirect to="/" />;
 
-    const { views, download, favorite, author } = this.state.hideout;
+    const { views, download, favorite, author, create, description } = this.state.hideout;
     return (
       <article className="detail">
         <DetailMenu hideout={this.state.hideout} />
         <ContentLayout breadcrumb={this.state.breadcrumb}>
           <Toolbar className="detail-author">
             <summary className="p-toolbar-group-left">
-              Posted by <Link to="/">{author}</Link> 20 hours ago
+              Posted by <Link to="/">{author}</Link> {moment(create).endOf('day').fromNow()}
             </summary>
             <div className="p-toolbar-group-right">
               <FaEye />
@@ -185,6 +187,10 @@ class Detail extends Component {
               <SplitButton icon="pi pi-share-alt" className="p-button-warning" onClick={this.save} model={this.getShareButtonItems()}></SplitButton>
             </div>
           </Toolbar>
+          <div className="detail-description">
+            <h4 className="detail-description-title">Description</h4>
+            {description}
+          </div>
           <TabMenu className="detaild-tabmenu" model={this.state.tabmenu} activeItem={this.state.activeItem} onTabChange={(e) => this.onTabChange(e.value)} />
           <Growl ref={(el) => this.growl = el} />
           {this.renderDetail()}

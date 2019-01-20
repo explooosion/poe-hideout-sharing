@@ -36,6 +36,19 @@
     }
   }
 
+  .detail-description {
+    margin-top: 1rem;
+    padding: 1rem;
+    width: 100%;
+    background-color: #fff;
+    border: 1px solid #c8c8c8;
+    border-radius: 3px;
+
+    .detail-description-title {
+      margin-bottom: .25rem;
+    }
+  }
+
   .detaild-tabmenu {
     margin-top: 1.5rem;
   }

@@ -154,7 +154,7 @@ class Create extends Component {
     List.type = 'Backstreet'; // fake
 
     List.thumbnail = this.state.thumbnail;
-    List.favour = Math.floor(Math.random() * 10000000);
+    List.favour = Math.floor(Math.random() * 10000000); // Hideout favour
     List.version = 1;
 
     const date = moment();
@@ -162,9 +162,9 @@ class Create extends Component {
     List.create = date.format('MMMM DD YYYY, h:mm:ss a');
     List.timestamp = date.format('X');
 
-    List.download = Math.floor(Math.random() * 500);  // Fake
-    List.views = Math.floor(Math.random() * 3000);    // Fake
-    List.favorite = Math.floor(Math.random() * 300);  // Fake
+    List.download = 0; // Math.floor(Math.random() * 500);  // Fake
+    List.views = 0; // Math.floor(Math.random() * 3000);    // Fake
+    List.favorite = 0; // Math.floor(Math.random() * 300);  // Fake
 
     List.screenshots = this.state.screenshotList;
     List.fileName = fileName;
