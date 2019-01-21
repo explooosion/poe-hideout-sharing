@@ -4,9 +4,11 @@ import './DetailMenu.scss';
 import { connect } from 'react-redux';
 import NumberFormat from 'react-number-format';
 import moment from 'moment';
+import 'moment/locale/zh-tw';
 
 import MenuLayout from '../layout/MenuLayout';
 
+moment.suppressDeprecationWarnings = true;
 
 class DetailMenu extends Component {
 

@@ -6,6 +6,7 @@ import { FaHeart, FaEye, FaDownload } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { Redirect } from 'react-router';
 import moment from 'moment';
+import 'moment/locale/zh-tw';
 // import PropTypes from 'prop-types';
 
 import { Button } from 'primereact/button';
@@ -14,7 +15,6 @@ import { DeferredContent } from 'primereact/deferredcontent';
 import { Growl } from "primereact/growl";
 import { SplitButton } from 'primereact/splitbutton';
 import { TabMenu } from 'primereact/tabmenu';
-import { Fieldset } from 'primereact/fieldset';
 
 import ContentLayout from '../layout/ContentLayout';
 import DetailMenu from '../components/DetailMenu';
@@ -26,6 +26,8 @@ class Detail extends Component {
   constructor(props) {
     super(props);
     this.dispatch = props.dispatch;
+    this.storage = props.firebase.storage;
+    this.database = props.firebase.database;
     const { id } = this.props.match.params;
     let hideout = HideoutList;
     hideout = this.props.hideouts.Lists.find(list => list.id === id);
@@ -52,6 +54,12 @@ class Detail extends Component {
 
   onTabChange(value) {
     this.setState({ activeItem: value });
+  }
+
+  async onDownloadFileClick(fileName) {
+    this.growl.show({ severity: 'info', summary: 'Download Hideout', detail: 'Start to download...' });
+    const URL = await this.storage.getHideoutLink(fileName);
+    window.open(URL, '_blank');
   }
 
   getShareButtonItems() {
@@ -158,7 +166,7 @@ class Detail extends Component {
   render() {
     if (!this.state.hideout) return <Redirect to="/" />;
 
-    const { views, download, favorite, author, create, description } = this.state.hideout;
+    const { views, download, favorite, author, create, description, fileName } = this.state.hideout;
     return (
       <article className="detail">
         <DetailMenu hideout={this.state.hideout} />
@@ -181,7 +189,7 @@ class Detail extends Component {
               {this.renderTitle()}
             </div>
             <div className="p-toolbar-group-right">
-              <Button label="Download" icon="pi pi-download" style={{ marginRight: '.25em' }} />
+              <Button label="Download" icon="pi pi-download" style={{ marginRight: '.25em' }} onClick={(e) => this.onDownloadFileClick(fileName)} />
               <Button icon="pi pi-star" className="p-button-success" style={{ marginRight: '.25em' }} />
               <Button icon="pi pi-exclamation-triangle" className="p-button-danger" style={{ marginRight: '.25em' }} />
               <SplitButton icon="pi pi-share-alt" className="p-button-warning" onClick={this.save} model={this.getShareButtonItems()}></SplitButton>

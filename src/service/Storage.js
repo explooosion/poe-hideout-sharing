@@ -43,7 +43,7 @@ class Storage {
    * Get hideout file link
    * @param {string} fileName
    */
-  getHideoutLink(fileName) {
+  async getHideoutLink(fileName) {
     return this.hideoutRef.child(fileName).getDownloadURL()
       .then(url => url)
       .catch(e => e);
