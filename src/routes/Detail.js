@@ -6,7 +6,6 @@ import { FaHeart, FaEye, FaDownload } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { Redirect } from 'react-router';
 import moment from 'moment';
-import 'moment/locale/zh-tw';
 // import PropTypes from 'prop-types';
 
 import { Button } from 'primereact/button';
