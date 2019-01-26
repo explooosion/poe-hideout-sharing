@@ -149,10 +149,35 @@
   }
 
   .group-preview {
-    > div {
-      flex-flow: wrap;
-      justify-content: flex-start;
-      display: flex;
+    .group-preview-image {
+      position: relative;
+      margin-bottom: 2rem;
+      width: 100%;
+      height: 300px;
+
+      &:hover .group-preview-delete {
+        opacity: 1;
+      }
+
+      .group-preview-delete {
+        position: absolute;
+        top: 4px;
+        left: 4px;
+        padding: .5rem;
+        width: 40px;
+        height: 40px;
+        color: $light-gray;
+        background: rgba($danger, .5);
+        transition: all .2s ease-in-out;
+        opacity: 0;
+        z-index: 1;
+        cursor: pointer;
+
+        &:hover {
+          padding: .4rem;
+          background: rgba($danger, .8);
+        }
+      }
     }
 
     img {

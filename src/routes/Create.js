@@ -5,6 +5,7 @@ import './Create.scss';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Files from 'react-files';
+import { FaTrashAlt } from 'react-icons/fa';
 import uuid from 'uuid/v1';
 import moment from 'moment';
 
@@ -208,8 +209,14 @@ class Create extends Component {
   }
 
   onAddScreenshot() {
+    // Check input url
     if (this.state.screenshotModelUrl.length === 0) {
       this.growl.show({ severity: 'warn', summary: 'Oops!', detail: 'Missing url or youtube id.' });
+      return;
+    };
+    // Check exist url
+    if (this.state.screenshotList.find(({ url }) => url === this.state.screenshotModelUrl) !== undefined) {
+      this.growl.show({ severity: 'warn', summary: 'Oops!', detail: 'Already in screenshot list.' });
       return;
     };
 
@@ -259,6 +266,46 @@ class Create extends Component {
     return valid
       ? { display: 'none' }
       : { display: 'block' };
+  }
+
+  /**
+   * Delete preview image or yotube
+   * @param {string} source
+   */
+  onDeletePreviewImage(source) {
+    const screenshotList = this.state.screenshotList.filter(({ url }) => url !== source);
+    this.setState({ screenshotList });
+  }
+
+  renderGroupPreview() {
+    return this.state.screenshotList.map(({ type, url }, index) => {
+      const KEY = `screenshot-${index}`;
+      let image;
+      switch (type) {
+        case 'image':
+          image = (<img src={url} alt={url} />);
+          break;
+        case 'youtube':
+          image = (
+            <div className="youtube-container">
+              <iframe title="share" src={url} frameBorder="0" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
+            </div>
+          );
+          break;
+        default:
+          image = null;
+          break;
+      }
+      return (
+        <div className="group-preview-image" key={KEY}>
+          <FaTrashAlt
+            className="group-preview-delete"
+            onClick={() => this.onDeletePreviewImage(url)}
+          />
+          {image}
+        </div>
+      )
+    });
   }
 
   renderSteps() {
@@ -347,7 +394,6 @@ class Create extends Component {
                     <span>Imgur: <b>https://imgur.com/A5iSyj1.jpg</b></span>
                     <span>Youtube: https://www.youtube.com/watch?v=<b>DDx1fysX5oo</b></span>
                   </div>
-
                   <div className="model-row">
                     {
                       this.state.screenshotModelType === 'image'
@@ -364,23 +410,13 @@ class Create extends Component {
             </div>
             <div className="p-grid p-justify-center group-preview">
               <div className="p-col-11">
-                <span className="form-valid" style={this.onValid(this.state.screenshotList)}>Please add screenshotLists.</span>
-                {
-                  this.state.screenshotList.map(({ type, url }, index) => {
-                    const KEY = `screenshot-${index}`;
-                    switch (type) {
-                      case 'image':
-                        return (<img key={KEY} src={url} alt={url} />);
-                      case 'youtube':
-                        return (
-                          <div key={KEY} className="youtube-container">
-                            <iframe title="share" src={url} frameBorder="0" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
-                          </div>
-                        );
-                      default: return null;
-                    }
-                  })
-                }
+                <span
+                  className="form-valid"
+                  style={this.onValid(this.state.screenshotList)}
+                >
+                  Please add screenshotLists.
+                </span>
+                {this.renderGroupPreview()}
               </div>
             </div>
             <div className="create-control">
@@ -392,7 +428,7 @@ class Create extends Component {
       case 2:
         return (
           <div className="create-group">
-            <h1 className="create-title">Choose hideout file.</h1>
+            <h1 className="create-title">Choose your hideout file.</h1>
             <br />
             <div className="p-grid p-justify-center group-upload">
               <Files

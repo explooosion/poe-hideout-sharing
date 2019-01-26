@@ -1,3 +1,4 @@
+import store from 'store2';
 import { db } from './config';
 // import HideoutList from '../interface/HideoutList';
 import { setHideouts } from '../actions';
@@ -57,6 +58,20 @@ class Database {
     await this.db.ref(`hideouts/${hideout.id}`).set(hideout);
   }
 
+  /**
+   * Update hideout views by id
+   * @param {string} id
+   */
+  async onUpdateHideoutsViews(_id) {
+    // Visited rule save in session
+    const hideout = this.hideouts.find(({ id }) => id === _id);
+    if (hideout !== undefined && !store.session('visited')) {
+      store.session('visited', true);
+      await this.db.ref(`hideouts/${_id}`).update({ 'views': hideout.views + 1 });
+    }
+  }
+
 }
+
 
 export default Database;

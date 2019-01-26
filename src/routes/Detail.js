@@ -27,28 +27,24 @@ class Detail extends Component {
     this.dispatch = props.dispatch;
     this.storage = props.firebase.storage;
     this.database = props.firebase.database;
-    const { id } = this.props.match.params;
-    let hideout = HideoutList;
-    hideout = this.props.hideouts.Lists.find(list => list.id === id);
+    this.id = this.props.match.params.id;
 
     this.state = {
-      hideout: hideout,
       tabmenu: [
-        { label: 'Images', icon: 'pi pi-images' },
+        { label: 'Preview', icon: 'pi pi-images' },
         { label: 'Code', icon: 'pi pi-fw pi-file' },
         { label: 'Edit', icon: 'pi pi-fw pi-pencil' },
       ],
       activeItem: 0,
       breadcrumb: [
         { label: 'hideouts', url: '/' },
-        { label: `${id}` },
+        { label: `${this.id}` },
       ],
     }
   }
 
-  onImageLoad() {
-    // console.log('load success');
-    // this.growl.show({ severity: 'success', summary: 'Image Initialized', detail: 'Scroll down to load the datatable' });
+  componentWillMount() {
+    this.database.onUpdateHideoutsViews(this.id);
   }
 
   onTabChange(value) {
@@ -87,18 +83,17 @@ class Detail extends Component {
     ];
   }
 
-  renderTitle() {
-    const { title, type } = this.state.hideout;
+  renderTitle({ title, type }) {
     return <h2>【{type}】{title}</h2>;
   }
 
-  renderDetail() {
+  renderDetail({ screenshots }) {
     const { label } = this.state.activeItem;
     switch (label) {
-      case 'Image': return this.renderImages();
+      case 'Image': return this.renderImages(screenshots);
       case 'Code': return this.renderCode();
       case 'Edit': return this.renderEdit();
-      default: return this.renderImages();
+      default: return this.renderImages(screenshots);
     }
   }
 
@@ -122,14 +117,13 @@ class Detail extends Component {
     )
   }
 
-  renderImages() {
-    const { screenshots } = this.state.hideout;
+  renderImages(screenshots) {
     return (
       <div className="detail-content">
         {
           screenshots.map((screenshot, index) => {
             return (
-              <DeferredContent onLoad={() => this.onImageLoad()} key={`content-${index}`}>
+              <DeferredContent key={`content-${index}`}>
                 <section className="section">
                   {this.renderImageContent(screenshot)}
                 </section>
@@ -163,12 +157,14 @@ class Detail extends Component {
   }
 
   render() {
-    if (!this.state.hideout) return <Redirect to="/" />;
+    let hideout = HideoutList;
+    hideout = this.props.hideouts.Lists.find(list => list.id === this.id);
+    if (!hideout) return <Redirect to="/" />;
 
-    const { views, download, favorite, author, create, description, fileName } = this.state.hideout;
+    const { views, download, favorite, author, create, description, fileName } = hideout;
     return (
       <article className="detail">
-        <DetailMenu hideout={this.state.hideout} />
+        <DetailMenu hideout={hideout} />
         <ContentLayout breadcrumb={this.state.breadcrumb}>
           <Toolbar className="detail-author">
             <summary className="p-toolbar-group-left">
@@ -185,7 +181,7 @@ class Detail extends Component {
           </Toolbar>
           <Toolbar className="detail-title">
             <div className="p-toolbar-group-left">
-              {this.renderTitle()}
+              {this.renderTitle(hideout)}
             </div>
             <div className="p-toolbar-group-right">
               <Button label="Download" icon="pi pi-download" style={{ marginRight: '.25em' }} onClick={(e) => this.onDownloadFileClick(fileName)} />
@@ -200,7 +196,7 @@ class Detail extends Component {
           </div>
           <TabMenu className="detaild-tabmenu" model={this.state.tabmenu} activeItem={this.state.activeItem} onTabChange={(e) => this.onTabChange(e.value)} />
           <Growl ref={(el) => this.growl = el} />
-          {this.renderDetail()}
+          {this.renderDetail(hideout)}
         </ContentLayout>
       </article>
     );
