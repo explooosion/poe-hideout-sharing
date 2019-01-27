@@ -13,13 +13,15 @@ import About from './routes/About';
 import Login from './routes/Login';
 import Create from './routes/Create';
 
+import loading from './images/loading.gif';
+
 class App extends Component {
 
   constructor(props) {
     super(props);
     this.dispatch = props.dispatch;
-    const { database } = this.props.firebase;
-    database.onHideoutsSnapshot(this.dispatch);
+    this.database = this.props.firebase.database;
+    this.database.onHideoutsSnapshot(this.dispatch);
   }
 
   componentDidMount() {
@@ -138,17 +140,29 @@ class App extends Component {
   render() {
     return (
       <Router>
-        <div>
-          <Header />
-          <Switch>
-            <Route exact path="/" component={Home} />
-            <Route exact path="/about" component={About} />
-            <Route exact path="/login" component={Login} />
-            <Route exact path="/create" component={Create} />
-            <Route exact path="/edit/:id" component={Create} />
-            <Route exact path="/detail/:id" component={Detail} />
-          </Switch>
-        </div>
+        {
+          /* Loading */
+          this.database.hideouts.length > 0
+            ? (
+              <div>
+                <Header />
+                <Switch>
+                  <Route exact path="/" component={Home} />
+                  <Route exact path="/about" component={About} />
+                  <Route exact path="/login" component={Login} />
+                  <Route exact path="/create" component={Create} />
+                  <Route exact path="/edit/:id" component={Create} />
+                  <Route exact path="/detail/:id" component={Detail} />
+                </Switch>
+              </div>
+            )
+            : (
+              <div className="loading-container">
+                <img src={loading} title=":')" alt=":')" />
+                <h1><div className="lds-ellipsis"><div></div><div></div><div></div><div></div></div></h1>
+              </div>
+            )
+        }
       </Router>
     );
   }

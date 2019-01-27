@@ -1,0 +1,21 @@
+.loading-container {
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  background-color: #111;
+
+  h1 {
+    display: flex;
+    align-items: center;
+    margin-top: 2rem;
+    color: #fff;
+
+    &::before {
+      content: 'Loading';
+      padding-right: 1rem;
+    }
+  }
+}
