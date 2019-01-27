@@ -19,6 +19,7 @@ import { Spinner } from 'primereact/spinner';
 import { Growl } from 'primereact/growl';
 import { Dialog } from 'primereact/dialog';
 import { ProgressBar } from 'primereact/progressbar';
+import { Captcha } from 'primereact/captcha';
 
 // layout
 import MasterLayout from '../layout/MasterLayout';
@@ -64,6 +65,7 @@ class Create extends Component {
       file: null,
       fileChoose: '',
       fileProgressShow: false,
+      captcha: false,
     }
 
     this.HKListener = this.onHotKeyNext.bind(this);
@@ -154,6 +156,10 @@ class Create extends Component {
         if (this.state.file === null && !this.id) {
           valid = false;
           this.growl.show({ severity: 'warn', summary: 'Oops!', detail: 'Missing description.' });
+        }
+        if (!this.state.captcha) {
+          valid = false;
+          this.growl.show({ severity: 'warn', summary: 'Oops!', detail: 'Please check the captcha.' });
         }
         break;
       default:
@@ -268,6 +274,14 @@ class Create extends Component {
     } else {
       this.setState({ fileProgressShow: false });
     }
+  }
+
+  /**
+   * Pass Captcha
+   * @param {object} response
+   */
+  onResponseCaptcha(response) {
+    if (response) this.setState({ captcha: true });
   }
 
   onScreenshotModelUrlChange(url) {
@@ -518,6 +532,7 @@ class Create extends Component {
                 </span>
                 {this.state.fileProgressShow ? <ProgressBar mode="indeterminate" style={{ height: '10px' }} /> : null}
               </Files>
+              <Captcha siteKey="6Lc8BI0UAAAAAKiq9Lu8ZYXO88T9FeFAnbEqNNA1" onResponse={res => this.onResponseCaptcha(res)}></Captcha>
             </div>
             <div className="create-control">
               <Button label="Previous" icon="pi pi-arrow-left" iconPos="left" className="p-button-secondary p-button-raised create-control-button" onClick={(e) => this.onPrev()} />

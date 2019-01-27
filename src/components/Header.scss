@@ -111,6 +111,10 @@
 
     .locale-menu {
       padding-left: 1rem;
+
+      .locale-menu-box {
+        top: -3px;
+      }
     }
   }
 }

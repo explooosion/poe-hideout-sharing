@@ -84,6 +84,7 @@ class Header extends Component {
             { /* <li><Link to="/login">LOGIN</Link></li> */}
             <li className="locale-menu">
               <Dropdown
+                className="locale-menu-box"
                 value={this.state.locale}
                 options={this.state.locales}
                 onChange={(e) => this.onChangeLanguage(e.value)}
