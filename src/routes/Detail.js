@@ -33,7 +33,7 @@ class Detail extends Component {
       tabmenu: [
         { label: 'Preview', icon: 'pi pi-images' },
         { label: 'Code', icon: 'pi pi-fw pi-file' },
-        { label: 'Edit', icon: 'pi pi-fw pi-pencil' },
+        // { label: 'Edit', icon: 'pi pi-fw pi-pencil' },
       ],
       activeItem: 0,
       breadcrumb: [
@@ -44,7 +44,7 @@ class Detail extends Component {
   }
 
   componentWillMount() {
-    this.database.onUpdateHideoutsViews(this.id);
+    this.database.onUpdateHideoutViews(this.id);
   }
 
   onTabChange(value) {
@@ -54,6 +54,7 @@ class Detail extends Component {
   async onDownloadFileClick(fileName) {
     this.growl.show({ severity: 'info', summary: 'Download Hideout', detail: 'Start to download...' });
     const URL = await this.storage.getHideoutLink(fileName);
+    await this.database.onUpdateHideoutDownload(this.id);
     window.open(URL, '_blank');
   }
 
@@ -117,7 +118,7 @@ class Detail extends Component {
     )
   }
 
-  renderImages(screenshots) {
+  renderImages(screenshots = []) {
     return (
       <div className="detail-content">
         {
@@ -157,8 +158,8 @@ class Detail extends Component {
   }
 
   render() {
-    let hideout = HideoutList;
-    hideout = this.props.hideouts.Lists.find(list => list.id === this.id);
+    let hideout = new HideoutList();
+    hideout = this.props.hideouts.Lists.find(({ id }) => id === this.id);
     if (!hideout) return <Redirect to="/" />;
 
     const { views, download, favorite, author, create, description, fileName } = hideout;
@@ -172,11 +173,11 @@ class Detail extends Component {
             </summary>
             <div className="p-toolbar-group-right">
               <FaEye />
-              <span>{views}</span>
-              <FaHeart />
-              <span>{download}</span>
+              <span className="v">{views}</span>
               <FaDownload />
-              <span>{favorite}</span>
+              <span className="d">{download}</span>
+              <FaHeart />
+              <span className="f">{favorite}</span>
             </div>
           </Toolbar>
           <Toolbar className="detail-title">
@@ -185,9 +186,10 @@ class Detail extends Component {
             </div>
             <div className="p-toolbar-group-right">
               <Button label="Download" icon="pi pi-download" style={{ marginRight: '.25em' }} onClick={(e) => this.onDownloadFileClick(fileName)} />
-              <Button icon="pi pi-star" className="p-button-success" style={{ marginRight: '.25em' }} />
+              <Button icon="pi pi-star" className="p-button-success" style={{ marginRight: '.25em' }} onClick={() => this.database.onUpdateHideoutFavorite(this.id)} />
               <Button icon="pi pi-exclamation-triangle" className="p-button-danger" style={{ marginRight: '.25em' }} />
-              <SplitButton icon="pi pi-share-alt" className="p-button-warning" onClick={this.save} model={this.getShareButtonItems()}></SplitButton>
+              <SplitButton icon="pi pi-share-alt" className="p-button-warning" style={{ marginRight: '.25em' }} onClick={this.save} model={this.getShareButtonItems()}></SplitButton>
+              <Link to={`/edit/${this.id}`}><Button icon="pi pi-pencil" className="p-button-secondary" /></Link>
             </div>
           </Toolbar>
           <div className="detail-description">

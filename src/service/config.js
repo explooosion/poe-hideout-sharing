@@ -20,4 +20,8 @@ const auth = firebase.auth();
 const storage = firebase.storage();
 const db = firebase.database();
 
-export { firebase, auth, storage, db };
+// Mode
+console.info(`[${process.env.NODE_ENV.toUpperCase()} MODE]`);
+const REF_PICK = process.env.NODE_ENV === 'development' ? '_dev' : '';
+
+export { firebase, auth, storage, db, REF_PICK };

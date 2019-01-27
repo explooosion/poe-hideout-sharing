@@ -1,12 +1,12 @@
 import uuid from 'uuid/v1';
 
-import { storage } from './config';
+import { storage, REF_PICK } from './config';
 
 class Storage {
   constructor() {
     this.storage = storage;
     this.storageRef = this.storage.ref();
-    this.hideoutRef = this.storageRef.child('hideouts');
+    this.hideoutRef = this.storageRef.child(`hideouts${REF_PICK}`);
   }
 
   /**

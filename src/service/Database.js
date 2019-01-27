@@ -1,5 +1,5 @@
 import store from 'store2';
-import { db } from './config';
+import { db, REF_PICK } from './config';
 // import HideoutList from '../interface/HideoutList';
 import { setHideouts } from '../actions';
 
@@ -28,7 +28,7 @@ class Database {
    */
   onHideoutsSnapshot(dispatch) {
     const SORTKEY = 'timestamp';
-    this.dbHideouts = this.db.ref('hideouts');
+    this.dbHideouts = this.db.ref(`hideouts${REF_PICK}`);
     this.dbHideouts.on('value', snapshot => {
       const datas = snapshot.val() || [];
       this.hideouts = Object.keys(datas)
@@ -51,26 +51,54 @@ class Database {
   }
 
   /**
-   * Update hideout data
+   * Create or update hideout data
    * @param {HideoutList} hideout
+   * @param {boolean} isCreate
    */
-  async onSetHideouts(hideout) {
-    await this.db.ref(`hideouts/${hideout.id}`).set(hideout);
+  async onSetHideouts(hideout, isCreate) {
+    if (isCreate) {
+      await this.db.ref(`hideouts${REF_PICK}/${hideout.id}`).set(hideout);
+    } else {
+      await this.db.ref(`hideouts${REF_PICK}/${hideout.id}`).update(hideout);
+    }
   }
 
   /**
    * Update hideout views by id
    * @param {string} id
    */
-  async onUpdateHideoutsViews(_id) {
+  async onUpdateHideoutViews(_id) {
     // Visited rule save in session
     const hideout = this.hideouts.find(({ id }) => id === _id);
-    if (hideout !== undefined && !store.session('visited')) {
-      store.session('visited', true);
-      await this.db.ref(`hideouts/${_id}`).update({ 'views': hideout.views + 1 });
+    if (hideout !== undefined && !store.session(`views-${_id}`)) {
+      store.session(`views-${_id}`, true);
+      await this.db.ref(`hideouts${REF_PICK}/${_id}`).update({ 'views': hideout.views + 1 });
     }
   }
 
+  /**
+   * Update hideout favorite by id
+   * @param {string} id
+   */
+  async onUpdateHideoutFavorite(_id) {
+    // Favorited rule save in session
+    const hideout = this.hideouts.find(({ id }) => id === _id);
+    if (hideout !== undefined) {
+      await this.db.ref(`hideouts${REF_PICK}/${_id}`).update({ 'favorite': hideout.favorite + 1 });
+    }
+  }
+
+  /**
+   * Update hideout download by id
+   * @param {string} id
+   */
+  async onUpdateHideoutDownload(_id) {
+    // Favorited rule save in session
+    const hideout = this.hideouts.find(({ id }) => id === _id);
+    if (hideout !== undefined) {
+      await this.db.ref(`hideouts${REF_PICK}/${_id}`).update({ 'download': hideout.download + 1 });
+    }
+  }
 }
 
 

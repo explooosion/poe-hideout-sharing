@@ -145,6 +145,7 @@ class App extends Component {
             <Route exact path="/about" component={About} />
             <Route exact path="/login" component={Login} />
             <Route exact path="/create" component={Create} />
+            <Route exact path="/edit/:id" component={Create} />
             <Route exact path="/detail/:id" component={Detail} />
           </Switch>
         </div>

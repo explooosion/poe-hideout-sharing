@@ -34,8 +34,10 @@ class Create extends Component {
   constructor(props) {
     super(props);
     this.dispatch = props.dispatch;
+    this.id = this.props.match.params.id;
     this.database = this.props.firebase.database;
     this.storage = this.props.firebase.storage;
+    this.hideout = new HideoutList();
 
     this.state = {
       steps: [
@@ -63,6 +65,42 @@ class Create extends Component {
       fileChoose: '',
       fileProgressShow: false,
     }
+
+    this.HKListener = this.onHotKeyNext.bind(this);
+  }
+
+  componentDidMount() {
+    if (this.id) this.onEditMode();
+    window.addEventListener('keypress', this.HKListener);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('keypress', this.HKListener);
+  }
+
+  /**
+   * Next by press enter
+   * @param {number} keyCode
+   */
+  onHotKeyNext({ keyCode }) {
+    if (keyCode === 13 && this.state.step < 3) this.onNext();
+  }
+
+  /**
+   * Load data by id in edit mode
+   */
+  onEditMode() {
+    this.hideout = this.props.hideouts.Lists.find(({ id }) => id === this.id);
+    if (this.hideout) {
+      this.setState({
+        title: this.hideout.title,
+        description: this.hideout.description,
+        version: this.hideout.version,
+        thumbnail: this.hideout.thumbnail,
+        screenshotList: this.hideout.screenshots,
+        fileChoose: this.hideout.fileName,
+      });
+    }
   }
 
   async onNext() {
@@ -81,6 +119,10 @@ class Create extends Component {
     this.setState({ step: step });
   }
 
+  /**
+   * Check form on next step
+   * @param {number} step
+   */
   onNextCheck(step) {
     let valid = true;
     switch (step) {
@@ -109,7 +151,7 @@ class Create extends Component {
         }
         break;
       case 2: // Upload
-        if (this.state.file === null) {
+        if (this.state.file === null && !this.id) {
           valid = false;
           this.growl.show({ severity: 'warn', summary: 'Oops!', detail: 'Missing description.' });
         }
@@ -137,38 +179,56 @@ class Create extends Component {
   async onPublish() {
     // Check payload
     let valid = true;
+    let fileName = this.state.fileChoose;
 
-    this.setState({ fileProgressShow: true });
-    const { status, fileName } = await this.storage.uploadHideout(this.state.file);
-    console.info(status, fileName);
-    if (!status) {
-      valid = false;
-      console.error('upload faild');
+    // Check is create or update with file
+    if ((this.id && this.state.file) || (!this.id && this.state.file)) {
+      this.setState({ fileProgressShow: true });
+      const result = await this.storage.uploadHideout(this.state.file);
+      fileName = result.fileName;
+      console.info(result.status, result.fileName);
+      if (!result.status) valid = false;
     }
 
-    // Create list
-    const List = new HideoutList();
-    List.title = this.state.title;
-    List.id = uuid();
-    List.description = this.state.description;
-    List.author = 'Robby';    // fake
-    List.type = 'Backstreet'; // fake
+    let List = {};
+    if (!this.id) {
+      // Create new list
+      List = new HideoutList();
+      List.title = this.state.title;
+      List.id = uuid();
+      List.description = this.state.description;
+      List.author = 'Robby';    // fake
+      List.type = 'Backstreet'; // fake
 
-    List.thumbnail = this.state.thumbnail;
-    List.favour = Math.floor(Math.random() * 10000000); // Hideout favour
-    List.version = 1;
+      List.thumbnail = this.state.thumbnail;
+      List.favour = Math.floor(Math.random() * 10000000); // Hideout favour
+      List.version = this.state.version;
 
-    const date = moment();
-    List.update = date.format('MMMM DD YYYY, h:mm:ss a');
-    List.create = date.format('MMMM DD YYYY, h:mm:ss a');
-    List.timestamp = date.format('X');
+      const date = moment();
+      List.update = date.format('MMMM DD YYYY, h:mm:ss a');
+      List.create = date.format('MMMM DD YYYY, h:mm:ss a');
+      List.timestamp = date.format('X');
 
-    List.download = 0; // Math.floor(Math.random() * 500);  // Fake
-    List.views = 0; // Math.floor(Math.random() * 3000);    // Fake
-    List.favorite = 0; // Math.floor(Math.random() * 300);  // Fake
+      List.download = 0; // Math.floor(Math.random() * 500);  // Fake
+      List.views = 0; // Math.floor(Math.random() * 3000);    // Fake
+      List.favorite = 0; // Math.floor(Math.random() * 300);  // Fake
 
-    List.screenshots = this.state.screenshotList;
-    List.fileName = fileName;
+      List.screenshots = this.state.screenshotList;
+      List.fileName = fileName;
+
+    } else {
+      // Update list
+      List.id = this.id;
+      List.title = this.state.title;
+      List.description = this.state.description;
+      List.thumbnail = this.state.thumbnail;
+      List.version = this.state.version;
+
+      const date = moment();
+      List.update = date.format('MMMM DD YYYY, h:mm:ss a');
+      List.screenshots = this.state.screenshotList;
+      List.fileName = fileName;
+    }
 
     Object.keys(List).forEach(key => {
       if (List[key].length === 0) {
@@ -181,8 +241,12 @@ class Create extends Component {
     // Add or update hideout
     if (valid) {
       console.log('push', List);
-      await this.database.onSetHideouts(List);
-      this.growl.show({ severity: 'success', summary: 'Success Publish', detail: this.state.title });
+      await this.database.onSetHideouts(List, !this.id ? true : false);
+      this.growl.show({
+        severity: 'success',
+        summary: this.id ? 'Success Update' : 'Success Publish',
+        detail: this.state.title,
+      });
 
       // // Redirect to home pages
       this.timer = setInterval(() => {
@@ -278,7 +342,8 @@ class Create extends Component {
   }
 
   renderGroupPreview() {
-    return this.state.screenshotList.map(({ type, url }, index) => {
+    const list = this.state.screenshotList ? this.state.screenshotList : [];
+    return list.map(({ type, url }, index) => {
       const KEY = `screenshot-${index}`;
       let image;
       switch (type) {
@@ -442,7 +507,9 @@ class Create extends Component {
               >
                 <div className="files-title">Drop files here or click to upload</div>
                 <p style={{ color: '#f00', textAlign: 'center' }}>{this.state.fileChoose}</p>
-                <span className="form-valid" style={Object.assign({}, this.onValid(this.state.file), { textAlign: 'center' })}>Please choose the file.</span>
+                <span className="form-valid" style={Object.assign({}, this.onValid(this.state.file), { textAlign: 'center' })}>
+                  {this.id ? 'Please choose the new file or ignoring.' : 'Please choose the file.'}
+                </span>
                 {this.state.fileProgressShow ? <ProgressBar mode="indeterminate" style={{ height: '10px' }} /> : null}
               </Files>
             </div>
@@ -471,6 +538,8 @@ class Create extends Component {
   }
 
   render() {
+    this.hideout = this.props.hideouts.Lists.find(({ id }) => id === this.id);
+
     return (
       <MasterLayout>
         <div className="create">
