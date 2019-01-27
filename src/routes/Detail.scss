@@ -14,6 +14,19 @@
       text-decoration: underline;
     }
 
+    .detail-button {
+      margin-left: .25rem;
+      cursor: pointer;
+
+      &[datatype=edit] {
+        color: $success;
+      }
+
+      &[datatype=delete] {
+        color: $danger;
+      }
+    }
+
     .p-toolbar-group-right {
       display: flex;
       align-items: center;

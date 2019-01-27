@@ -13,7 +13,7 @@ class Storage {
    * Upload hideout file
    * @param {FILE} file
    */
-  async uploadHideout(file) {
+  async onUploadHideout(file) {
     try {
       const { extension } = file;
       if (extension !== 'hideout') {
@@ -37,6 +37,14 @@ class Storage {
       console.error('Please check your file.');
       return { status: false };
     }
+  }
+
+  /**
+   * Delete file
+   * @param {string} fileName
+   */
+  async onDeleteHideout(fileName) {
+    await this.hideoutRef.child(fileName).delete().catch(e => console.error('onDeleteHideout', e));
   }
 
   /**

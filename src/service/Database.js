@@ -64,6 +64,14 @@ class Database {
   }
 
   /**
+   * Delete hideout data
+   * @param {string} id
+   */
+  async onDeleteHideouts(id) {
+    await this.db.ref(`hideouts${REF_PICK}/${id}`).remove();
+  }
+
+  /**
    * Update hideout views by id
    * @param {string} id
    */

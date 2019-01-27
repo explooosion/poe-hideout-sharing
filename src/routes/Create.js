@@ -184,7 +184,13 @@ class Create extends Component {
     // Check is create or update with file
     if ((this.id && this.state.file) || (!this.id && this.state.file)) {
       this.setState({ fileProgressShow: true });
-      const result = await this.storage.uploadHideout(this.state.file);
+      if (this.id && this.state.file) {
+        // Delete old file
+        console.log('wait for deletinng old file');
+        await this.storage.onDeleteHideout(this.hideout.fileName);
+      }
+      // Upload new file
+      const result = await this.storage.onUploadHideout(this.state.file);
       fileName = result.fileName;
       console.info(result.status, result.fileName);
       if (!result.status) valid = false;

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './Detail.scss';
 
 import { connect } from 'react-redux';
-import { FaHeart, FaEye, FaDownload } from 'react-icons/fa';
+import { FaHeart, FaEye, FaDownload, FaEdit, FaTrashAlt } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { Redirect } from 'react-router';
 import moment from 'moment';
@@ -28,6 +28,7 @@ class Detail extends Component {
     this.storage = props.firebase.storage;
     this.database = props.firebase.database;
     this.id = this.props.match.params.id;
+    this.hideout = new HideoutList();
 
     this.state = {
       tabmenu: [
@@ -51,11 +52,31 @@ class Detail extends Component {
     this.setState({ activeItem: value });
   }
 
+  /**
+   * Delete this hideout and file
+   */
+  async onDeleteHideout() {
+    if (!this.id && !this.hideout.fileName) return;
+    await this.database.onDeleteHideouts(this.id);
+    await this.storage.onDeleteHideout(this.hideout.fileName);
+  }
+
+  /**
+   * Update favorite counter
+   */
+  async onFavoriteClick() {
+    await this.database.onUpdateHideoutFavorite(this.id);
+    this.growl.show({ severity: 'success', summary: 'Favorite Hideout', detail: 'Add successfully.' });
+  }
+
+  /**
+   * Download file and update counter
+   */
   async onDownloadFileClick(fileName) {
     this.growl.show({ severity: 'info', summary: 'Download Hideout', detail: 'Start to download...' });
     const URL = await this.storage.getHideoutLink(fileName);
-    await this.database.onUpdateHideoutDownload(this.id);
     window.open(URL, '_blank');
+    await this.database.onUpdateHideoutDownload(this.id);
   }
 
   getShareButtonItems() {
@@ -158,18 +179,19 @@ class Detail extends Component {
   }
 
   render() {
-    let hideout = new HideoutList();
-    hideout = this.props.hideouts.Lists.find(({ id }) => id === this.id);
-    if (!hideout) return <Redirect to="/" />;
+    this.hideout = this.props.hideouts.Lists.find(({ id }) => id === this.id);
+    if (!this.hideout) return <Redirect to="/" />;
 
-    const { views, download, favorite, author, create, description, fileName } = hideout;
+    const { views, download, favorite, author, create, description, fileName } = this.hideout;
     return (
       <article className="detail">
-        <DetailMenu hideout={hideout} />
+        <DetailMenu hideout={this.hideout} />
         <ContentLayout breadcrumb={this.state.breadcrumb}>
           <Toolbar className="detail-author">
             <summary className="p-toolbar-group-left">
               Posted by <Link to="/">{author}</Link> {moment(create).endOf('day').fromNow()}
+              <Link to={`/edit/${this.id}`}><FaEdit className="detail-button" datatype="edit" /></Link>
+              <FaTrashAlt className="detail-button" datatype="delete" onClick={() => window.confirm('Are you sure to delete?') ? this.onDeleteHideout() : null} />
             </summary>
             <div className="p-toolbar-group-right">
               <FaEye />
@@ -182,14 +204,13 @@ class Detail extends Component {
           </Toolbar>
           <Toolbar className="detail-title">
             <div className="p-toolbar-group-left">
-              {this.renderTitle(hideout)}
+              {this.renderTitle(this.hideout)}
             </div>
             <div className="p-toolbar-group-right">
-              <Button label="Download" icon="pi pi-download" style={{ marginRight: '.25em' }} onClick={(e) => this.onDownloadFileClick(fileName)} />
-              <Button icon="pi pi-star" className="p-button-success" style={{ marginRight: '.25em' }} onClick={() => this.database.onUpdateHideoutFavorite(this.id)} />
+              <Button label="Download" icon="pi pi-download" style={{ marginRight: '.25em' }} onClick={e => this.onDownloadFileClick(fileName)} />
+              <Button icon="pi pi-star" className="p-button-success" style={{ marginRight: '.25em' }} onClick={e => this.onFavoriteClick()} />
               <Button icon="pi pi-exclamation-triangle" className="p-button-danger" style={{ marginRight: '.25em' }} />
               <SplitButton icon="pi pi-share-alt" className="p-button-warning" style={{ marginRight: '.25em' }} onClick={this.save} model={this.getShareButtonItems()}></SplitButton>
-              <Link to={`/edit/${this.id}`}><Button icon="pi pi-pencil" className="p-button-secondary" /></Link>
             </div>
           </Toolbar>
           <div className="detail-description">
@@ -198,7 +219,7 @@ class Detail extends Component {
           </div>
           <TabMenu className="detaild-tabmenu" model={this.state.tabmenu} activeItem={this.state.activeItem} onTabChange={(e) => this.onTabChange(e.value)} />
           <Growl ref={(el) => this.growl = el} />
-          {this.renderDetail(hideout)}
+          {this.renderDetail(this.hideout)}
         </ContentLayout>
       </article>
     );
