@@ -3,5 +3,9 @@
   "HeaderHome": "首页",
   "HeaderAbout": "关于",
   "HeaderGithub": "GITHUB",
-  "HeaderCreate": "新增"
+  "HeaderCreate": "新增",
+  "HeaderLogin": "登入",
+  "HeaderLogout": "登出",
+  "LoginTitle": "请登入:",
+  "LoginButton": "使用 Google 登录"
 }

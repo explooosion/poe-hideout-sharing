@@ -3,5 +3,9 @@
   "HeaderHome": "首頁",
   "HeaderAbout": "關於",
   "HeaderGithub": "GITHUB",
-  "HeaderCreate": "新增"
+  "HeaderCreate": "新增",
+  "HeaderLogin": "登入",
+  "HeaderLogout": "登出",
+  "LoginTitle": "請登入:",
+  "LoginButton": "使用 Google 登錄"
 }

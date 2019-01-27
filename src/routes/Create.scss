@@ -17,7 +17,7 @@
   margin: 0 auto;
   width: 100%;
   height: calc(100vh - #{$header-height});
-  background-color: $light-gray;
+  background-image: url('../images/bg.jpg');
 
   .create-steps {
   }
@@ -242,5 +242,9 @@
   .p-grid {
     margin: .75rem auto;
     max-width: 600px;
+  }
+
+  .p-steps-title {
+    color: #fff !important;
   }
 }

@@ -4,6 +4,9 @@ import './Header.scss';
 import { withNamespaces } from 'react-i18next';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
+import store from 'store2';
+import { MdNoteAdd } from 'react-icons/md';
+import { IoMdLogOut, IoMdLogIn, IoLogoGithub } from 'react-icons/io';
 
 import { Sidebar } from 'primereact/sidebar';
 import { Button } from 'primereact/button';
@@ -19,15 +22,14 @@ class Header extends Component {
     super(props);
     const { locale } = this.props.settings;
     this.dispatch = props.dispatch;
+    this.auth = props.firebase.auth;
     this.t = props.t;
     this.state = {
       visible: false,
       items: [
         { label: 'Create', icon: 'pi pi-fw pi-plus', command: () => this.props.history.push('/create') },
-        { label: 'Home', icon: 'pi pi-fw pi-home', command: () => this.props.history.push('/') },
-        { label: 'About', icon: 'pi pi-fw pi-info', command: () => { /* window.location.pathname = '/about'; */ } },
         { label: 'Github', icon: 'pi pi-fw pi-star', command: () => { window.open('https://github.com/explooosion/poe-hideout-sharing'); } },
-        // { label: 'Login', icon: 'pi pi-fw pi-globe', command: () => { window.location.pathname = '/login'; } },
+        // { label: 'Login', icon: 'pi pi-fw pi-globe', command: () => this.props.history.push('/loginn') },
       ],
       locale: locale,
       locales: [
@@ -43,11 +45,18 @@ class Header extends Component {
   }
 
   onChangeLanguage(value) {
-    this.setState({ locale: value },
-      () => this.dispatch(setLocal(this.state.locale)));
+    this.setState(
+      { locale: value },
+      () => this.dispatch(setLocal(this.state.locale))
+    );
   }
 
-  renderHideoutTemplate(option) {
+  async onLogout() {
+    await this.auth.onLogout();
+    window.location.reload();
+  }
+
+  renderFlagTemplate(option) {
     return (
       <div className="p-clearfix flag-group">
         <span className={`flag-icon flag-icon-${option.icon}`}></span>
@@ -57,44 +66,41 @@ class Header extends Component {
   }
 
   render() {
+    const { displayName, photoURL } = this.auth.user;
     return (
       <nav className="nav">
         <header className="header">
-          <Link
-            to="/"
-            className="menu-button"
-            onClick={e => this.setState({ visible: true })}
-          >
+          <Link to="/" className="menu-button" onClick={e => this.setState({ visible: true })}>
             <i className="pi pi-bars" />
           </Link>
-          <Link to="/" className="logo">
+          <a href="/" className="logo">
             <img className="logo-img" alt="logo" title="logo" src={logo} />
             <span className="logo-title">POEHoS</span>
-          </Link>
+          </a>
           <div className="mobile-menu">
             <Menu model={this.state.items} popup={true} ref={el => this.menu = el} />
             <Button className="p-button-secondary" icon="pi pi-bars" onClick={(event) => this.menu.toggle(event)} />
           </div>
           <ul className="topbar-menu">
-            <li><Link to="/create">{this.t('HeaderCreate')}</Link></li>
-            <li><Link to="/">{this.t('HeaderHome')}</Link></li>
-            <li><Link to="/">{this.t('HeaderAbout')}</Link></li>
-            { /* <li><Link to="/about">ABOUT</Link></li> */}
-            <li><a href="https://github.com/explooosion/poe-hideout-sharing" target="_blank" rel="noopener noreferrer">{this.t('HeaderGithub')}</a></li>
-            { /* <li><Link to="/login">LOGIN</Link></li> */}
-            <li className="locale-menu">
+            <li><Link to="/profile" alt={displayName} title={displayName}><img src={photoURL} style={{ width: '30px', borderRadius: '100%' }} /></Link></li>
+            <li><Link to="/create" alt="create" title="create"><MdNoteAdd size="2rem" /></Link></li>
+            {
+              store.session('auth')
+                ? <li><a onClick={() => this.onLogout()} alt="logout" title="logout"><IoMdLogOut size="2rem" /></a></li>
+                : <li><Link to="/login" alt="login" title="login"><IoMdLogIn size="2rem" /></Link></li>
+            }
+            <li><a href="https://github.com/explooosion/poe-hideout-sharing" target="_blank" rel="noopener noreferrer" alt="github" title="github"><IoLogoGithub size="2rem" /></a></li>
+            <li style={{ paddingLeft: '1rem', height: 'auto' }}>
               <Dropdown
-                className="locale-menu-box"
                 value={this.state.locale}
                 options={this.state.locales}
                 onChange={(e) => this.onChangeLanguage(e.value)}
-                itemTemplate={this.renderHideoutTemplate}
+                itemTemplate={this.renderFlagTemplate}
               />
             </li>
           </ul>
         </header>
-        <Sidebar visible={this.state.visible} onHide={e => this.setState({ visible: false })}>
-        </Sidebar>
+        <Sidebar visible={this.state.visible} onHide={e => this.setState({ visible: false })}></Sidebar>
       </nav>
     );
   }
@@ -106,6 +112,7 @@ const mapStateToProps = state => {
   return {
     hideouts: state.hideouts,
     settings: state.settings,
+    firebase: state.firebase,
   }
 }
 

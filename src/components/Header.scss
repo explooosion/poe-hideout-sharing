@@ -11,7 +11,7 @@
   width: 100%;
   height: $header-height;
   text-align: left;
-  background-color: $dark;
+  background-color: rgba(#111, .95);
   z-index: 999;
 
   .menu-button {
@@ -65,11 +65,13 @@
   }
 
   .topbar-menu {
-    list-style-type: none;
-    float: right;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     margin: 0 2rem 0 0;
     padding: 0;
     height: 100%;
+    list-style-type: none;
 
     @media only screen and (max-width: $screen-lg) {
       display: none;
@@ -90,30 +92,21 @@
       }
 
       > a {
-        display: inline-block;
-        min-width: 120px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 60px;
         height: 100%;
         color: #fff;
-        line-height: $header-height;
-        font-size: 20px;
-        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-        text-align: center;
         text-decoration: none;
         transition: background-color .2s;
         -o-transition: background-color .2s;
         -webkit-transition: background-color .2s;
+        cursor: pointer;
 
         &:hover {
           background-color: $gray;
         }
-      }
-    }
-
-    .locale-menu {
-      padding-left: 1rem;
-
-      .locale-menu-box {
-        top: -3px;
       }
     }
   }

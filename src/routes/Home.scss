@@ -3,6 +3,9 @@
 .home {
   display: flex;
   margin-top: $header-height;
+  width: 100vw;
+  height: calc(100vh - #{$header-height});
+  background-image: url('../images/bg.jpg');
 
   .lazy-image {
     background-color: #f6f6f6;

@@ -11,7 +11,7 @@ import moment from 'moment';
 import { Button } from 'primereact/button';
 import { Toolbar } from 'primereact/toolbar';
 import { DeferredContent } from 'primereact/deferredcontent';
-import { Growl } from "primereact/growl";
+import { Growl } from 'primereact/growl';
 import { SplitButton } from 'primereact/splitbutton';
 import { TabMenu } from 'primereact/tabmenu';
 
@@ -50,15 +50,6 @@ class Detail extends Component {
 
   onTabChange(value) {
     this.setState({ activeItem: value });
-  }
-
-  /**
-   * Delete this hideout and file
-   */
-  async onDeleteHideout() {
-    if (!this.id && !this.hideout.fileName) return;
-    await this.database.onDeleteHideouts(this.id);
-    await this.storage.onDeleteHideout(this.hideout.fileName);
   }
 
   /**
@@ -191,7 +182,6 @@ class Detail extends Component {
             <summary className="p-toolbar-group-left">
               Posted by <Link to="/">{author}</Link> {moment(create).endOf('day').fromNow()}
               <Link to={`/edit/${this.id}`}><FaEdit className="detail-button" datatype="edit" /></Link>
-              <FaTrashAlt className="detail-button" datatype="delete" onClick={() => window.confirm('Are you sure to delete?') ? this.onDeleteHideout() : null} />
             </summary>
             <div className="p-toolbar-group-right">
               <FaEye />

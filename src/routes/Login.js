@@ -3,7 +3,9 @@ import './Login.scss';
 
 // import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-
+import { FaGooglePlusG } from 'react-icons/fa';
+import { withNamespaces } from 'react-i18next';
+import store from 'store2';
 import MasterLayout from '../layout/MasterLayout';
 
 class Login extends Component {
@@ -11,20 +13,30 @@ class Login extends Component {
   constructor(props) {
     super(props);
     this.dispatch = props.dispatch;
-    const { counter } = this.props;
-    this.state = {
-      counter: counter,
-    }
+    this.auth = props.firebase.auth;
+    this.t = props.t;
+  }
+
+  componentWillMount() {
+    if (store.session('auth')) this.props.history.push('/');
+  }
+
+  async signInByGoogle() {
+    await this.auth.onSignInByGoogle();
+    window.location.reload();
   }
 
   render() {
     return (
       <MasterLayout>
         <div className="login">
-          <h1>
-            Login
-          </h1>
-          <h2>{this.props.counter}</h2>
+          <div className="login-form">
+            <h1 className="login-title">{this.t('LoginTitle')}</h1>
+            <div className="login-google" onClick={() => this.signInByGoogle()}>
+              <FaGooglePlusG className="login-google-icon" />
+              <span className="login-google-text">{this.t('LoginButton')}</span>
+            </div>
+          </div>
         </div>
       </MasterLayout>
     );
@@ -34,7 +46,9 @@ class Login extends Component {
 Login.propTypes = {}
 
 const mapStateToProps = state => {
-  return {}
+  return {
+    firebase: state.firebase,
+  }
 }
 
-export default connect(mapStateToProps)(Login);
+export default withNamespaces()(connect(mapStateToProps)(Login));

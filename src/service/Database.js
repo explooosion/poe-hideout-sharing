@@ -1,6 +1,5 @@
 import store from 'store2';
 import { db, REF_PICK } from './config';
-// import HideoutList from '../interface/HideoutList';
 import { setHideouts } from '../actions';
 
 class Database {
@@ -9,18 +8,6 @@ class Database {
 
   constructor() {
     this.db = db;
-    // this.onUsersSnapshot();
-  }
-
-  /**
-   * Users handler
-   */
-  onUsersSnapshot() {
-    this.dbUsers = this.db.ref('users');
-    this.dbUsers.on('value', snapshot => {
-      this.users = snapshot.val();
-      console.info('users', snapshot.val());
-    });
   }
 
   /**
@@ -37,17 +24,6 @@ class Database {
       console.info('snapshot', this.hideouts);
       dispatch(setHideouts(this.hideouts));
     });
-  }
-
-  /**
-   * Update user data
-   */
-  onSetUsers() {
-    const user = {
-      username: 'robby',
-      email: 'robby@mail.com',
-    }
-    this.db.ref(`users/${user.username}`).set(user);
   }
 
   /**

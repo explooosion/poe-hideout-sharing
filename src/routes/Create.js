@@ -8,8 +8,7 @@ import Files from 'react-files';
 import { FaTrashAlt } from 'react-icons/fa';
 import uuid from 'uuid/v1';
 import moment from 'moment';
-
-// import faker from 'faker';
+import store from 'store2';
 
 import { Steps } from 'primereact/steps';
 import { InputText } from 'primereact/inputtext';
@@ -65,10 +64,14 @@ class Create extends Component {
       file: null,
       fileChoose: '',
       fileProgressShow: false,
-      captcha: false,
+      captcha: process.env.NODE_ENV === 'development' ? true : false,
     }
 
     this.HKListener = this.onHotKeyNext.bind(this);
+  }
+
+  componentWillMount() {
+    if (!store.session('auth')) this.props.history.push('/login');
   }
 
   componentDidMount() {
@@ -406,10 +409,8 @@ class Create extends Component {
               <span className="form-valid" style={this.onValid(this.state.title)}>Please set the a title.</span>
             </div>
             <div className="create-control">
-              <Link to='/'>
-                <Button label="Cancel" className="p-button-secondary p-button-raised create-control-button" />
-              </Link>
-              <Button label="Next" icon="pi pi-arrow-right" iconPos="right" className="p-button-raised create-control-button" onClick={(e) => this.onNext()} />
+              <Button label="Cancel" className="p-button-secondary p-button-raised create-control-button" onClick={() => this.props.history.goBack()} />
+              <Button label="Next" icon="pi pi-arrow-right" iconPos="right" className="p-button-raised create-control-button" onClick={() => this.onNext()} />
             </div>
           </div>
         );
@@ -532,7 +533,11 @@ class Create extends Component {
                 </span>
                 {this.state.fileProgressShow ? <ProgressBar mode="indeterminate" style={{ height: '10px' }} /> : null}
               </Files>
-              <Captcha siteKey="6Lc8BI0UAAAAAKiq9Lu8ZYXO88T9FeFAnbEqNNA1" onResponse={res => this.onResponseCaptcha(res)}></Captcha>
+              {
+                process.env.NODE_ENV !== 'development'
+                  ? <Captcha siteKey="6Lc8BI0UAAAAAKiq9Lu8ZYXO88T9FeFAnbEqNNA1" onResponse={res => this.onResponseCaptcha(res)}></Captcha>
+                  : null
+              }
             </div>
             <div className="create-control">
               <Button label="Previous" icon="pi pi-arrow-left" iconPos="left" className="p-button-secondary p-button-raised create-control-button" onClick={(e) => this.onPrev()} />

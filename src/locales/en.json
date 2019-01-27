@@ -3,5 +3,9 @@
   "HeaderHome": "HOME",
   "HeaderAbout": "ABOUT",
   "HeaderGithub": "GITHUB",
-  "HeaderCreate": "CREATE"
+  "HeaderCreate": "CREATE",
+  "HeaderLogin": "LOGIN",
+  "HeaderLogout": "LOGOUT",
+  "LoginTitle": "Please login in.",
+  "LoginButton": "Sign in with Google"
 }

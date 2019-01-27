@@ -5,12 +5,21 @@
   align-items: center;
   width: 100vw;
   height: 100vh;
-  background-color: #111;
+  background-image: url('./images/loading.jpg');
+  background-repeat: no-repeat;
+  background-position: center top;
+  background-size: 100%;
+
+  img {
+    width: 250px;
+    border-radius: .5rem;
+    opacity: .8;
+  }
 
   h1 {
     display: flex;
     align-items: center;
-    margin-top: 2rem;
+    margin-top: 1.5rem;
     color: #fff;
 
     &::before {
