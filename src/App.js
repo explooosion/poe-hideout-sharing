@@ -3,7 +3,6 @@ import './App.scss';
 
 import { Switch, BrowserRouter as Router, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
-// import { withNamespaces } from 'react-i18next';
 
 import Header from './components/Header';
 
@@ -45,7 +44,7 @@ class App extends Component {
             )
             : (
               <div className="loading-container">
-                <img src={loading} title=":')" alt=":')" />
+                <img src={loading} alt="loading" title="loading" style={{ width: '250px', borderRadius: '.25rem' }} />
                 <h1><div className="lds-ellipsis"><div></div><div></div><div></div><div></div></div></h1>
               </div>
             )
