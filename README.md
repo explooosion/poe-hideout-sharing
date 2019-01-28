@@ -14,27 +14,16 @@
 
 ## ToDo
 
-### Routes
-
-- [ ] Home (hideout list)
-- [ ] Detail (:id - hideout)
-- [ ] About (website info)
-- [ ] Login (firebase)
-- [ ] Profile (account)
-- [x] Upload (new hideout)
-- [ ] Favourite (collec hideout)
-
 ### Feature
 
 - [ ] Logo
 - [x] i18n
-- [x] Deploy
+- [x] Hosting
 - [x] Storge
-- [x] Firebase
-- [ ] Online Code Viewer
-- [ ] Code Highlight
+- [x] Database
+- [x] Authentication
 
-## Dev
+## Developer
 
 ```sh
 git clone https://github.com/explooosion/poe-hideout-sharing.git
@@ -48,29 +37,13 @@ yarn # npm install
 yarn start # npm start
 ```
 
-## Dependencies
-
-- react
-- react-icons
-- react-router-dom
-- redux
-- react-redux
-- react-thunk
-- prop-types
-- node-scss
-- firebase
-  - authentication
-  - database
-  - hosting
-  - storage
-- prime
-  - primereact
-  - primeflex
-  - Primeicons
-
 ## Credit
 
 - [http://poedb.tw](http://poedb.tw)
+- [create-react-app](https://github.com/facebook/create-react-app)
+- [react-icons](https://react-icons.netlify.com/#/)
+- [firebase](https://firebase.google.com/)
+- [primereact](https://www.primefaces.org/primereact/#/)
 
 ## License
 
