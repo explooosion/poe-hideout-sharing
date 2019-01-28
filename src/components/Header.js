@@ -82,11 +82,11 @@ class Header extends Component {
             <Button className="p-button-secondary" icon="pi pi-bars" onClick={(event) => this.menu.toggle(event)} />
           </div>
           <ul className="topbar-menu">
-            <li><Link to="/profile" alt={displayName} title={displayName}><img src={photoURL} style={{ width: '30px', borderRadius: '100%' }} /></Link></li>
+            <li><Link to="/profile"><img src={photoURL} style={{ width: '30px', borderRadius: '100%' }} alt={displayName} title={displayName} /></Link></li>
             <li><Link to="/create" alt="create" title="create"><MdNoteAdd size="2rem" /></Link></li>
             {
               store.session('auth')
-                ? <li><a onClick={() => this.onLogout()} alt="logout" title="logout"><IoMdLogOut size="2rem" /></a></li>
+                ? <li><a href="#logout" onClick={() => this.onLogout()} alt="logout" title="logout"><IoMdLogOut size="2rem" /></a></li>
                 : <li><Link to="/login" alt="login" title="login"><IoMdLogIn size="2rem" /></Link></li>
             }
             <li><a href="https://github.com/explooosion/poe-hideout-sharing" target="_blank" rel="noopener noreferrer" alt="github" title="github"><IoLogoGithub size="2rem" /></a></li>

@@ -220,8 +220,8 @@ class Create extends Component {
       List.version = this.state.version;
 
       const date = moment();
-      List.update = date.format('MMMM DD YYYY, h:mm:ss a');
-      List.create = date.format('MMMM DD YYYY, h:mm:ss a');
+      List.update = date.format('YYYY-MM-DD, hh:mm:ss');
+      List.create = date.format('YYYY-MM-DD, hh:mm:ss');
       List.timestamp = date.format('X');
 
       List.download = 0; // Math.floor(Math.random() * 500);  // Fake
@@ -240,7 +240,7 @@ class Create extends Component {
       List.version = this.state.version;
 
       const date = moment();
-      List.update = date.format('MMMM DD YYYY, h:mm:ss a');
+      List.update = date.format('YYYY-MM-DD, HH:mm:ss');
       List.screenshots = this.state.screenshotList;
       List.fileName = fileName;
     }

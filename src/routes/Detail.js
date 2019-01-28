@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './Detail.scss';
 
 import { connect } from 'react-redux';
-import { FaHeart, FaEye, FaDownload, FaEdit, FaTrashAlt } from 'react-icons/fa';
+import { FaHeart, FaEye, FaDownload, FaEdit } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { Redirect } from 'react-router';
 import moment from 'moment';

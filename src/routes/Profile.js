@@ -43,7 +43,7 @@ class Profile extends Component {
       return (
         <tr key={list.id}>
           <td><Link to={`/detail/${list.id}`}><FaExternalLinkAlt size="1.5rem" /></Link></td>
-          <td><Link to={`/detail/${list.id}`}><img src={list.thumbnail} style={{ width: '100px', borderRadius: '.25rem' }} /></Link></td>
+          <td><Link to={`/detail/${list.id}`}><img src={list.thumbnail} style={{ width: '100px', borderRadius: '.25rem' }} alt="thumbnail" title="thumbnail" /></Link></td>
           <td>{list.type}</td>
           <td>{list.title}</td>
           <td>{list.views}</td>
@@ -52,7 +52,10 @@ class Profile extends Component {
           <td>{list.update}</td>
           <td className="profile-list-control">
             <Link to={`/edit/${list.id}`}><FaEdit size="1.5rem" /></Link>
-            <a><FaTrashAlt size="1.5rem" onClick={() => window.confirm(`Delete 「${list.title}」 ???`) ? this.onDeleteHideout(list) : null} /></a>
+            <FaTrashAlt
+              size="1.5rem"
+              onClick={() => window.confirm(`Delete 「${list.title}」 ???`) ? this.onDeleteHideout(list) : null}
+            />
           </td>
         </tr>
       );
@@ -66,7 +69,7 @@ class Profile extends Component {
       <MasterLayout>
         <div className="profile">
           <div className="profile-form">
-            <img src={photoURL} style={{ width: '80px', borderRadius: '100%' }} />
+            <img src={photoURL} style={{ width: '80px', borderRadius: '100%' }} alt={`Hi~ ${displayName}`} title={`Hi~ ${displayName}`} />
             <h4 className="profile-name">{displayName}</h4>
             {
               Lists.length > 0 ?
