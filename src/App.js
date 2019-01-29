@@ -22,9 +22,7 @@ class App extends Component {
     this.dispatch = props.dispatch;
     this.database = props.database;
     this.database.onHideoutsSnapshot(this.dispatch);
-    this.state = {
-      time: 10,
-    }
+    this.state = { time: 10 };
   }
 
   componentDidMount() {
@@ -34,9 +32,7 @@ class App extends Component {
         clearInterval(this.load);
         return;
       }
-      this.setState({
-        time: l - 1,
-      })
+      this.setState({ time: l - 1 })
     }, 1000);
   }
 

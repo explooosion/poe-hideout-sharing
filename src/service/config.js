@@ -9,11 +9,11 @@ console.info(`[${process.env.NODE_ENV.toUpperCase()} MODE]`);
 const REF_PICK = process.env.NODE_ENV === 'development' ? '_dev' : '';
 
 const config = {
-  apiKey: 'AIzaSyCE2_Ln7-2_II4flCTrvT5xuS_bYjBQt40',
-  authDomain: 'poe-hideout.firebaseapp.com',
-  databaseURL: 'https://poe-hideout.firebaseio.com/',
-  projectId: "***",
-  storageBucket: 'gs://poe-hideout.appspot.com/',
+  apiKey: process.env.REACT_APP_API_KEY,
+  authDomain: process.env.REACT_APP_AUTH_DOMAIN,
+  databaseURL: process.env.REACT_APP_DATABASE_URL,
+  projectId: process.env.REACT_APP_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_STORAGE_BUCKET,
 }
 
 firebase.initializeApp(config);

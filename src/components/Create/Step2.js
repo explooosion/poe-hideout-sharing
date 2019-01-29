@@ -65,7 +65,7 @@ class Step2 extends Component {
           </Files>
           {
             process.env.NODE_ENV !== 'development'
-              ? <Captcha siteKey="6Lc8BI0UAAAAAKiq9Lu8ZYXO88T9FeFAnbEqNNA1" onResponse={res => this.onResponseCaptcha(res)}></Captcha>
+              ? <Captcha siteKey={process.env.REACT_APP_CAPTCHA_KEY} onResponse={res => this.onResponseCaptcha(res)}></Captcha>
               : null
           }
         </div>
