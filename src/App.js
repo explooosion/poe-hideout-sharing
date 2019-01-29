@@ -22,6 +22,22 @@ class App extends Component {
     this.dispatch = props.dispatch;
     this.database = props.database;
     this.database.onHideoutsSnapshot(this.dispatch);
+    this.state = {
+      time: 10,
+    }
+  }
+
+  componentDidMount() {
+    this.load = setInterval(() => {
+      const l = this.state.time;
+      if (l === 0) {
+        clearInterval(this.load);
+        return;
+      }
+      this.setState({
+        time: l - 1,
+      })
+    }, 1000);
   }
 
   render() {
@@ -29,7 +45,7 @@ class App extends Component {
       <Router>
         {
           /* Loading */
-          this.database.hideouts.length > 0
+          this.database.hideouts.length > 0 || this.state.time === 0
             ? (
               <div>
                 <Header />
