@@ -25,6 +25,11 @@ class HideoutList {
   author = '';
 
   /**
+   * AuthorId
+   */
+  authorId = '';
+
+  /**
    * Type
    */
   type = '';
@@ -93,6 +98,7 @@ class HideoutList {
       title: this.title,
       description: this.description,
       author: this.author,
+      authorId: this.authorId,
       type: this.type,
       thumbnail: this.thumbnail,
       favour: this.favour,

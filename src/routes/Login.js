@@ -5,25 +5,31 @@ import './Login.scss';
 import { connect } from 'react-redux';
 import { FaGooglePlusG } from 'react-icons/fa';
 import { withNamespaces } from 'react-i18next';
-import store from 'store2';
 import MasterLayout from '../layout/MasterLayout';
+import Session from '../service/Session';
 
 class Login extends Component {
 
   constructor(props) {
     super(props);
     this.dispatch = props.dispatch;
-    this.auth = props.firebase.auth;
+    this.auth = props.auth;
+    this.users = props.users;
     this.t = props.t;
   }
 
   componentWillMount() {
-    if (store.session('auth')) this.props.history.push('/');
+    if (Session.get('auth')) {
+      // Login susessful
+      const user = this.users.get().find(({ uid }) => uid === Session.get('auth').uid);
+      // Check is new user
+      if (!user) this.users.onCreateUser(Session.get('auth'));
+      this.props.history.push('/');
+    }
   }
 
   async signInByGoogle() {
     await this.auth.onSignInByGoogle();
-    window.location.reload();
   }
 
   render() {
@@ -47,7 +53,8 @@ Login.propTypes = {}
 
 const mapStateToProps = state => {
   return {
-    firebase: state.firebase,
+    auth: state.auth,
+    users: state.users,
   }
 }
 

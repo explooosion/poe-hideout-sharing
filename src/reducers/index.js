@@ -1,10 +1,16 @@
 import { combineReducers } from 'redux';
 import hideouts from './hideouts';
 import settings from './settings';
-import firebase from './firebase';
+import auth from './auth';
+import database from './database';
+import storage from './storage';
+import users from './users';
 
 export default combineReducers({
   hideouts,
   settings,
-  firebase,
+  auth,
+  database,
+  storage,
+  users,
 })

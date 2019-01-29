@@ -13,25 +13,22 @@ class Storage {
    * Upload hideout file
    * @param {FILE} file
    */
-  async onUploadHideout(file) {
+  async onUploadHideout(file = {}) {
     try {
       const { extension } = file;
+      // Check file extension
       if (extension !== 'hideout') {
         console.error('Please check your file extension.');
         return { status: false };
       }
+
+      // Upload file
       const fileName = `${uuid()}.${extension}`;
       return this.hideoutRef.child(fileName)
         .put(file).then(snapshot => {
-          const { state } = snapshot;
-          console.log('Upload', snapshot);
-          return state === 'success'
+          return snapshot.state === 'success'
             ? { status: true, fileName }
             : { status: false };
-          // Debug for download
-          // return this.hideoutRef.child(fileName).getDownloadURL()
-          //   .then(url => { return { status: true, url, fileName } })
-          //   .catch(e => { console.error(e); return { status: false, error: e } });
         });
     } catch (e) {
       console.error('Please check your file.');
@@ -43,7 +40,8 @@ class Storage {
    * Delete file
    * @param {string} fileName
    */
-  async onDeleteHideout(fileName) {
+  async onDeleteHideout(fileName = '') {
+    if (fileName.length === 0) return;
     await this.hideoutRef.child(fileName).delete().catch(e => console.error('onDeleteHideout', e));
   }
 
@@ -51,7 +49,8 @@ class Storage {
    * Get hideout file link
    * @param {string} fileName
    */
-  async getHideoutLink(fileName) {
+  async getHideoutLink(fileName = '') {
+    if (fileName.length === 0) return;
     return this.hideoutRef.child(fileName).getDownloadURL()
       .then(url => url)
       .catch(e => e);

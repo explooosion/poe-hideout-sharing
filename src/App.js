@@ -5,6 +5,7 @@ import { Switch, BrowserRouter as Router, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import Header from './components/Header';
+import Loading from './components/Animation/Loading';
 
 import Home from './routes/Home';
 import Detail from './routes/Detail';
@@ -19,7 +20,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.dispatch = props.dispatch;
-    this.database = this.props.firebase.database;
+    this.database = props.database;
     this.database.onHideoutsSnapshot(this.dispatch);
   }
 
@@ -35,6 +36,7 @@ class App extends Component {
                 <Switch>
                   <Route exact path="/" component={Home} />
                   <Route exact path="/profile" component={Profile} />
+                  <Route exact path="/profile/:id" component={Profile} />
                   <Route exact path="/login" component={Login} />
                   <Route exact path="/create" component={Create} />
                   <Route exact path="/edit/:id" component={Create} />
@@ -45,7 +47,7 @@ class App extends Component {
             : (
               <div className="loading-container">
                 <img src={loading} alt="loading" title="loading" style={{ width: '250px', borderRadius: '.25rem' }} />
-                <h1><div className="lds-ellipsis"><div></div><div></div><div></div><div></div></div></h1>
+                <h1><Loading /></h1>
               </div>
             )
         }
@@ -59,9 +61,8 @@ App.propTypes = {}
 const mapStateToProps = state => {
   return {
     hideouts: state.hideouts,
-    firebase: state.firebase,
+    database: state.database,
   }
 }
 
-// export default withNamespaces()(connect(mapStateToProps)(App));
 export default connect(mapStateToProps)(App);

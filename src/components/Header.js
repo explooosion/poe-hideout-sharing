@@ -4,7 +4,6 @@ import './Header.scss';
 import { withNamespaces } from 'react-i18next';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
-import store from 'store2';
 import { MdNoteAdd } from 'react-icons/md';
 import { IoMdLogOut, IoMdLogIn, IoLogoGithub } from 'react-icons/io';
 
@@ -13,6 +12,7 @@ import { Button } from 'primereact/button';
 import { Menu } from 'primereact/menu';
 import { Dropdown } from 'primereact/dropdown';
 
+import Session from '../service/Session';
 import { setLocal } from '../actions';
 import logo from '../images/logo.svg';
 
@@ -20,10 +20,10 @@ class Header extends Component {
 
   constructor(props) {
     super(props);
-    const { locale } = this.props.settings;
+    const { locale } = props.settings;
     this.dispatch = props.dispatch;
-    this.auth = props.firebase.auth;
     this.t = props.t;
+    this.auth = props.auth;
     this.state = {
       visible: false,
       items: [
@@ -53,7 +53,7 @@ class Header extends Component {
 
   async onLogout() {
     await this.auth.onLogout();
-    window.location.reload();
+    window.location.href = '/';
   }
 
   renderFlagTemplate(option) {
@@ -66,11 +66,11 @@ class Header extends Component {
   }
 
   render() {
-    const { displayName, photoURL } = this.auth.user;
+    const { uname, avatar } = this.auth.user;
     return (
       <nav className="nav">
         <header className="header">
-          <Link to="/" className="menu-button" onClick={e => this.setState({ visible: true })}>
+          <Link to="/" className="menu-button" onClick={() => this.setState({ visible: true })}>
             <i className="pi pi-bars" />
           </Link>
           <a href="/" className="logo">
@@ -82,10 +82,15 @@ class Header extends Component {
             <Button className="p-button-secondary" icon="pi pi-bars" onClick={(event) => this.menu.toggle(event)} />
           </div>
           <ul className="topbar-menu">
-            <li><Link to="/profile"><img src={photoURL} style={{ width: '30px', borderRadius: '100%' }} alt={displayName} title={displayName} /></Link></li>
+            {
+              Session.get('auth')
+                ? <li><Link to="/profile"><img src={avatar} style={{ width: '30px', borderRadius: '100%' }} alt={uname} title={uname} /></Link></li>
+
+                : null
+            }
             <li><Link to="/create" alt="create" title="create"><MdNoteAdd size="2rem" /></Link></li>
             {
-              store.session('auth')
+              Session.get('auth')
                 ? <li><a href="#logout" onClick={() => this.onLogout()} alt="logout" title="logout"><IoMdLogOut size="2rem" /></a></li>
                 : <li><Link to="/login" alt="login" title="login"><IoMdLogIn size="2rem" /></Link></li>
             }
@@ -94,13 +99,13 @@ class Header extends Component {
               <Dropdown
                 value={this.state.locale}
                 options={this.state.locales}
-                onChange={(e) => this.onChangeLanguage(e.value)}
+                onChange={e => this.onChangeLanguage(e.value)}
                 itemTemplate={this.renderFlagTemplate}
               />
             </li>
           </ul>
         </header>
-        <Sidebar visible={this.state.visible} onHide={e => this.setState({ visible: false })}></Sidebar>
+        <Sidebar visible={this.state.visible} onHide={() => this.setState({ visible: false })}></Sidebar>
       </nav>
     );
   }
@@ -112,7 +117,7 @@ const mapStateToProps = state => {
   return {
     hideouts: state.hideouts,
     settings: state.settings,
-    firebase: state.firebase,
+    auth: state.auth,
   }
 }
 

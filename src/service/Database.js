@@ -1,4 +1,4 @@
-import store from 'store2';
+import Session from './Session';
 import { db, REF_PICK } from './config';
 import { setHideouts } from '../actions';
 
@@ -21,7 +21,7 @@ class Database {
       this.hideouts = Object.keys(datas)
         .map(key => datas[key])
         .sort((a, b) => (a[SORTKEY] < b[SORTKEY]) ? 1 : ((b[SORTKEY] < a[SORTKEY]) ? -1 : 0));
-      console.info('snapshot', this.hideouts);
+      // console.info('snapshot', this.hideouts);
       dispatch(setHideouts(this.hideouts));
     });
   }
@@ -54,8 +54,8 @@ class Database {
   async onUpdateHideoutViews(_id) {
     // Visited rule save in session
     const hideout = this.hideouts.find(({ id }) => id === _id);
-    if (hideout !== undefined && !store.session(`views-${_id}`)) {
-      store.session(`views-${_id}`, true);
+    if (hideout !== undefined && !Session.get(`v-${_id}`)) {
+      Session.set(`v-${_id}`, true);
       await this.db.ref(`hideouts${REF_PICK}/${_id}`).update({ 'views': hideout.views + 1 });
     }
   }

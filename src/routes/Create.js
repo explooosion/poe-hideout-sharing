@@ -3,29 +3,27 @@ import './Create.scss';
 
 // import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
-import Files from 'react-files';
-import { FaTrashAlt } from 'react-icons/fa';
+import { Redirect } from 'react-router';
+import { withNamespaces } from 'react-i18next';
 import uuid from 'uuid/v1';
 import moment from 'moment';
-import store from 'store2';
 
 import { Steps } from 'primereact/steps';
-import { InputText } from 'primereact/inputtext';
-import { SelectButton } from 'primereact/selectbutton';
-import { Button } from 'primereact/button';
-import { Spinner } from 'primereact/spinner';
 import { Growl } from 'primereact/growl';
-import { Dialog } from 'primereact/dialog';
-import { ProgressBar } from 'primereact/progressbar';
-import { Captcha } from 'primereact/captcha';
+
+import Session from '../service/Session';
 
 // layout
 import MasterLayout from '../layout/MasterLayout';
 
+// Step components
+import Step0 from '../components/Create/Step0';
+import Step1 from '../components/Create/Step1';
+import Step2 from '../components/Create/Step2';
+import Step3 from '../components/Create/Step3';
+
 // interface
 import HideoutList from '../interface/HideoutList';
-import HideoutScreenshot from '../interface/HideoutScreenshot';
 
 const defaultModelImg = 'https://via.placeholder.com/392x220?text=Path+Of+Exile';
 
@@ -34,11 +32,13 @@ class Create extends Component {
   constructor(props) {
     super(props);
     this.dispatch = props.dispatch;
-    this.id = this.props.match.params.id;
-    this.database = this.props.firebase.database;
-    this.storage = this.props.firebase.storage;
+    this.t = props.t;
+    this.id = props.match.params.id;
+    this.database = props.database;
+    this.storage = props.storage;
+    this.auth = props.auth;
+    this.users = props.users;
     this.hideout = new HideoutList();
-
     this.state = {
       steps: [
         { label: 'Title' },
@@ -71,7 +71,7 @@ class Create extends Component {
   }
 
   componentWillMount() {
-    if (!store.session('auth')) this.props.history.push('/login');
+    if (!Session.get('auth')) this.props.history.push('/login');
   }
 
   componentDidMount() {
@@ -117,8 +117,13 @@ class Create extends Component {
     step = step >= 3 ? 3 : step + 1;
 
     // onPublish event
-    if (step === this.state.steps.length - 1)
-      await this.onPublish();
+    if (step === this.state.steps.length - 1) {
+      const status = await this.onPublish();
+      if (!status) {
+        this.setState({ step: step - 1 });
+        return;
+      }
+    }
 
     // Wait for onNextCheck or onPublish
     this.setState({ step: step });
@@ -201,27 +206,29 @@ class Create extends Component {
       // Upload new file
       const result = await this.storage.onUploadHideout(this.state.file);
       fileName = result.fileName;
-      console.info(result.status, result.fileName);
+      // console.info(result.status, result.fileName);
       if (!result.status) valid = false;
     }
 
     let List = {};
+    const { uname, uid } = this.auth.user;
     if (!this.id) {
       // Create new list
       List = new HideoutList();
       List.title = this.state.title;
       List.id = uuid();
       List.description = this.state.description;
-      List.author = 'Robby';    // fake
-      List.type = 'Backstreet'; // fake
+      List.author = uname;
+      List.authorId = uid;
 
+      List.type = 'Backstreet'; // fake
       List.thumbnail = this.state.thumbnail;
       List.favour = Math.floor(Math.random() * 10000000); // Hideout favour
       List.version = this.state.version;
 
       const date = moment();
-      List.update = date.format('YYYY-MM-DD, hh:mm:ss');
-      List.create = date.format('YYYY-MM-DD, hh:mm:ss');
+      List.update = date.toString();
+      List.create = date.toString();
       List.timestamp = date.format('X');
 
       List.download = 0; // Math.floor(Math.random() * 500);  // Fake
@@ -238,13 +245,12 @@ class Create extends Component {
       List.description = this.state.description;
       List.thumbnail = this.state.thumbnail;
       List.version = this.state.version;
-
-      const date = moment();
-      List.update = date.format('YYYY-MM-DD, HH:mm:ss');
+      List.update = moment().toString();
       List.screenshots = this.state.screenshotList;
       List.fileName = fileName;
     }
 
+    // Check payload keys
     Object.keys(List).forEach(key => {
       if (List[key].length === 0) {
         valid = false;
@@ -255,7 +261,6 @@ class Create extends Component {
 
     // Add or update hideout
     if (valid) {
-      console.log('push', List);
       await this.database.onSetHideouts(List, !this.id ? true : false);
       this.growl.show({
         severity: 'success',
@@ -263,74 +268,20 @@ class Create extends Component {
         detail: this.state.title,
       });
 
-      // // Redirect to home pages
+      // Redirect to home pages
       this.timer = setInterval(() => {
         if (this.state.finishTimer <= 0) {
           clearInterval(this.timer);
           this.props.history.push('/');
         } else {
-          this.setState({
-            finishTimer: this.state.finishTimer - 1,
-          });
+          this.setState({ finishTimer: this.state.finishTimer - 1 });
         };
       }, 1000);
     } else {
       this.setState({ fileProgressShow: false });
     }
-  }
 
-  /**
-   * Pass Captcha
-   * @param {object} response
-   */
-  onResponseCaptcha(response) {
-    if (response) this.setState({ captcha: true });
-  }
-
-  onScreenshotModelUrlChange(url) {
-    const URL = url === '' ? defaultModelImg : url;
-    this.setState({
-      screenshotModelUrl: url,
-      screenshotModelImg: URL,
-    });
-  }
-
-  onAddScreenshot() {
-    // Check input url
-    if (this.state.screenshotModelUrl.length === 0) {
-      this.growl.show({ severity: 'warn', summary: 'Oops!', detail: 'Missing url or youtube id.' });
-      return;
-    };
-    // Check exist url
-    if (this.state.screenshotList.find(({ url }) => url === this.state.screenshotModelUrl) !== undefined) {
-      this.growl.show({ severity: 'warn', summary: 'Oops!', detail: 'Already in screenshot list.' });
-      return;
-    };
-
-    const list = this.state.screenshotList;
-    const url = this.state.screenshotModelType === 'youtube'
-      ? `https://www.youtube.com/embed/${this.state.screenshotModelUrl}?rel=0`
-      : this.state.screenshotModelUrl;
-
-    const screenshot = new HideoutScreenshot(url, this.state.screenshotModelType);
-    list.push(screenshot.toJSON());
-
-    this.setState({
-      screenshotModel: false,
-      screenshotModelUrl: '',
-      screenshotModelType: 'image',
-      screenshotModelImg: defaultModelImg,
-      screenshotList: list,
-    });
-  }
-
-  onFilesChange(files) {
-    // Single file
-    this.setState({ file: files[0], fileChoose: files[0].name });
-  }
-
-  onFilesError(error, file) {
-    console.error('error code ' + error.code + ': ' + error.message, file);
+    return valid;
   }
 
   /**
@@ -348,7 +299,7 @@ class Create extends Component {
           break;
         }
         valid = false; break; // for file upload
-      default: valid = false; console.warn(data, typeof data); break;
+      default: valid = false; console.warn(typeof data, data); break;
     }
     return valid
       ? { display: 'none' }
@@ -356,44 +307,11 @@ class Create extends Component {
   }
 
   /**
-   * Delete preview image or yotube
-   * @param {string} source
+   * Upadte state by child
+   * @param {object} state
    */
-  onDeletePreviewImage(source) {
-    const screenshotList = this.state.screenshotList.filter(({ url }) => url !== source);
-    this.setState({ screenshotList });
-  }
-
-  renderGroupPreview() {
-    const list = this.state.screenshotList ? this.state.screenshotList : [];
-    return list.map(({ type, url }, index) => {
-      const KEY = `screenshot-${index}`;
-      let image;
-      switch (type) {
-        case 'image':
-          image = (<img src={url} alt={url} />);
-          break;
-        case 'youtube':
-          image = (
-            <div className="youtube-container">
-              <iframe title="share" src={url} frameBorder="0" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
-            </div>
-          );
-          break;
-        default:
-          image = null;
-          break;
-      }
-      return (
-        <div className="group-preview-image" key={KEY}>
-          <FaTrashAlt
-            className="group-preview-delete"
-            onClick={() => this.onDeletePreviewImage(url)}
-          />
-          {image}
-        </div>
-      )
-    });
+  onSetState(state) {
+    this.setState(state);
   }
 
   renderSteps() {
@@ -402,170 +320,58 @@ class Create extends Component {
       case 0:
       default:
         return (
-          <div className="create-group">
-            <h1 className="create-title">What is your hideout name?</h1>
-            <div className="p-grid p-justify-center group-title">
-              <InputText className="p-col-11 form-title" value={this.state.title} onChange={(e) => this.setState({ title: e.target.value })} placeholder="Please Input your hideout name." autoFocus />
-              <span className="form-valid" style={this.onValid(this.state.title)}>Please set the a title.</span>
-            </div>
-            <div className="create-control">
-              <Button label="Cancel" className="p-button-secondary p-button-raised create-control-button" onClick={() => this.props.history.goBack()} />
-              <Button label="Next" icon="pi pi-arrow-right" iconPos="right" className="p-button-raised create-control-button" onClick={() => this.onNext()} />
-            </div>
-          </div>
+          <Step0
+            state={this.state}
+            history={this.props.history}
+            onSetState={this.onSetState.bind(this)}
+            onNext={this.onNext.bind(this)}
+            onValid={this.onValid.bind(this)}
+          />
         );
       case 1:
         return (
-          <div className="create-group">
-            <h1 className="create-title">{this.state.title}</h1>
-            <div className="p-grid p-justify-center">
-              <div className="p-col-3">
-                <label htmlFor="txtDescription">Description:</label>
-              </div>
-              <div className="p-col-8">
-                <InputText id="txtDescription" value={this.state.description} onChange={(e) => this.setState({ description: e.target.value })} placeholder="Please Input your hideout description." autoFocus />
-                <span className="form-valid" style={this.onValid(this.state.description)}>Please set the description.</span>
-              </div>
-            </div>
-            <div className="p-grid p-justify-center group-version">
-              <div className="p-col-3">
-                <label htmlFor="txtVersion">Version:</label>
-              </div>
-              <div className="p-col-8">
-                <Spinner id="txtVersion" keyfilter="int" min={1} max={100} step={1} value={this.state.version} onChange={(e) => this.setState({ version: e.target.value })} placeholder="Please Input your hideout version." />
-                <span className="form-valid" style={this.onValid(this.state.version)}>Please set the version.</span>
-              </div>
-            </div>
-            <div className="p-grid p-justify-center group-thumbnail">
-              <div className="p-col-3">
-                <label htmlFor="txtThumbnail">Thumbnail:</label>
-                <small>( jpg | png | gif )</small>
-              </div>
-              <div className="p-col-8">
-                <InputText className="form-thumbnail" id="txtThumbnail" value={this.state.thumbnail} onChange={(e) => this.setState({ thumbnail: e.target.value })} placeholder="Please Input your hideout thumbnail url." />
-                <span className="form-valid" style={this.onValid(this.state.thumbnail)}>Please set the thumbnail.</span>
-                <img src={this.state.thumbnail} alt={this.state.thumbnail} />
-                <a href="https://imgur.com/" target="_blank" rel="noopener noreferrer">Need to upload?</a>
-              </div>
-            </div>
-            <div className="p-grid p-justify-center group-screenshot">
-              <div className="p-col-3">
-                <label htmlFor="txtThumbnail">Screenshot:</label>
-              </div>
-              <div className="p-col-8">
-                <Button label="Add" icon="pi pi-plus" iconPos="left" className="p-button-raised" onClick={() => this.setState({ screenshotModel: true })} />
-                <Button label="Reset" icon="pi pi-replay" iconPos="left" className="p-button-secondary p-button-raised" onClick={() => this.setState({ screenshotList: [] })} />
-                <Dialog
-                  className="screenshot-model"
-                  header="Add Screenshot"
-                  visible={this.state.screenshotModel}
-                  footer={this.renderModelFooter()}
-                  modal={true}
-                  onHide={(e) => this.setState({ screenshotModel: false })}
-                /* dismissableMask={true} */
-                >
-                  <div className="model-row">
-                    <label htmlFor="txtScreenshotUrl">Type:</label>
-                    <SelectButton
-                      style={{ marginTop: '.25rem' }}
-                      value={this.state.screenshotModelType}
-                      options={this.state.screenshotModelTypes}
-                      onChange={(e) => this.setState({ screenshotModelType: e.value, screenshotModelUrl: '', screenshotModelImg: defaultModelImg })}
-                    >
-                    </SelectButton>
-                    <label htmlFor="txtScreenshotUrl">Url or Youtube ID:</label>
-                    <InputText id="txtScreenshotUrl" value={this.state.screenshotModelUrl} onChange={(e) => this.onScreenshotModelUrlChange(e.target.value)} />
-                    <span className="form-valid" style={this.onValid(this.state.screenshotModelUrl)}>Please set the url or youtube id.</span>
-                    <label htmlFor="txtScreenshotUrl">*.Example</label>
-                    <span>Imgur: <b>https://imgur.com/A5iSyj1.jpg</b></span>
-                    <span>Youtube: https://www.youtube.com/watch?v=<b>DDx1fysX5oo</b></span>
-                  </div>
-                  <div className="model-row">
-                    {
-                      this.state.screenshotModelType === 'image'
-                        ? (<img className="form-screenshot" src={this.state.screenshotModelImg} alt={this.state.screenshotModelImg} />)
-                        : (
-                          <div className="youtube-container">
-                            <iframe title="share" src={`https://www.youtube.com/embed/${this.state.screenshotModelImg}?rel=0`} frameBorder="0" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
-                          </div>
-                        )
-                    }
-                  </div>
-                </Dialog>
-              </div>
-            </div>
-            <div className="p-grid p-justify-center group-preview">
-              <div className="p-col-11">
-                <span
-                  className="form-valid"
-                  style={this.onValid(this.state.screenshotList)}
-                >
-                  Please add screenshotLists.
-                </span>
-                {this.renderGroupPreview()}
-              </div>
-            </div>
-            <div className="create-control">
-              <Button label="Previous" icon="pi pi-arrow-left" iconPos="left" className="p-button-secondary p-button-raised create-control-button" onClick={(e) => this.onPrev()} />
-              <Button label="Next" icon="pi pi-arrow-right" iconPos="right" className="p-button-raised create-control-button" onClick={(e) => this.onNext()} />
-            </div>
-          </div>
+          <Step1
+            state={this.state}
+            onSetState={this.onSetState.bind(this)}
+            onNext={this.onNext.bind(this)}
+            onPrev={this.onPrev.bind(this)}
+            onValid={this.onValid.bind(this)}
+          />
         );
       case 2:
         return (
-          <div className="create-group">
-            <h1 className="create-title">Choose your hideout file.</h1>
-            <br />
-            <div className="p-grid p-justify-center group-upload">
-              <Files
-                className="files-dropzone"
-                onChange={files => this.onFilesChange(files)}
-                onError={(error, file) => this.onFilesError(error, file)}
-                accepts={['.hideout', 'hideout/*']}
-                maxFileSize={10000000}
-                minFileSize={0}
-                clickable
-              >
-                <div className="files-title">Drop files here or click to upload</div>
-                <p style={{ color: '#f00', textAlign: 'center' }}>{this.state.fileChoose}</p>
-                <span className="form-valid" style={Object.assign({}, this.onValid(this.state.file), { textAlign: 'center' })}>
-                  {this.id ? 'Please choose the new file or ignoring.' : 'Please choose the file.'}
-                </span>
-                {this.state.fileProgressShow ? <ProgressBar mode="indeterminate" style={{ height: '10px' }} /> : null}
-              </Files>
-              {
-                process.env.NODE_ENV !== 'development'
-                  ? <Captcha siteKey="6Lc8BI0UAAAAAKiq9Lu8ZYXO88T9FeFAnbEqNNA1" onResponse={res => this.onResponseCaptcha(res)}></Captcha>
-                  : null
-              }
-            </div>
-            <div className="create-control">
-              <Button label="Previous" icon="pi pi-arrow-left" iconPos="left" className="p-button-secondary p-button-raised create-control-button" onClick={(e) => this.onPrev()} />
-              <Button label="Submit" icon="pi pi-arrow-right" iconPos="right" className="p-button-raised create-control-button" onClick={(e) => this.onNext()} />
-            </div>
-          </div>
+          <Step2
+            id={this.id}
+            state={this.state}
+            onSetState={this.onSetState.bind(this)}
+            onNext={this.onNext.bind(this)}
+            onPrev={this.onPrev.bind(this)}
+            onValid={this.onValid.bind(this)}
+          />
         );
       case 3:
         return (
-          <div className="create-group">
-            <h1 className="create-title">Publish!</h1>
-            <div className="create-control">
-              <Link to='/'>
-                <Button label={`Finish (${this.state.finishTimer})`} className="p-button-raised create-control-button" onClick={(e) => clearInterval(this.timer)} />
-              </Link>
-            </div>
-          </div>
+          <Step3
+            timer={this.timer}
+            state={this.state}
+            onSetState={this.onSetState.bind(this)}
+            onNext={this.onNext.bind(this)}
+            onPrev={this.onPrev.bind(this)}
+            onValid={this.onValid.bind(this)}
+          />
         );
     }
   }
 
-  renderModelFooter() {
-    return <Button label="Add" className="p-button-raised model-add" onClick={(e) => this.onAddScreenshot()} />;
-  }
-
   render() {
     this.hideout = this.props.hideouts.Lists.find(({ id }) => id === this.id);
-
+    // Edit mode check
+    if (this.id && Session.get('auth')) {
+      // Not find hideout by id
+      if (!this.hideout) return <Redirect to="/" />;
+      // Auth 401
+      if (this.hideout.authorId !== this.auth.user.uid) return <Redirect to="/" />;
+    }
     return (
       <MasterLayout>
         <div className="create">
@@ -585,8 +391,11 @@ Create.propTypes = {}
 const mapStateToProps = state => {
   return {
     hideouts: state.hideouts,
-    firebase: state.firebase,
+    auth: state.auth,
+    database: state.database,
+    storage: state.storage,
+    users: state.users,
   }
 }
 
-export default connect(mapStateToProps)(Create);
+export default withNamespaces()(connect(mapStateToProps)(Create));

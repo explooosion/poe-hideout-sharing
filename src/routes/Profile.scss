@@ -11,17 +11,18 @@
   background-size: 100%;
 
   .profile-form {
-    margin-top: 2.5rem;
-    padding: 1.5rem 0 2rem;
+    margin-top: 2rem;
+    padding: 1rem 0;
+    overflow: hidden;
     width: $screen-lg;
-    height: calc(85vh - #{$header-height});
+    height: calc(90vh - #{$header-height});
     text-align: center;
     background-color: $dark;
     border: 2px solid $gray;
 
     .profile-name {
-      padding: .5rem 0 1rem;
-      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      margin-bottom: .5rem;
       color: #fff;
       border-bottom: 1px solid $gray;
       font-family: Arial, Helvetica, sans-serif;
@@ -30,6 +31,11 @@
       &::before {
         content: '@';
       }
+    }
+
+    .profile-list-container {
+      overflow: scroll;
+      height: 500px;
     }
 
     .profile-list {

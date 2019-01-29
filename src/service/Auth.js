@@ -1,5 +1,6 @@
-import store from 'store2';
 import { firebase, auth } from './config';
+import Session from './Session';
+import User from '../interface/User';
 
 class Auth {
 
@@ -11,7 +12,7 @@ class Auth {
     this.provider.addScope('https://www.googleapis.com/auth/contacts.readonly');
     this.auth.useDeviceLanguage();
     this.onAuthStateChanged();
-    if (store.session('auth')) this.user = store.session('auth');
+    if (Session.get('auth')) this.user = Session.get('auth');
   }
 
   /**
@@ -21,20 +22,11 @@ class Auth {
     this.auth.onAuthStateChanged(user => {
       if (user === null || !user.providerData) return;
       if (user.providerData.length === 0) return;
-      this.user = user.providerData[0];
+      if (user.providerData[0].uid.length === 0) return;
+      const { uid, displayName, photoURL, email } = user.providerData[0];
+      this.user = new User(uid, displayName, photoURL, email);
       console.log('onAuthStateChanged', this.user);
-      store.session('auth', this.user);
-      // console.log('currentUser', this.auth.currentUser);
-      // const { displayName, email, photoURL, uid } = user.providerData[0];
-      // console.log('Name: ', displayName);
-      // console.log('Email: ', email);
-      // console.log('Photo URL: ', photoURL);
-      // console.log('Provider-specific UID: ', uid);
-
-      // Update user
-      // this.UpdateUser({
-      //   displayName: String(user.providerData[0].email).split('@')[0],
-      // });
+      Session.set('auth', this.user);
     });
   }
 
@@ -42,9 +34,8 @@ class Auth {
    * Login with google+
    */
   async onSignInByGoogle() {
+    // return this.auth.signInWithPopup(this.provider)
     return this.auth.signInWithRedirect(this.provider)
-      // this.auth.signInWithPopup(this.provider)
-      // .then(result => store.session('auth', result))
       .catch(error => console.error('onSignInByGoogle', error));
   }
 
@@ -52,8 +43,8 @@ class Auth {
    * Logout
    */
   async onLogout() {
-    this.auth.signOut()
-      .then(() => store.session('auth', null))
+    await this.auth.signOut()
+      .then(() => Session.set('auth', null))
       .catch(error => console.error('onLogout', error));
   }
 

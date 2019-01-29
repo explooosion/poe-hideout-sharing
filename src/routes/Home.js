@@ -4,8 +4,8 @@ import './Home.scss';
 import { Link } from 'react-router-dom';
 import { FaHeart, FaEye, FaDownload } from 'react-icons/fa';
 import { connect } from 'react-redux';
-// import PropTypes from 'prop-types';
 import { withNamespaces } from 'react-i18next';
+// import PropTypes from 'prop-types';
 
 import { Button } from 'primereact/button';
 import { Card } from 'primereact/card';
@@ -21,7 +21,8 @@ class Home extends Component {
   constructor(props) {
     super(props);
     this.dispatch = props.dispatch;
-    const { Lists } = this.props.hideouts;
+    this.t = props.t;
+    const { Lists } = props.hideouts;
     this.state = {
       first: 0,
       rows: 10,
@@ -87,7 +88,6 @@ class Home extends Component {
   }
 
   renderCards(lists = []) {
-    // Use debug
     return lists.map((hideout, index) => {
       return (
         <div className="p-xl-3 p-lg-4 p-md-6 p-sm-12" key={`card-${index}-${hideout.id}`}>
@@ -167,7 +167,6 @@ Home.propTypes = {}
 const mapStateToProps = state => {
   return {
     hideouts: state.hideouts,
-    firebase: state.firebase,
   }
 }
 

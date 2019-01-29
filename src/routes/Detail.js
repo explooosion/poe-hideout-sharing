@@ -20,14 +20,17 @@ import DetailMenu from '../components/DetailMenu';
 
 import HideoutList from '../interface/HideoutList';
 
+import Session from '../service/Session';
+
 class Detail extends Component {
 
   constructor(props) {
     super(props);
     this.dispatch = props.dispatch;
-    this.storage = props.firebase.storage;
-    this.database = props.firebase.database;
-    this.id = this.props.match.params.id;
+    this.storage = props.storage;
+    this.database = props.database;
+    this.auth = props.auth;
+    this.id = props.match.params.id;
     this.hideout = new HideoutList();
 
     this.state = {
@@ -173,15 +176,21 @@ class Detail extends Component {
     this.hideout = this.props.hideouts.Lists.find(({ id }) => id === this.id);
     if (!this.hideout) return <Redirect to="/" />;
 
-    const { views, download, favorite, author, create, description, fileName } = this.hideout;
+    const { views, download, favorite, author, authorId, update, description, fileName } = this.hideout;
+    const uid = Session.get('auth') ? Session.get('auth').uid : null;
     return (
       <article className="detail">
         <DetailMenu hideout={this.hideout} />
         <ContentLayout breadcrumb={this.state.breadcrumb}>
           <Toolbar className="detail-author">
             <summary className="p-toolbar-group-left">
-              Posted by <Link to="/">{author}</Link> {moment(create).endOf('day').fromNow()}
-              <Link to={`/edit/${this.id}`}><FaEdit className="detail-button" datatype="edit" /></Link>
+              Posted by <Link to={`/profile/${authorId}`}>{author}</Link> {moment().startOf('hour').from(update)}
+              {
+                /* Edit button */
+                authorId === uid
+                  ? <Link to={`/edit/${this.id}`}><FaEdit className="detail-button" datatype="edit" /></Link>
+                  : null
+              }
             </summary>
             <div className="p-toolbar-group-right">
               <FaEye />
@@ -221,7 +230,9 @@ Detail.propTypes = {}
 const mapStateToProps = state => {
   return {
     hideouts: state.hideouts,
-    firebase: state.firebase,
+    auth: state.auth,
+    database: state.database,
+    storage: state.storage,
   }
 }
 
