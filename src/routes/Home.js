@@ -97,7 +97,7 @@ class Home extends Component {
       ) ? listsByPage.push(value) : null);
 
     return listsByPage.map((hideout, index) => {
-      const { uname } = this.props.users.get().find(({ uid }) => uid === hideout.authorId);
+      const { uname } = this.props.users.get().find(({ uid }) => uid === hideout.authorId) || { uname: 'unknown' };
       return (
         <div className="p-xl-3 p-lg-4 p-md-6 p-sm-12" key={`card-${index}-${hideout.id}`}>
           <DeferredContent>

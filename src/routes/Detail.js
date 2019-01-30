@@ -176,14 +176,14 @@ class Detail extends Component {
     this.hideout = this.props.hideouts.Lists.find(({ id }) => id === this.id);
     if (!this.hideout) return <Redirect to="/" />;
     const { views, download, favorite, authorId, update, description, fileName } = this.hideout;
-    const authorData = this.users.get().find(({ uid }) => uid === authorId);
+    const { uname } = this.users.get().find(({ uid }) => uid === authorId) || { uname: 'unknown' };
     return (
       <article className="detail">
         <DetailMenu hideout={this.hideout} />
         <ContentLayout breadcrumb={this.state.breadcrumb}>
           <Toolbar className="detail-author">
             <summary className="p-toolbar-group-left">
-              Posted by <Link to={`/profile/${authorId}`}>{authorData.uname}</Link> {moment().startOf('hour').from(update)}
+              Posted by <Link to={`/profile/${authorId}`}>{uname}</Link> {moment().startOf('hour').from(update)}
               {
                 /* Edit button */
                 (Session.get('auth') ? (authorId === Session.get('auth').uid) : false)

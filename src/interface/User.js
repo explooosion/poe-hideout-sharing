@@ -9,7 +9,7 @@ class User {
   /**
    * User displayname from google
    */
-  uname = '';
+  uname = 'unknown';
 
   /**
    * User avatar from google

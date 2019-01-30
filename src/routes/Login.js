@@ -19,15 +19,18 @@ class Login extends Component {
   }
 
   async componentWillMount() {
-    if (Session.get('auth')) {
-      // Login susessful
-      const user = this.users.get().find(({ uid }) => uid === Session.get('auth').uid);
-      // Check is new user
-      if (!user) {
-        await this.users.onCreateUser(Session.get('auth'));
+    if (Session.get('auth-google') || Session.get('auth')) {
+      // Google login susessful
+      const userGoogle = this.users.get().find(({ uid }) => uid === Session.get('auth-google').uid);
+      if (!userGoogle) {
+        // New user
+        await this.users.onCreateUser(Session.get('auth-google'));
       } else {
+        // Old user
+        const user = this.users.get().find(({ uid }) => uid === Session.get('auth').uid);
         Session.set(user);
       }
+      // Not login in google
       this.props.history.push('/');
     }
   }

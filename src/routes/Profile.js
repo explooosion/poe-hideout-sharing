@@ -13,7 +13,6 @@ import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 
 import Session from '../service/Session';
-
 import MasterLayout from '../layout/MasterLayout';
 
 class Profile extends Component {
@@ -112,7 +111,7 @@ class Profile extends Component {
    * Render user name
    * @param {object} user
    */
-  renderName(user = {}) {
+  renderName(user = { uname: 'unknown' }) {
     return this.isOwner ?
       (
         <h4 className="profile-name">

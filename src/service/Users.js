@@ -36,8 +36,8 @@ class Users {
    * Create user
    * @param {object} user
    */
-  async onCreateUser(user = {}) {
-    if (Object.keys(user).length === 0) return;
+  async onCreateUser(user = { uid: '' }) {
+    if (user.uid.length === 0) return;
     console.log('onCreateUser', user);
     await this.db.ref(`users${REF_PICK}/${user.uid}`).set(user);
   }
