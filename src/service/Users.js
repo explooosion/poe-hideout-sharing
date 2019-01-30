@@ -22,7 +22,6 @@ class Users {
     this.dbUsers.on('value', snapshot => {
       const datas = snapshot.val() || [];
       this.users = Object.keys(datas).map(key => datas[key]);
-      console.log('snapshot', this.users);
     });
   }
 
@@ -32,6 +31,7 @@ class Users {
    */
   async onCreateUser(user = {}) {
     if (!Object.keys(user).length === 0) return;
+    console.log('onCreateUser', user);
     await this.db.ref(`users${REF_PICK}/${user.uid}`).set(user);
   }
 
@@ -41,6 +41,7 @@ class Users {
    */
   async onUpdateUser(user = {}) {
     if (!Object.keys(user).length === 0) return;
+    console.log('onUpdateUser', user);
     await this.db.ref(`users${REF_PICK}/${user.uid}`).update(user);
   }
 }

@@ -36,6 +36,7 @@
     "flag-icon-css": "^3.2.1",
     "i18next": "^14.0.1",
     "i18next-browser-languagedetector": "^2.2.4",
+    "iconv-lite": "^0.4.24",
     "js-cookie": "^2.2.0",
     "moment": "^2.24.0",
     "primeflex": "^1.0.0-rc.1",

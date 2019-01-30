@@ -25,15 +25,20 @@ class Profile extends Component {
     this.database = props.database;
     this.storage = props.storage;
     this.users = props.users;
+    this.isOwner = false;
   }
 
   componentWillMount() {
     // Both null
     if (!Session.get('auth') && !this.id) this.props.history.push('/');
-    // Owner Mode
     if (!this.id) {
+      // View by auth
       if (!Session.get('auth')) this.props.history.push('/');
       if (!Object.keys(Session.get('auth')).includes('uid')) this.props.history.push('/');
+      this.isOwner = Session.get('auth').uid === this.id ? true : false;
+    } else {
+      // View by id
+      this.isOwner = Session.get('auth') ? true : false;
     }
   }
 
@@ -65,11 +70,18 @@ class Profile extends Component {
           <td>{h.favorite}</td>
           <td>{moment(h.update).format('YYYY-MM-DD')}</td>
           <td className="profile-list-control">
-            <Link to={`/edit/${h.id}`}><FaEdit size="1.5rem" /></Link>
-            <FaTrashAlt
-              size="1.5rem"
-              onClick={() => window.confirm(`Delete 「${h.title}」 ???`) ? this.onDeleteHideout(h) : null}
-            />
+            {
+              this.isOwner ?
+                (
+                  <div>
+                    <Link to={`/edit/${h.id}`}><FaEdit size="1.5rem" /></Link>
+                    <FaTrashAlt
+                      size="1.5rem"
+                      onClick={() => window.confirm(`Delete 「${h.title}」 ???`) ? this.onDeleteHideout(h) : null}
+                    />
+                  </div>
+                ) : null
+            }
           </td>
         </tr>
       );
@@ -85,7 +97,6 @@ class Profile extends Component {
     // Find profile by user id
     // eslint-disable-next-line no-shadow
     const { avatar, uname } = this.users.get().find(({ uid }) => uid === ID);
-
     return (
       <MasterLayout>
         <div className="profile">

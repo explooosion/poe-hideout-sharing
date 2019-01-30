@@ -18,12 +18,12 @@ class Login extends Component {
     this.t = props.t;
   }
 
-  componentWillMount() {
+  async componentWillMount() {
     if (Session.get('auth')) {
       // Login susessful
       const user = this.users.get().find(({ uid }) => uid === Session.get('auth').uid);
       // Check is new user
-      if (!user) this.users.onCreateUser(Session.get('auth'));
+      if (!user) await this.users.onCreateUser(Session.get('auth'));
       this.props.history.push('/');
     }
   }
