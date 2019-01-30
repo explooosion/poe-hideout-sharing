@@ -30,6 +30,7 @@ class Login extends Component {
 
   async signInByGoogle() {
     await this.auth.onSignInByGoogle();
+    window.location.href = '/';
   }
 
   render() {

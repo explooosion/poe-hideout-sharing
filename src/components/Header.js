@@ -5,7 +5,8 @@ import { withNamespaces } from 'react-i18next';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
 import { MdNoteAdd } from 'react-icons/md';
-import { IoMdLogOut, IoMdLogIn, IoLogoGithub } from 'react-icons/io';
+import { IoLogoGithub } from 'react-icons/io';
+import { GiExitDoor, GiEntryDoor } from 'react-icons/gi';
 
 import { Sidebar } from 'primereact/sidebar';
 import { Button } from 'primereact/button';
@@ -91,8 +92,8 @@ class Header extends Component {
             <li><Link to="/create" alt="create" title="create"><MdNoteAdd size="2rem" /></Link></li>
             {
               Session.get('auth')
-                ? <li><a href="#logout" onClick={() => this.onLogout()} alt="logout" title="logout"><IoMdLogOut size="2rem" /></a></li>
-                : <li><Link to="/login" alt="login" title="login"><IoMdLogIn size="2rem" /></Link></li>
+                ? <li><a href="#logout" onClick={() => this.onLogout()} alt="logout" title="logout"><GiEntryDoor size="2rem" /></a></li>
+                : <li><Link to="/login" alt="login" title="login"><GiExitDoor size="2rem" /></Link></li>
             }
             <li><a href="https://github.com/explooosion/poe-hideout-sharing" target="_blank" rel="noopener noreferrer" alt="github" title="github"><IoLogoGithub size="2rem" /></a></li>
             <li style={{ paddingLeft: '1rem', height: 'auto' }}>
