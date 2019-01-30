@@ -3984,10 +3984,10 @@ eslint-plugin-import@2.14.0:
     read-pkg-up "^2.0.0"
     resolve "^1.6.0"
 
-eslint-plugin-import@^2.15.0:
-  version "2.15.0"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-import/-/eslint-plugin-import-2.15.0.tgz#d8f3c28b8988ccde5df964706faa7c1e52f0602a"
-  integrity sha512-LEHqgR+RcnpGqYW7h9WMkPb/tP+ekKxWdQDztfTtZeV43IHF+X8lXU+1HOCcR4oXD24qRgEwNSxIweD5uNKGVg==
+eslint-plugin-import@^2.16.0:
+  version "2.16.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-import/-/eslint-plugin-import-2.16.0.tgz#97ac3e75d0791c4fac0e15ef388510217be7f66f"
+  integrity sha512-z6oqWlf1x5GkHIFgrSvtmudnqM6Q60KM4KvpWi5ubonMjycLjndvd5+8VAZIsTlHC03djdgJuyKG6XO577px6A==
   dependencies:
     contains-path "^0.1.0"
     debug "^2.6.9"
@@ -9280,10 +9280,10 @@ react-files@^2.4.8:
   resolved "https://registry.yarnpkg.com/react-files/-/react-files-2.4.8.tgz#780f140e3830923a368ee56e17e13e48b74acad6"
   integrity sha512-ua1MT5wOT+5qHWa98UxgIA9BhtzzmsgWaacNuuLMs97U/7fhSCSXvvWjG17xGtJN/0bzmkbu04SaKApcAPd1kQ==
 
-react-i18next@^9.0.8:
-  version "9.0.8"
-  resolved "https://registry.yarnpkg.com/react-i18next/-/react-i18next-9.0.8.tgz#a77561641f23c86bd81a68bb2464c5e78b02c04b"
-  integrity sha512-jZNlJVqN1xMf9rd6r8O1m7sJx/H2tw/HSb0oJY/1yR9RW2DKh9TDz7ao85iS/r2Q3VDAl1p6KRVJ/Cv3uC4ZHA==
+react-i18next@^9.0.9:
+  version "9.0.9"
+  resolved "https://registry.yarnpkg.com/react-i18next/-/react-i18next-9.0.9.tgz#92afa0c457b200d57a3c76bba7a1d5712384f328"
+  integrity sha512-VQCu2hel5qj+5FlzvOWu+AdoFq1dwTWFSuHZaiCE69GrMi75jYwN9gfJWs+v17btWJPgsxJD1Lj1shRp0M42eA==
   dependencies:
     "@babel/runtime" "^7.3.1"
     hoist-non-react-statics "3.2.1"
