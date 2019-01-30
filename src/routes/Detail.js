@@ -219,6 +219,9 @@ class Detail extends Component {
           <TabMenu className="detaild-tabmenu" model={this.state.tabmenu} activeItem={this.state.activeItem} onTabChange={(e) => this.onTabChange(e.value)} />
           <Growl ref={(el) => this.growl = el} />
           {this.renderDetail(this.hideout)}
+          <div className="detail-footer">
+            <Button label="Goback" icon="pi pi-arrow-left" iconPos="left" onClick={() => this.props.history.goBack()} />
+          </div>
         </ContentLayout>
       </article>
     );
