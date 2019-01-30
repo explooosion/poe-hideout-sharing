@@ -76,7 +76,7 @@ class Profile extends Component {
                   <div>
                     <Link to={`/edit/${h.id}`}><FaEdit size="1.5rem" /></Link>
                     <FaTrashAlt
-                      size="1.5rem"
+                      size="1.3rem"
                       onClick={() => window.confirm(`Delete 「${h.title}」 ???`) ? this.onDeleteHideout(h) : null}
                     />
                   </div>
