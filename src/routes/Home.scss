@@ -34,6 +34,17 @@
     }
   }
 
+  .card-group {
+    padding: .75rem;
+    background-color: $dark;
+    border: 1px solid #000;
+  }
+
+  .card-item {
+    border: 1px solid $gray;
+    background-color: #111;
+  }
+
   .card-title {
     display: flex;
   }
@@ -41,29 +52,13 @@
   .card-image {
     position: relative;
     min-height: 115px;
+    opacity: 1;
 
-    &:before {
-      content: ' ';
-      display: block;
-      position: absolute;
-      overflow: hidden;
-      height: 100%;
-      width: 100%;
-      background-image: url('../images/background.jpg');
+    &:hover {
+      transition: all .2s ease-in-out;
+      opacity: .9;
     }
   }
-  // .card-img {
-  //   position: relative;
-  //   height: 150px;
-  //   background-position: center;
-  //   background-repeat: no-repeat;
-  //   background-size: 100%;
-  //   transition: all .3s ease-in-out;
-
-  //   &:hover {
-  //     background-size: 120%;
-  //   }
-  // }
 
   .card-counts {
     display: flex;
@@ -72,7 +67,7 @@
       display: flex;
       align-items: center;
       margin-right: .5rem;
-      color: $primary;
+      color: #fff;
     }
 
     span {
@@ -91,10 +86,22 @@
     flex-flow: row-reverse;
   }
 
-  .p-card-title,
-  .p-card-subtitle {
+  .p-card-title {
     overflow: hidden;
+    color: $light-warning;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+
+  .p-card-subtitle {
+    overflow: hidden;
+    color: #fff;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    opacity: 1;
+
+    &::before {
+      content: '@';
+    }
   }
 }

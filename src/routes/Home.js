@@ -25,7 +25,7 @@ class Home extends Component {
     const { Lists } = props.hideouts;
     this.state = {
       first: 0,
-      rows: 10,
+      rows: 20,
       breadcrumb: [
         { label: 'hideouts', url: '/' },
       ],
@@ -88,42 +88,52 @@ class Home extends Component {
   }
 
   renderCards(lists = []) {
-    return lists.map((hideout, index) => {
+    // Lists by pages
+    const listsByPage = [];
+    lists.forEach((value, index) =>
+      (
+        index >= this.state.first &&
+        index < (this.state.first + this.state.rows)
+      ) ? listsByPage.push(value) : null);
+
+    return listsByPage.map((hideout, index) => {
       return (
         <div className="p-xl-3 p-lg-4 p-md-6 p-sm-12" key={`card-${index}-${hideout.id}`}>
           <DeferredContent>
-            <Link to={`/detail/${hideout.id}`}>
-              <Card
-                style={{ cursor: 'pointer' }}
-                title={hideout.title}
-                subTitle={hideout.author}
-                header={this.renderCardHeader(hideout)}
-              >
-                <div className="card-counts">
-                  <div>
-                    <FaEye />
-                    <span>{hideout.views}</span>
-                  </div>
-                  <div>
-                    <FaDownload />
-                    <span>{hideout.download}</span>
-                  </div>
-                  <div>
-                    <FaHeart />
-                    <span>{hideout.favorite}</span>
-                  </div>
+            <Card
+              className="card-item"
+              title={hideout.title}
+              subTitle={hideout.author}
+              header={this.renderCardHeader(hideout)}
+            >
+              <div className="card-counts">
+                <div>
+                  <FaEye />
+                  <span>{hideout.views}</span>
                 </div>
-              </Card>
-            </Link>
+                <div>
+                  <FaDownload />
+                  <span>{hideout.download}</span>
+                </div>
+                <div>
+                  <FaHeart />
+                  <span>{hideout.favorite}</span>
+                </div>
+              </div>
+            </Card>
           </DeferredContent>
         </div>
       );
     });
   }
 
-  renderCardHeader(hideout) {
-    const { thumbnail } = hideout;
-    return <img className="card-image" alt={thumbnail} title={thumbnail} src={thumbnail} />;
+  renderCardHeader(hideout = {}) {
+    const { id, thumbnail, title } = hideout;
+    return (
+      <Link to={`/detail/${id}`}>
+        <img className="card-image" alt={title} title={title} src={thumbnail} />
+      </Link>
+    );
   }
 
   renderCardFooter() {
@@ -137,6 +147,16 @@ class Home extends Component {
 
   render() {
     const { Lists } = this.props.hideouts;
+
+    // Fake Data
+    // let { Lists } = this.props.hideouts;
+    // const ALists = [];
+    // const FAKETOTAL = 100;
+    // if (Lists.length > 0) {
+    //   for (let i = 0; i < FAKETOTAL; i++) ALists[i] = Lists[0];
+    //   Lists = ALists;
+    // }
+
     return (
       <div className="home">
         <HomeMenu
@@ -149,10 +169,10 @@ class Home extends Component {
               ? <ProgressBar mode="indeterminate" style={{ height: '10px' }} />
               :
               (
-                <div>
+                <div className="card-group">
                   <div className="p-grid">{this.renderCards(Lists)}</div>
                   <br />
-                  <Paginator first={this.state.first} rows={this.state.rows} totalRecords={120} rowsPerPageOptions={[10, 20, 30]} onPageChange={e => this.onPageChange(e)}></Paginator>
+                  <Paginator first={this.state.first} rows={this.state.rows} rowsPerPageOptions={[20, 40, 60]} totalRecords={Lists.length} onPageChange={e => this.onPageChange(e)}></Paginator>
                 </div>
               )
           }
