@@ -7,8 +7,8 @@
   width: $menu-width;
   height: calc(100vh - #{$header-height});
   text-align: left;
-  background-color: #fefefe;
-  border-right: 4px solid #fafafa;
+  // background-color: #fefefe;
+  border: 1px solid $dark;
 
   @media only screen and (max-width: $screen-lg) {
     display: none;
