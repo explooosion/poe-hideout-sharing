@@ -1,4 +1,5 @@
 import { db, REF_PICK } from './config';
+import Session from './Session';
 // import { setHideouts } from '../actions';
 
 class Users {
@@ -22,6 +23,12 @@ class Users {
     this.dbUsers.on('value', snapshot => {
       const datas = snapshot.val() || [];
       this.users = Object.keys(datas).map(key => datas[key]);
+
+      // Login with session
+      if (Session.get('auth-google')) {
+        const user = this.users.find(({ uid }) => uid === Session.get('auth-google').uid);
+        if (user) Session.set('auth', user);
+      }
     });
   }
 
@@ -30,7 +37,7 @@ class Users {
    * @param {object} user
    */
   async onCreateUser(user = {}) {
-    if (!Object.keys(user).length === 0) return;
+    if (Object.keys(user).length === 0) return;
     console.log('onCreateUser', user);
     await this.db.ref(`users${REF_PICK}/${user.uid}`).set(user);
   }
@@ -39,10 +46,17 @@ class Users {
    * Update user
    * @param {User} user
    */
-  async onUpdateUser(user = {}) {
-    if (!Object.keys(user).length === 0) return;
+  async onUpdateUser(uid = '', user = {}) {
+    if (Object.keys(user).length === 0) return;
+    if (uid.length === 0) return;
     console.log('onUpdateUser', user);
-    await this.db.ref(`users${REF_PICK}/${user.uid}`).update(user);
+    if (Session.get('auth-google')) {
+      Session.set('auth', {
+        ...Session.get('auth-google'),
+        ...user,
+      });
+    }
+    await this.db.ref(`users${REF_PICK}/${uid}`).update(user);
   }
 }
 

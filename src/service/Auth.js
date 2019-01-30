@@ -6,13 +6,16 @@ class Auth {
 
   user = {};
 
+  userSession = Session.get('auth');
+
   constructor() {
     this.auth = auth;
     this.provider = new firebase.auth.GoogleAuthProvider();
     this.provider.addScope('https://www.googleapis.com/auth/contacts.readonly');
     this.auth.useDeviceLanguage();
     this.onAuthStateChanged();
-    if (Session.get('auth')) this.user = Session.get('auth');
+
+    if (this.userSession) this.user = Session.get('auth');
   }
 
   /**
@@ -26,7 +29,7 @@ class Auth {
       const { uid, displayName, photoURL, email } = user.providerData[0];
       this.user = new User(uid, displayName, photoURL, email);
       console.log('onAuthStateChanged', this.user);
-      Session.set('auth', this.user);
+      Session.set('auth-google', this.user);
     });
   }
 
@@ -44,7 +47,10 @@ class Auth {
    */
   async onLogout() {
     await this.auth.signOut()
-      .then(() => Session.set('auth', null))
+      .then(() => {
+        Session.set('auth-google', null);
+        Session.set('auth', null);
+      })
       .catch(error => console.error('onLogout', error));
   }
 

@@ -67,7 +67,7 @@ class Header extends Component {
   }
 
   render() {
-    const { uname, avatar } = this.auth.user;
+    const auth = Session.get('auth');
     return (
       <nav className="nav">
         <header className="header">
@@ -84,14 +84,14 @@ class Header extends Component {
           </div>
           <ul className="topbar-menu">
             {
-              Session.get('auth')
-                ? <li><Link to="/profile"><img src={avatar} style={{ width: '30px', borderRadius: '100%' }} alt={uname} title={uname} /></Link></li>
+              auth
+                ? <li><Link to="/profile"><img src={auth.avatar} style={{ width: '30px', borderRadius: '100%' }} alt={auth.uname} title={auth.uname} /></Link></li>
 
                 : null
             }
             <li><Link to="/create" alt="create" title="create"><MdNoteAdd size="2rem" /></Link></li>
             {
-              Session.get('auth')
+              auth
                 ? <li><a href="#logout" onClick={() => this.onLogout()} alt="logout" title="logout"><GiEntryDoor size="2rem" /></a></li>
                 : <li><Link to="/login" alt="login" title="login"><GiExitDoor size="2rem" /></Link></li>
             }

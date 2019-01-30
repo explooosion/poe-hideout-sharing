@@ -97,13 +97,14 @@ class Home extends Component {
       ) ? listsByPage.push(value) : null);
 
     return listsByPage.map((hideout, index) => {
+      const { uname } = this.props.users.get().find(({ uid }) => uid === hideout.authorId);
       return (
         <div className="p-xl-3 p-lg-4 p-md-6 p-sm-12" key={`card-${index}-${hideout.id}`}>
           <DeferredContent>
             <Card
               className="card-item"
               title={hideout.title}
-              subTitle={hideout.author}
+              subTitle={uname}
               header={this.renderCardHeader(hideout)}
             >
               <div className="card-counts">
@@ -187,6 +188,7 @@ Home.propTypes = {}
 const mapStateToProps = state => {
   return {
     hideouts: state.hideouts,
+    users: state.users,
   }
 }
 

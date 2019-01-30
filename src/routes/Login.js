@@ -23,14 +23,18 @@ class Login extends Component {
       // Login susessful
       const user = this.users.get().find(({ uid }) => uid === Session.get('auth').uid);
       // Check is new user
-      if (!user) await this.users.onCreateUser(Session.get('auth'));
+      if (!user) {
+        await this.users.onCreateUser(Session.get('auth'));
+      } else {
+        Session.set(user);
+      }
       this.props.history.push('/');
     }
   }
 
   async signInByGoogle() {
     await this.auth.onSignInByGoogle();
-    window.location.href = '/';
+    window.location.reload();
   }
 
   render() {

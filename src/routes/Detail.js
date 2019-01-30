@@ -29,6 +29,7 @@ class Detail extends Component {
     this.dispatch = props.dispatch;
     this.storage = props.storage;
     this.database = props.database;
+    this.users = props.users;
     this.auth = props.auth;
     this.id = props.match.params.id;
     this.hideout = new HideoutList();
@@ -155,8 +156,7 @@ class Detail extends Component {
    * Render Hideout Content
    * @param {screenshot} object
    */
-  renderImageContent(screenshot) {
-    const { type, url, alt } = screenshot;
+  renderImageContent({ type, url, alt } = {}) {
     switch (type) {
       case 'image':
         // Use debug local img
@@ -175,19 +175,18 @@ class Detail extends Component {
   render() {
     this.hideout = this.props.hideouts.Lists.find(({ id }) => id === this.id);
     if (!this.hideout) return <Redirect to="/" />;
-
-    const { views, download, favorite, author, authorId, update, description, fileName } = this.hideout;
-    const uid = Session.get('auth') ? Session.get('auth').uid : null;
+    const { views, download, favorite, authorId, update, description, fileName } = this.hideout;
+    const authorData = this.users.get().find(({ uid }) => uid === authorId);
     return (
       <article className="detail">
         <DetailMenu hideout={this.hideout} />
         <ContentLayout breadcrumb={this.state.breadcrumb}>
           <Toolbar className="detail-author">
             <summary className="p-toolbar-group-left">
-              Posted by <Link to={`/profile/${authorId}`}>{author}</Link> {moment().startOf('hour').from(update)}
+              Posted by <Link to={`/profile/${authorId}`}>{authorData.uname}</Link> {moment().startOf('hour').from(update)}
               {
                 /* Edit button */
-                authorId === uid
+                (Session.get('auth') ? (authorId === Session.get('auth').uid) : false)
                   ? <Link to={`/edit/${this.id}`}><FaEdit className="detail-button" datatype="edit" /></Link>
                   : null
               }
@@ -236,6 +235,7 @@ const mapStateToProps = state => {
     auth: state.auth,
     database: state.database,
     storage: state.storage,
+    users: state.users,
   }
 }
 

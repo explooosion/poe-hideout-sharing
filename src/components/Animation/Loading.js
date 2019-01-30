@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import './Loading.scss';
-import { connect } from 'react-redux';
 
 class Loading extends Component {
   render() {
@@ -8,10 +7,4 @@ class Loading extends Component {
   }
 }
 
-Loading.propTypes = {}
-
-const mapStateToProps = state => {
-  return {}
-}
-
-export default connect(mapStateToProps)(Loading);
+export default Loading;

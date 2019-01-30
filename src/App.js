@@ -41,7 +41,7 @@ class App extends Component {
       <Router>
         {
           /* Loading */
-          this.database.hideouts.length > 0 || this.state.time === 0
+          this.database.get().length > 0 || this.state.time === 0
             ? (
               <div>
                 <Header />

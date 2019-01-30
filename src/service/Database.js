@@ -10,6 +10,10 @@ class Database {
     this.db = db;
   }
 
+  get() {
+    return this.hideouts || [];
+  }
+
   /**
    * Hideouts handler
    */

@@ -211,7 +211,7 @@ class Create extends Component {
     }
 
     let List = {};
-    const { uname, uid } = this.auth.user;
+    const { uname, uid } = Session.get('auth');
     if (!this.id) {
       // Create new list
       List = new HideoutList();

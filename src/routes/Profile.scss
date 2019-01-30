@@ -11,6 +11,7 @@
   background-size: 100%;
 
   .profile-form {
+    position: relative;
     margin-top: 2rem;
     padding: 1rem 0;
     overflow: hidden;
@@ -20,12 +21,76 @@
     background-color: $dark;
     border: 2px solid $gray;
 
+    .profile-avatar-edit {
+      position: absolute;
+      top: 90px;
+      left: 0;
+      right: 0;
+      z-index: 1;
+    }
+
+    .profile-avatar {
+      overflow: hidden;
+      position: relative;
+      display: inline-flex;
+      justify-content: center;
+      align-items: flex-end;
+      border-radius: 100%;
+
+      &:hover::after,
+      &:hover svg {
+        opacity: 1;
+        cursor: pointer;
+      }
+
+      &::after {
+        content: '';
+        position: absolute;
+        width: 80px;
+        height: 25px;
+        background: rgba(#222, .5);
+        opacity: 0;
+        transition: all .2s ease-in-out;
+      }
+
+      svg {
+        position: absolute;
+        bottom: 3px;
+        color: $warning;
+        z-index: 1;
+        opacity: 0;
+        transition: all .2s ease-in-out;
+      }
+    }
+
     .profile-name {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
       padding-bottom: 1rem;
       margin-bottom: .5rem;
+      margin-left: 1.5rem;
       color: #fff;
       border-bottom: 1px solid $gray;
       user-select: none;
+
+      &:hover svg {
+        opacity: 1;
+      }
+
+      .profile-name-edit {
+        position: absolute;
+        top: 0;
+        left: 40%;
+      }
+
+      svg {
+        margin-left: .25rem;
+        color: $warning;
+        opacity: 0;
+        cursor: pointer;
+      }
 
       &::before {
         content: '@';
@@ -47,38 +112,11 @@
       th,
       td {
         padding: .75rem .5rem;
-
-        a {
-          color: $primary;
-          opacity: .8;
-
-          &:hover {
-            opacity: 1;
-          }
-        }
       }
 
       thead,
       tbody {
         border-bottom: 1px solid #fff;
-      }
-
-      .profile-list-control div > * {
-        margin-right: .25rem;
-        cursor: pointer;
-        opacity: .8;
-
-        &:hover {
-          opacity: 1;
-        }
-
-        &:first-child {
-          color: $success;
-        }
-
-        &:last-child {
-          color: $danger;
-        }
       }
     }
   }
