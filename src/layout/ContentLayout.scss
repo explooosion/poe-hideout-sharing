@@ -16,7 +16,7 @@
   }
 
   .block {
-    overflow: scroll;
+    overflow-y: auto;
     display: block;
     padding: 1.5rem 2rem 2rem;
     width: 100%;

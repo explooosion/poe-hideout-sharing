@@ -1,3 +1,4 @@
+@import url(http://fonts.googleapis.com/earlyaccess/notosanstc.css);
 @import '~primereact/resources/themes/nova-light/theme.css';
 @import '~primereact/resources/primereact.min.css';
 @import '~primeicons/primeicons.css';
@@ -9,7 +10,7 @@ body {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  font-family: 'Noto Sans TC', -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

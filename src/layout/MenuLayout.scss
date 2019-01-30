@@ -3,7 +3,7 @@
 .menu {
   display: block;
   padding: 2rem 1.5rem;
-  overflow-y: scroll;
+  overflow-y: auto;
   width: $menu-width;
   height: calc(100vh - #{$header-height});
   text-align: left;

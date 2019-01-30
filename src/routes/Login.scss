@@ -13,7 +13,7 @@
   .login-form {
     margin-top: 5rem;
     width: 500px;
-    height: 220px;
+    height: 230px;
     text-align: center;
     background-color: $dark;
     border: 2px solid $gray;
@@ -23,43 +23,36 @@
       margin-bottom: 2rem;
       color: #fff;
       border-bottom: 1px solid $gray;
-      font-family: Arial, Helvetica, sans-serif;
     }
 
     .login-google {
+      position: relative;
       display: flex;
       align-items: center;
       margin: 0 auto;
-      padding: .5rem 1rem;
+      padding: 1rem;
       width: 350px;
       color: #fff;
       background-color: $danger-google;
-      border: 3px solid $light-gray;
-      border-radius: .25rem;
       cursor: pointer;
       user-select: none;
       transition: all .2s ease-in-out;
 
       &:hover {
-        background-color: lighten($danger-google, 3);
-
-        .login-google-icon {
-          transform: rotate(-10deg);
-        }
+        background-color: lighten($danger-google, 2);
       }
 
       .login-google-icon {
-        display: block;
-        font-size: 2.5rem;
-        transition: all .2s ease-in-out;
+        position: absolute;
+        left: 15px;
+        font-size: 3rem;
       }
 
       .login-google-text {
-        margin-left: 1.8rem;
-        display: block;
+        display: inline-block;
+        margin: 0 auto 0 80px;
+        font-size: 1.4rem;
         font-weight: bold;
-        font-size: 1.5rem;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       }
     }
   }
