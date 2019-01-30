@@ -5,7 +5,7 @@ import './Profile.scss';
 import { connect } from 'react-redux';
 import { withNamespaces } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { FaExternalLinkAlt, FaHeart, FaEye, FaDownload, FaEdit, FaTrashAlt } from 'react-icons/fa';
+import { FaHeart, FaEye, FaDownload, FaEdit } from 'react-icons/fa';
 import moment from 'moment';
 
 import { Growl } from 'primereact/growl';
