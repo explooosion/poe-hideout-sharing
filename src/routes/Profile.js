@@ -35,10 +35,10 @@ class Profile extends Component {
       // View by auth
       if (!Session.get('auth')) this.props.history.push('/');
       if (!Object.keys(Session.get('auth')).includes('uid')) this.props.history.push('/');
-      this.isOwner = Session.get('auth').uid === this.id ? true : false;
+      this.isOwner = Session.get('auth') ? true : false;
     } else {
       // View by id
-      this.isOwner = Session.get('auth') ? true : false;
+      this.isOwner = Session.get('auth').uid === this.id ? true : false;
     }
   }
 
