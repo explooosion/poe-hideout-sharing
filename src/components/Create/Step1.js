@@ -109,10 +109,6 @@ class Step1 extends Component {
     });
   }
 
-  renderModelFooter() {
-    return <Button label="Add" className="p-button-raised model-add" onClick={(e) => this.onAddScreenshot()} />;
-  }
-
   render() {
     const { onSetState, onValid, onNext, onPrev } = this.props;
     return (
@@ -159,20 +155,22 @@ class Step1 extends Component {
               className="screenshot-model"
               header="Add Screenshot"
               visible={this.state.screenshotModel}
-              footer={this.renderModelFooter()}
               modal={true}
-              onHide={(e) => onSetState({ screenshotModel: false })}
+              onHide={() => onSetState({ screenshotModel: false })}
             /* dismissableMask={true} */
             >
               <div className="model-row">
                 <label htmlFor="txtScreenshotUrl">Type:</label>
-                <SelectButton
-                  style={{ marginTop: '.25rem' }}
-                  value={this.state.screenshotModelType}
-                  options={this.state.screenshotModelTypes}
-                  onChange={(e) => onSetState({ screenshotModelType: e.value, screenshotModelUrl: '', screenshotModelImg: defaultModelImg })}
-                >
-                </SelectButton>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <SelectButton
+                    style={{ marginTop: '.25rem' }}
+                    value={this.state.screenshotModelType}
+                    options={this.state.screenshotModelTypes}
+                    onChange={(e) => onSetState({ screenshotModelType: e.value, screenshotModelUrl: '', screenshotModelImg: defaultModelImg })}
+                  >
+                  </SelectButton>
+                  <Button label="Add" className="p-button-raised" style={{ width: '80px' }} onClick={() => this.onAddScreenshot()} />
+                </div>
                 <label htmlFor="txtScreenshotUrl">Url or Youtube ID:</label>
                 <InputText id="txtScreenshotUrl" value={this.state.screenshotModelUrl} onChange={(e) => this.onScreenshotModelUrlChange(e.target.value)} />
                 <span className="form-valid" style={onValid(this.state.screenshotModelUrl)}>Please set the url or youtube id.</span>
