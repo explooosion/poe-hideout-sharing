@@ -51,6 +51,10 @@ class Profile extends Component {
     }
   }
 
+  componentWillReceiveProps() {
+    this.id = this.props.match.params.id;
+  }
+
   async onUpdateProfile(payload = {}) {
     try {
       const { uid } = Session.get('auth');

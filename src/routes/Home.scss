@@ -37,12 +37,12 @@
   .card-group {
     padding: .75rem;
     background-color: $dark;
-    border: 1px solid #000;
+    border: 2px solid $black;
   }
 
   .card-item {
-    border: 1px solid $gray;
-    background-color: #111;
+    border: 2px solid $gray;
+    background-color: $light-black;
   }
 
   .card-title {
@@ -52,12 +52,6 @@
   .card-image {
     position: relative;
     min-height: 115px;
-    opacity: 1;
-
-    &:hover {
-      transition: all .2s ease-in-out;
-      opacity: .9;
-    }
   }
 
   .card-counts {
@@ -74,11 +68,6 @@
       margin: 0 .15rem 0 .25rem;
     }
   }
-
-  .search {
-    margin: 1rem 0;
-  }
-
 
   /* overwrite */
   .p-card-content {

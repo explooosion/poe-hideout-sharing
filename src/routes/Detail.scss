@@ -9,10 +9,18 @@
     margin: .25rem 0;
     padding: 0;
     border: none;
-    color: $gray;
+    color: #fff;
+    background-color: transparent;
 
-    a:hover {
-      text-decoration: underline;
+    a:first-child {
+      &::before {
+        content: '@';
+      }
+      color: $warning;
+
+      &:hover {
+        text-decoration: underline;
+      }
     }
 
     .detail-button {
@@ -41,8 +49,9 @@
 
   .detail-title {
     padding-left: .25rem;
-    color: $dark;
-    background-color: #fff;
+    color: $warning;
+    background-color: $dark;
+    border: 1px solid $black;
     z-index: 100;
 
     @media only screen and (min-width: $screen-xl) {
@@ -55,8 +64,9 @@
     margin-top: 1rem;
     padding: 1rem;
     width: 100%;
-    background-color: #fff;
-    border: 1px solid #c8c8c8;
+    color: $light-warning;
+    background-color: $dark;
+    border: 1px solid $black;
     border-radius: 3px;
 
     .detail-description-title {
@@ -66,12 +76,17 @@
 
   .detaild-tabmenu {
     margin-top: 1.5rem;
+
+    .p-tabmenu-nav {
+      border-bottom-color: $dark;
+    }
   }
 
   .detail-content {
     padding: .5rem 2rem;
-    background-color: #fff;
-    border: 1px solid #c8c8c8;
+    color: #fff;
+    background-color: $dark;
+    border: 1px solid $black;
     border-top: none;
     border-radius: 0 0 3px 3px;
   }

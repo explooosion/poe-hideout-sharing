@@ -2,7 +2,14 @@
 
 .home-menu {
   /* overwrite */
+
+  .item-title {
+    color: $light-warning;
+  }
+
   .p-fieldset {
+    border: 1px solid $light-warning;
+    background-color: $dark;
     margin-bottom: 1rem;
   }
 }

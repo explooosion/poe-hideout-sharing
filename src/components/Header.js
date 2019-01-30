@@ -85,7 +85,7 @@ class Header extends Component {
           <ul className="topbar-menu">
             {
               auth
-                ? <li><Link to="/profile"><img src={auth.avatar} style={{ width: '30px', borderRadius: '100%' }} alt={auth.uname} title={auth.uname} /></Link></li>
+                ? <li><Link to={`/profile/${auth.uid}`}><img src={auth.avatar} style={{ width: '30px', borderRadius: '100%' }} alt={auth.uname} title={auth.uname} /></Link></li>
 
                 : null
             }

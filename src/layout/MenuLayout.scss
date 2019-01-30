@@ -7,14 +7,17 @@
   width: $menu-width;
   height: calc(100vh - #{$header-height});
   text-align: left;
-  // background-color: #fefefe;
-  border: 1px solid $dark;
+  color: #fff;
+  background-color: $dark;
+  border: 2px solid $black;
+  border-top: 0;
 
   @media only screen and (max-width: $screen-lg) {
     display: none;
   }
 
   .menu-title {
+    color: $warning;
     margin-bottom: 2rem;
   }
 

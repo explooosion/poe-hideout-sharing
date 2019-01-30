@@ -161,7 +161,7 @@ class Detail extends Component {
       case 'image':
         // Use debug local img
         // return <img alt={alt || url} title={alt || url} src={require(`../images/${url}`)} width="100%" />;
-        return <img alt={alt || url} title={alt || url} src={url} width="100%" />;
+        return <img alt={alt || url} title={alt || url} src={url} style={{ maxWidth: '100%' }} />;
       case 'youtube':
         return (
           <div className="youtube-container">
