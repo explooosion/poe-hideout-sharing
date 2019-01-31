@@ -113,7 +113,18 @@ class Detail extends Component {
   }
 
   renderCode(code = '') {
-    const c = JSON.parse(code);
+    let c;
+    try {
+      c = JSON.parse(code);
+    } catch (e) {
+      c = {
+        Language: '',
+        'Hideout Hash': '',
+        'Hideout Name': '',
+        Objects: [],
+      }
+      console.error('renderCode', e);
+    }
     return (
       <div className="detail-content">
         <section className="section detail-code">

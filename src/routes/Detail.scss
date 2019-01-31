@@ -25,15 +25,8 @@
 
     .detail-button {
       margin-left: .25rem;
+      color: $light-warning;
       cursor: pointer;
-
-      &[datatype=edit] {
-        color: $success;
-      }
-
-      &[datatype=delete] {
-        color: $danger;
-      }
     }
 
     .p-toolbar-group-right {

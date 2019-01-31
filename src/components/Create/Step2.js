@@ -32,7 +32,13 @@ class Step2 extends Component {
     const f = files[0];
     r.readAsText(f);
     r.onload = (e) => {
-      const fileContent = HideoutParse(e.target.result);
+      let fileContent;
+      try {
+        fileContent = HideoutParse(e.target.result);
+      } catch (err) {
+        fileContent = {};
+        console.error('onFilesChange', err);
+      }
       this.props.onSetState({ fileContent: JSON.stringify(fileContent) });
     }
     this.props.onSetState({ file: files[0], fileChoose: files[0].name });

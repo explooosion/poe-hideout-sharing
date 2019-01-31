@@ -92,8 +92,8 @@ class Header extends Component {
             <li><Link to="/create" alt="create" title="create"><MdNoteAdd size="2rem" /></Link></li>
             {
               auth
-                ? <li><a href="#logout" onClick={() => this.onLogout()} alt="logout" title="logout"><GiEntryDoor size="2rem" /></a></li>
-                : <li><Link to="/login" alt="login" title="login"><GiExitDoor size="2rem" /></Link></li>
+                ? <li><a href="#logout" onClick={() => this.onLogout()} alt="logout" title="logout"><GiExitDoor size="2rem" /></a></li>
+                : <li><Link to="/login" alt="login" title="login"><GiEntryDoor size="2rem" /></Link></li>
             }
             <li><a href="https://github.com/explooosion/poe-hideout-sharing" target="_blank" rel="noopener noreferrer" alt="github" title="github"><IoLogoGithub size="2rem" /></a></li>
             <li style={{ paddingLeft: '1rem', height: 'auto' }}>
