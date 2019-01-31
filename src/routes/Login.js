@@ -35,9 +35,6 @@ class Login extends Component {
       }
       // Not login in google
       this.props.history.push('/');
-    } else {
-      // Not login in google
-      this.props.history.push('/');
     }
   }
 
