@@ -38,7 +38,6 @@ class Detail extends Component {
       tabmenu: [
         { label: 'Preview', icon: 'pi pi-images' },
         { label: 'Code', icon: 'pi pi-fw pi-file' },
-        // { label: 'Edit', icon: 'pi pi-fw pi-pencil' },
       ],
       activeItem: 0,
       breadcrumb: [
@@ -104,31 +103,34 @@ class Detail extends Component {
     return <h2>【{type}】{title}</h2>;
   }
 
-  renderDetail({ screenshots }) {
+  renderDetail({ screenshots, fileContent }) {
     const { label } = this.state.activeItem;
     switch (label) {
       case 'Image': return this.renderImages(screenshots);
-      case 'Code': return this.renderCode();
-      case 'Edit': return this.renderEdit();
+      case 'Code': return this.renderCode(fileContent);
       default: return this.renderImages(screenshots);
     }
   }
 
-  renderCode() {
+  renderCode(code = '') {
+    const c = JSON.parse(code);
     return (
       <div className="detail-content">
-        <section className="section">
-          <h3 className="section-title">renderCode</h3>
-        </section>
-      </div>
-    )
-  }
-
-  renderEdit() {
-    return (
-      <div className="detail-content">
-        <section className="section">
-          <h3 className="section-title">renderEdit</h3>
+        <section className="section detail-code">
+          <p><b>Language</b><code className="section-title">{c.Language}</code></p>
+          <p><b>Hideout Hash</b><code className="section-title">{c['Hideout Hash']}</code></p>
+          <p><b>Hideout Name</b><code className="section-title">{c['Hideout Name']}</code></p>
+          <hr />
+          {
+            c.Objects.map((o, index) => {
+              return (
+                <div>
+                  {index % 10 === 0 && index > 0 ? <hr /> : null}
+                  <p key={`hideout-object-${index}`}><b>{o.Name}</b><code className="section-title">{JSON.stringify(o)}</code></p>
+                </div>
+              )
+            })
+          }
         </section>
       </div>
     )

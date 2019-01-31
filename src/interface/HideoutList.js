@@ -109,6 +109,7 @@ class HideoutList {
       favorite: this.favorite,
       screenshots: [],
       fileName: this.fileName,
+      fileContent: this.fileContent,
       timestamp: this.timestamp,
     }
   }
