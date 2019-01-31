@@ -46,7 +46,10 @@ class Login extends Component {
   }
 
   render() {
-    this.onCheckAuth();
+    // Before render, should wait for loading users data
+    this.users = this.props.users;
+    if (this.users.get().length > 0) this.onCheckAuth();
+
     return (
       <MasterLayout>
         <div className="login">
