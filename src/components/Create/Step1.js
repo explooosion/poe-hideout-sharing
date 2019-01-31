@@ -172,7 +172,7 @@ class Step1 extends Component {
                   <Button label="Add" className="p-button-raised" style={{ width: '80px' }} onClick={() => this.onAddScreenshot()} />
                 </div>
                 <label htmlFor="txtScreenshotUrl">Url or Youtube ID:</label>
-                <InputText id="txtScreenshotUrl" value={this.state.screenshotModelUrl} onChange={(e) => this.onScreenshotModelUrlChange(e.target.value)} />
+                <InputText id="txtScreenshotUrl" value={this.state.screenshotModelUrl} onChange={(e) => this.onScreenshotModelUrlChange(e.target.value)}></InputText>
                 <span className="form-valid" style={onValid(this.state.screenshotModelUrl)}>Please set the url or youtube id.</span>
                 <label htmlFor="txtScreenshotUrl">*.Example</label>
                 <span>Imgur: <b>https://imgur.com/A5iSyj1.jpg</b></span>

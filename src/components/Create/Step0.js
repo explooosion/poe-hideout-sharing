@@ -32,7 +32,7 @@ class Step0 extends Component {
           <span className="form-valid" style={onValid(this.state.title)}>Please set the a title.</span>
         </div>
         <div className="create-control">
-          <Button label="Cancel" className="p-button-secondary p-button-raised create-control-button" onClick={() => history.goBack()} />
+          <Button label="Cancel" className="p-button-secondary p-button-raised create-control-button" onClick={() => history.push('/')} />
           <Button label="Next" icon="pi pi-arrow-right" iconPos="right" className="p-button-raised create-control-button" onClick={() => onNext()} />
         </div>
       </div>

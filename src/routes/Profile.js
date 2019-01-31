@@ -36,6 +36,15 @@ class Profile extends Component {
   }
 
   componentWillMount() {
+    this.onCheckIsOwner();
+  }
+
+  componentWillReceiveProps() {
+    this.onCheckIsOwner();
+  }
+
+  onCheckIsOwner() {
+    this.id = this.props.match.params.id;
     // Both null
     if (!Session.get('auth') && !this.id) this.props.history.push('/');
     if (!this.id) {
@@ -48,10 +57,6 @@ class Profile extends Component {
       if (!Session.get('auth')) return this.isOwner = false;
       return this.isOwner = Session.get('auth').uid === this.id ? true : false;
     }
-  }
-
-  componentWillReceiveProps() {
-    this.id = this.props.match.params.id;
   }
 
   async onUpdateProfile(payload = {}) {
@@ -82,14 +87,25 @@ class Profile extends Component {
       (
         <div>
           <div className="profile-avatar-edit" style={!this.state.avatarEdit ? { display: 'none' } : {}}>
-            <InputText style={{ width: '300px' }} value={this.state.avatar} onChange={(e) => this.setState({ avatar: e.target.value })} />
+            <InputText
+              style={{ width: '300px' }}
+              value={this.state.avatar}
+              onChange={(e) => this.setState({ avatar: e.target.value })}
+              onKeyPress={(e) => {
+                if (e.charCode === 13 && this.state.avatar.length > 0) {
+                  this.onUpdateProfile({ avatar: this.state.avatar });
+                  this.setState({ avatarEdit: false });
+                }
+              }}
+            />
             <Button
               icon="pi pi-check"
               style={{ margin: '0 .15rem 0 .25rem' }}
               onClick={() => {
-                if (this.state.avatar.length === 0) return;
-                this.onUpdateProfile({ avatar: this.state.avatar });
-                this.setState({ avatarEdit: false });
+                if (this.state.avatar.length > 0) {
+                  this.onUpdateProfile({ avatar: this.state.avatar });
+                  this.setState({ avatarEdit: false });
+                }
               }}
             />
             <Button icon="pi pi-times" style={{ margin: '0 .15rem' }} onClick={() => this.setState({ avatarEdit: false })} />
@@ -101,9 +117,7 @@ class Profile extends Component {
         </div>
       ) :
       (
-        <div className="profile-avatar">
-          <img src={user.avatar} style={{ height: '70px', borderRadius: '100%' }} alt={user.uname} title={user.uname} />
-        </div>
+        <img src={user.avatar} style={{ height: '70px', borderRadius: '100%' }} alt={user.uname} title={user.uname} />
       )
   }
 
@@ -114,18 +128,28 @@ class Profile extends Component {
   renderName(user = { uname: 'unknown' }) {
     return this.isOwner ?
       (
-        <h4 className="profile-name">
+        <h4 className="profile-name" style={{ marginLeft: '1.5rem' }}>
           {user.uname}
           <FaEdit size="1.3rem" onClick={() => this.setState({ nameEdit: true, avatarEdit: false, name: user.uname })} />
           <div className="profile-name-edit" style={!this.state.nameEdit ? { display: 'none' } : {}}>
-            <InputText value={this.state.name} onChange={(e) => this.setState({ name: e.target.value })} />
+            <InputText
+              value={this.state.name}
+              onChange={(e) => this.setState({ name: e.target.value })}
+              onKeyPress={(e) => {
+                if (e.charCode === 13 && this.state.name.length > 0) {
+                  this.onUpdateProfile({ uname: this.state.name });
+                  this.setState({ nameEdit: false });
+                }
+              }}
+            />
             <Button
               icon="pi pi-check"
               style={{ margin: '0 .15rem 0 .25rem' }}
               onClick={() => {
-                if (this.state.name.length === 0) return;
-                this.onUpdateProfile({ uname: this.state.name });
-                this.setState({ nameEdit: false });
+                if (this.state.name.length > 0) {
+                  this.onUpdateProfile({ uname: this.state.name });
+                  this.setState({ nameEdit: false });
+                }
               }}
             />
             <Button icon="pi pi-times" style={{ margin: '0 .15rem' }} onClick={() => this.setState({ nameEdit: false })} />
@@ -133,9 +157,7 @@ class Profile extends Component {
         </h4>
       ) :
       (
-        <h4 className="profile-name">
-          {user.uname}
-        </h4>
+        <h4 className="profile-name">{user.uname}</h4>
       )
   }
 
@@ -180,7 +202,7 @@ class Profile extends Component {
     // If has id, then read id or get owner uid
     const ID = this.id ? this.id : Session.get('auth').uid;
     // Find list by user id
-    const Hideouts = this.props.hideouts.Lists.filter(({ authorId }) => authorId === ID);
+    const Hideouts = this.props.hideouts.Lists.filter(({ authorId }) => authorId === ID) || [];
     // Find profile by user id
     const user = this.props.users.get().find(({ uid }) => uid === ID);
     return (
@@ -203,7 +225,7 @@ class Profile extends Component {
                           <th><FaDownload /></th>
                           <th><FaHeart /></th>
                           <th>Update</th>
-                          <th style={{ width: '130px' }}></th>
+                          <th style={{ width: this.isOwner ? '130px' : '50px' }}></th>
                         </tr>
                       </thead>
                       <tbody>

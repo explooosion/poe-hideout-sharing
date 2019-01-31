@@ -219,7 +219,7 @@ class Detail extends Component {
           <Growl ref={(el) => this.growl = el} />
           {this.renderDetail(this.hideout)}
           <div className="detail-footer">
-            <Button label="Goback" icon="pi pi-arrow-left" iconPos="left" onClick={() => this.props.history.goBack()} />
+            <Button label="Back" icon="pi pi-arrow-left" iconPos="left" onClick={() => this.props.history.push('/')} />
           </div>
         </ContentLayout>
       </article>
