@@ -62,6 +62,7 @@ class Create extends Component {
         { label: 'Youtube', value: 'youtube' },
       ],
       file: null,
+      fileContent: '',
       fileChoose: '',
       fileProgressShow: false,
       captcha: process.env.NODE_ENV === 'development' ? true : false,
@@ -161,7 +162,7 @@ class Create extends Component {
         }
         break;
       case 2: // Upload
-        if (this.state.file === null && !this.id) {
+        if (this.state.file === null && !this.id && this.state.fileContent === '') {
           valid = false;
           this.growl.show({ severity: 'warn', summary: 'Oops!', detail: 'Missing description.' });
         }
@@ -211,17 +212,16 @@ class Create extends Component {
     }
 
     let List = {};
-    const { uname, uid } = Session.get('auth');
+    const { uid } = Session.get('auth') || {};
     if (!this.id) {
       // Create new list
       List = new HideoutList();
       List.title = this.state.title;
       List.id = uuid();
       List.description = this.state.description;
-      List.author = uname;
       List.authorId = uid;
 
-      List.type = 'Backstreet'; // fake
+      List.type = JSON.parse(this.state.fileContent)['Hideout Name'] || ''; // fake
       List.thumbnail = this.state.thumbnail;
       List.favour = Math.floor(Math.random() * 10000000); // Hideout favour
       List.version = this.state.version;
@@ -237,6 +237,7 @@ class Create extends Component {
 
       List.screenshots = this.state.screenshotList;
       List.fileName = fileName;
+      List.fileContent = this.state.fileContent;
 
     } else {
       // Update list
@@ -247,7 +248,11 @@ class Create extends Component {
       List.version = this.state.version;
       List.update = moment().toString();
       List.screenshots = this.state.screenshotList;
-      List.fileName = fileName;
+      if (this.state.fileContent !== '') {
+        List.fileName = fileName;
+        List.fileContent = this.state.fileContent;
+        List.type = JSON.parse(this.state.fileContent)['Hideout Name'] || ''; // fake
+      }
     }
 
     // Check payload keys

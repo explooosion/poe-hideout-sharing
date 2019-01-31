@@ -50,8 +50,8 @@
   .detail-title {
     padding-left: .25rem;
     color: $warning;
-    background-color: $dark;
-    border: 1px solid $black;
+    background-color: rgba($dark, .85);
+    border: 2px solid $black;
     z-index: 100;
 
     @media only screen and (min-width: $screen-xl) {
@@ -65,8 +65,8 @@
     padding: 1rem;
     width: 100%;
     color: $light-warning;
-    background-color: $dark;
-    border: 1px solid $black;
+    background-color: rgba($dark, .85);
+    border: 2px solid $black;
     border-radius: 3px;
 
     .detail-description-title {
@@ -85,8 +85,8 @@
   .detail-content {
     padding: .5rem 2rem;
     color: #fff;
-    background-color: $dark;
-    border: 1px solid $black;
+    background-color: rgba($dark, .85);
+    border: 2px solid $black;
     border-top: none;
     border-radius: 0 0 3px 3px;
   }
@@ -116,7 +116,10 @@
   }
 
   .detail-footer {
-    margin-top: 1rem;
+    padding: 1rem;
+    background-color: rgba($dark, .85);
+    border: 2px solid $black;
+    border-top: 0;
     text-align: center;
   }
 }

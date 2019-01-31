@@ -9,7 +9,7 @@
 
   .p-fieldset {
     border: 1px solid $light-warning;
-    background-color: $dark;
+    background-color: rgba($dark, .85);
     margin-bottom: 1rem;
   }
 }

@@ -18,7 +18,7 @@
     width: $screen-lg;
     height: calc(90vh - #{$header-height});
     text-align: center;
-    background-color: $dark;
+    background-color: rgba($dark, .85);
     border: 2px solid $gray;
 
     .profile-avatar-edit {

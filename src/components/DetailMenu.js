@@ -16,6 +16,7 @@ class DetailMenu extends Component {
   constructor(props) {
     super(props);
     this.dispatch = props.dispatch;
+    this.users = props.users;
     this.t = props.t;
     this.state = {
       hideout: props.hideout,
@@ -24,14 +25,15 @@ class DetailMenu extends Component {
   }
 
   render() {
-    const { author, type, favour, version, update, create } = this.state.hideout;
+    const { type, favour, version, update, create, authorId } = this.state.hideout;
+    const { uname } = this.users.getById(authorId);
     return (
       <MenuLayout title={this.state.title}>
         <div className="detail-menu">
           <div className="list">
             <div className="item">
               <h4 className="item-title">Hideout Type</h4>
-              <h4 className="item-value">{type} Hideout</h4>
+              <h4 className="item-value">{type}</h4>
             </div>
             <div className="item">
               <h4 className="item-title">Total Favor</h4>
@@ -41,7 +43,7 @@ class DetailMenu extends Component {
             </div>
             <div className="item">
               <h4 className="item-title">Author</h4>
-              <h4 className="item-value">{author}</h4>
+              <h4 className="item-value">{uname}</h4>
             </div>
             <div className="item">
               <h4 className="item-title">Version</h4>
@@ -67,6 +69,7 @@ DetailMenu.propTypes = {}
 const mapStateToProps = state => {
   return {
     hideouts: state.hideouts,
+    users: state.users,
   }
 }
 

@@ -36,7 +36,7 @@
 
   .card-group {
     padding: .75rem;
-    background-color: $dark;
+    background-color: rgba($dark, .85);
     border: 2px solid $black;
   }
 
@@ -91,6 +91,16 @@
 
     &::before {
       content: '@';
+    }
+  }
+
+  .p-paginator {
+    background-color: transparent;
+    border: none;
+
+    .p-disabled {
+      color: #fff;
+      opacity: .8;
     }
   }
 }

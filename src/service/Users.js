@@ -11,8 +11,19 @@ class Users {
     this.onUsersSnapshot();
   }
 
+  /**
+   * Get all users
+   */
   get() {
     return this.users || [];
+  }
+
+  /**
+   * Get user by user id
+   * @param {string} id
+   */
+  getById(id = '') {
+    return this.users.find(({ uid }) => uid === id) || { uname: 'Unknown' };
   }
 
   /**

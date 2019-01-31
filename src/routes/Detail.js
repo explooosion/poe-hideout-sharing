@@ -80,21 +80,21 @@ class Detail extends Component {
         label: 'FaceBook',
         // icon: 'pi pi-star-o',
         command: (e) => {
-          this.growl.show({ severity: 'info', summary: 'Title', detail: 'Share FaceBook' });
+          window.open(`https://www.facebook.com/sharer/sharer.php?u=${document.URL}`, '_blank');
         },
       },
       {
         label: 'Google',
         // icon: 'pi pi-star-o',
         command: (e) => {
-          this.growl.show({ severity: 'warn', summary: 'Title', detail: 'Share Google' });
+          window.open(`https://plus.google.com/share?url=${document.URL}`, '_blank');
         },
       },
       {
         label: 'Twitter',
         // icon: 'pi pi-star-o',
         command: (e) => {
-          this.growl.show({ severity: 'error', summary: 'Title', detail: 'Share Twitter' });
+          window.open(`https://twitter.com/intent/tweet?text=${document.URL}`, '_blank');
         },
       },
     ];
@@ -176,7 +176,7 @@ class Detail extends Component {
     this.hideout = this.props.hideouts.Lists.find(({ id }) => id === this.id);
     if (!this.hideout) return <Redirect to="/" />;
     const { views, download, favorite, authorId, update, description, fileName } = this.hideout;
-    const { uname } = this.users.get().find(({ uid }) => uid === authorId) || { uname: 'unknown' };
+    const { uname } = this.users.getById(authorId);
     return (
       <article className="detail">
         <DetailMenu hideout={this.hideout} />

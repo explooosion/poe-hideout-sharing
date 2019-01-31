@@ -15,7 +15,7 @@
     width: 500px;
     height: 230px;
     text-align: center;
-    background-color: $dark;
+    background-color: rgba($dark, .85);
     border: 2px solid $gray;
 
     .login-title {

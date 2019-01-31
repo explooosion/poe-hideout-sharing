@@ -8,6 +8,8 @@ import { Button } from 'primereact/button';
 import { ProgressBar } from 'primereact/progressbar';
 import { Captcha } from 'primereact/captcha';
 
+import HideoutParse from 'hideout-parse';
+
 class Step2 extends Component {
 
   constructor(props) {
@@ -26,6 +28,13 @@ class Step2 extends Component {
 
   onFilesChange(files) {
     // Single file
+    const r = new FileReader();
+    const f = files[0];
+    r.readAsText(f);
+    r.onload = (e) => {
+      const fileContent = HideoutParse(e.target.result);
+      this.props.onSetState({ fileContent: JSON.stringify(fileContent) });
+    }
     this.props.onSetState({ file: files[0], fileChoose: files[0].name });
   }
 

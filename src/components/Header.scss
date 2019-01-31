@@ -11,7 +11,7 @@
   width: 100%;
   height: $header-height;
   text-align: left;
-  background-color: $light-black;
+  background-color: rgba($light-black, .95);
   border-bottom: 2px solid $black;
   z-index: 999;
 

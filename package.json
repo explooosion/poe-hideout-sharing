@@ -34,6 +34,7 @@
     "firebase": "^5.8.1",
     "firebase-admin": "^6.5.1",
     "flag-icon-css": "^3.2.1",
+    "hideout-parse": "^0.1.0",
     "i18next": "^14.0.1",
     "i18next-browser-languagedetector": "^2.2.4",
     "iconv-lite": "^0.4.24",

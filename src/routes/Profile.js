@@ -182,7 +182,7 @@ class Profile extends Component {
                 (
                   <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                     <Link to={`/detail/${h.id}`}><Button icon="pi pi-external-link" style={{ marginRight: '.25rem', marginBottom: '.08rem' }} /></Link>
-                    <Link to={`/edit/${h.id}`}><Button icon="pi pi-pencil" style={{ marginRight: '.25rem', marginBottom: '.08rem' }} /></Link>
+                    <Link to={`/edit/${h.id}`}><Button className="p-button-success" icon="pi pi-pencil" style={{ marginRight: '.25rem', marginBottom: '.08rem' }} /></Link>
                     <Button className="p-button-danger" icon="pi pi-trash" onClick={() => window.confirm(`Delete 「${h.title}」 ???`) ? this.onDeleteHideout(h) : null} />
                   </div>
                 ) :
@@ -204,7 +204,7 @@ class Profile extends Component {
     // Find list by user id
     const Hideouts = this.props.hideouts.Lists.filter(({ authorId }) => authorId === ID) || [];
     // Find profile by user id
-    const user = this.props.users.get().find(({ uid }) => uid === ID);
+    const user = this.props.users.getById(ID);
     return (
       <MasterLayout>
         <div className="profile">

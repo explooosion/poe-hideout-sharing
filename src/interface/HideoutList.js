@@ -20,11 +20,6 @@ class HideoutList {
   description = 'This is a simple hideout.';
 
   /**
-   * Author
-   */
-  author = '';
-
-  /**
    * AuthorId
    */
   authorId = '';
@@ -80,9 +75,14 @@ class HideoutList {
   screenshots = [HideoutScreenshot];
 
   /**
-   * file name
+   * File name
    */
   fileName = '';
+
+  /**
+   * File content
+   */
+  fileContent = '';
 
   /**
    * timestamp
@@ -97,7 +97,6 @@ class HideoutList {
       id: this.id,
       title: this.title,
       description: this.description,
-      author: this.author,
       authorId: this.authorId,
       type: this.type,
       thumbnail: this.thumbnail,
