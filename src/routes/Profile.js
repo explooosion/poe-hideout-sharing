@@ -43,6 +43,10 @@ class Profile extends Component {
     this.onCheckIsOwner();
   }
 
+  componentWillUpdate() {
+    this.onCheckIsOwner();
+  }
+
   onCheckIsOwner() {
     this.id = this.props.match.params.id;
     // Both null

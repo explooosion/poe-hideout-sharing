@@ -21,8 +21,11 @@ class Login extends Component {
   async componentWillMount() {
     if (Session.get('auth-google') || Session.get('auth')) {
       // Google login susessful
-      const userGoogle = this.users.getById(Session.get('auth-google').uid);
-      if (!userGoogle) {
+      if (!Session.get('auth')) {
+        // New user
+        await this.users.onCreateUser(Session.get('auth-google'));
+      }
+      else if (Object.keys(this.users.getById(Session.get('auth').uid).length === 0)) {
         // New user
         await this.users.onCreateUser(Session.get('auth-google'));
       } else {
@@ -30,6 +33,9 @@ class Login extends Component {
         const user = this.users.getById(Session.get('auth').uid);
         Session.set(user);
       }
+      // Not login in google
+      this.props.history.push('/');
+    } else {
       // Not login in google
       this.props.history.push('/');
     }
