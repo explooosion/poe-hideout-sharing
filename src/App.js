@@ -21,6 +21,7 @@ class App extends Component {
     super(props);
     this.dispatch = props.dispatch;
     this.database = props.database;
+    this.users = props.users;
     this.database.onHideoutsSnapshot(this.dispatch);
     this.state = { time: 10 };
   }
@@ -37,11 +38,13 @@ class App extends Component {
   }
 
   render() {
+    this.database = this.props.database;
+    this.users = this.props.users;
     return (
       <Router>
         {
           /* Loading */
-          this.database.get().length > 0 || this.state.time === 0
+          (this.database.get().length > 0 && this.users.get().length > 0) || this.state.time === 0
             ? (
               <div>
                 <Header />
@@ -74,6 +77,7 @@ const mapStateToProps = state => {
   return {
     hideouts: state.hideouts,
     database: state.database,
+    users: state.users,
   }
 }
 

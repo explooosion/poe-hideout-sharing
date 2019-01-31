@@ -37,8 +37,8 @@ class Users {
 
       // Login with session
       if (Session.get('auth-google')) {
-        const user = this.users.find(({ uid }) => uid === Session.get('auth-google').uid);
-        if (user) Session.set('auth', user);
+        const user = this.getById(Session.get('auth-google').uid);
+        if (user.uname !== 'Unknown') Session.set('auth', user);
       }
     });
   }
@@ -49,7 +49,7 @@ class Users {
    */
   async onCreateUser(user = { uid: '' }) {
     if (user.uid.length === 0) return;
-    console.log('onCreateUser', user);
+    // console.log('onCreateUser', user);
     await this.db.ref(`users${REF_PICK}/${user.uid}`).set(user);
   }
 
@@ -60,7 +60,7 @@ class Users {
   async onUpdateUser(uid = '', user = {}) {
     if (Object.keys(user).length === 0) return;
     if (uid.length === 0) return;
-    console.log('onUpdateUser', user);
+    // console.log('onUpdateUser', user);
     if (Session.get('auth-google')) {
       Session.set('auth', {
         ...Session.get('auth-google'),

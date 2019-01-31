@@ -28,7 +28,7 @@ class Auth {
       if (user.providerData[0].uid.length === 0) return;
       const { uid, displayName, photoURL, email } = user.providerData[0];
       this.user = new User(uid, displayName, photoURL, email);
-      console.log('onAuthStateChanged', this.user);
+      // console.log('onAuthStateChanged', this.user);
       Session.set('auth-google', this.user);
     });
   }

@@ -16,9 +16,10 @@ class Login extends Component {
     this.auth = props.auth;
     this.users = props.users;
     this.t = props.t;
+    this.isCheckOk = false;
   }
 
-  async componentWillMount() {
+  async onCheckAuth() {
     if (Session.get('auth-google') || Session.get('auth')) {
       // Google login susessful
       if (!Session.get('auth')) {
@@ -36,24 +37,31 @@ class Login extends Component {
       // Not login in google
       this.props.history.push('/');
     }
+    this.isCheckOk = true;
   }
 
   async signInByGoogle() {
     await this.auth.onSignInByGoogle();
-    window.location.reload();
+    this.props.history.push('/');
   }
 
   render() {
+    this.onCheckAuth();
     return (
       <MasterLayout>
         <div className="login">
-          <div className="login-form">
-            <h1 className="login-title">{this.t('LoginTitle')}</h1>
-            <div className="login-google" onClick={() => this.signInByGoogle()}>
-              <FaGooglePlusG className="login-google-icon" />
-              <span className="login-google-text">{this.t('LoginButton')}</span>
-            </div>
-          </div>
+          {
+            this.isCheckOk ?
+              (
+                <div className="login-form">
+                  <h1 className="login-title">{this.t('LoginTitle')}</h1>
+                  <div className="login-google" onClick={() => this.signInByGoogle()}>
+                    <FaGooglePlusG className="login-google-icon" />
+                    <span className="login-google-text">{this.t('LoginButton')}</span>
+                  </div>
+                </div>
+              ) : null
+          }
         </div>
       </MasterLayout>
     );
