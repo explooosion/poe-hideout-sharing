@@ -96,7 +96,7 @@ class Create extends Component {
    * Load data by id in edit mode
    */
   onEditMode() {
-    this.hideout = this.props.hideouts.Lists.find(({ id }) => id === this.id);
+    this.hideout = this.database.get().find(({ id }) => id === this.id);
     if (this.hideout) {
       this.setState({
         title: this.hideout.title,
@@ -369,7 +369,7 @@ class Create extends Component {
   }
 
   render() {
-    this.hideout = this.props.hideouts.Lists.find(({ id }) => id === this.id);
+    this.hideout = this.database.getById(this.id);
     // Edit mode check
     if (this.id && Session.get('auth')) {
       // Not find hideout by id
@@ -395,7 +395,6 @@ Create.propTypes = {}
 
 const mapStateToProps = state => {
   return {
-    hideouts: state.hideouts,
     auth: state.auth,
     database: state.database,
     storage: state.storage,

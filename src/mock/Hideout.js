@@ -1,10 +1,4 @@
-import uuid from 'uuid/v1';
-import faker from 'faker';
-
-/* eslint-disable global-require */
-const Lists = [];
-
-const Type = [
+const HideoutType = [
   {
     label: 'Arboreal',
     value: 'Arboreal',
@@ -119,6 +113,5 @@ const Type = [
 ];
 
 export default {
-  Lists,
-  Type,
-};
+  HideoutType,
+}

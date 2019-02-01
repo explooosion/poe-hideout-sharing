@@ -1,6 +1,5 @@
 import Session from './Session';
 import { db, REF_PICK } from './config';
-import { setHideouts } from '../actions';
 
 class Database {
 
@@ -15,9 +14,25 @@ class Database {
   }
 
   /**
+   * Get hideouts by hideout id
+   * @param {string} id
+   */
+  getById(id = '') {
+    return this.hideouts.find((hideout) => hideout.id === id) || null;
+  }
+
+  /**
+   * Get hideouts by user id
+   * @param {string} uid
+   */
+  getByUserId(uid = '') {
+    return this.hideouts.filter((hideout) => hideout.authorId === uid) || [];
+  }
+
+  /**
    * Hideouts handler
    */
-  onHideoutsSnapshot(dispatch) {
+  onHideoutsSnapshot() {
     const SORTKEY = 'timestamp';
     this.dbHideouts = this.db.ref(`hideouts${REF_PICK}`);
     this.dbHideouts.on('value', snapshot => {
@@ -26,7 +41,6 @@ class Database {
         .map(key => datas[key])
         .sort((a, b) => (a[SORTKEY] < b[SORTKEY]) ? 1 : ((b[SORTKEY] < a[SORTKEY]) ? -1 : 0));
       // console.info('snapshot', this.hideouts);
-      dispatch(setHideouts(this.hideouts));
     });
   }
 
@@ -88,6 +102,5 @@ class Database {
     }
   }
 }
-
 
 export default Database;

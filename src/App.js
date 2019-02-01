@@ -22,7 +22,7 @@ class App extends Component {
     this.dispatch = props.dispatch;
     this.database = props.database;
     this.users = props.users;
-    this.database.onHideoutsSnapshot(this.dispatch);
+    this.database.onHideoutsSnapshot();
     this.state = { time: 10 };
   }
 
@@ -75,7 +75,6 @@ App.propTypes = {}
 
 const mapStateToProps = state => {
   return {
-    hideouts: state.hideouts,
     database: state.database,
     users: state.users,
   }

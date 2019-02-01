@@ -135,7 +135,7 @@ class Detail extends Component {
           {
             c.Objects.map((o, index) => {
               return (
-                <div>
+                <div key={`code-${index}-${o.Hash}`}>
                   {index % 10 === 0 && index > 0 ? <hr /> : null}
                   <p key={`hideout-object-${index}`}><b>{o.Name}</b><code className="section-title">{JSON.stringify(o)}</code></p>
                 </div>
@@ -186,7 +186,7 @@ class Detail extends Component {
   }
 
   render() {
-    this.hideout = this.props.hideouts.Lists.find(({ id }) => id === this.id);
+    this.hideout = this.database.get().find(({ id }) => id === this.id);
     if (!this.hideout) return <Redirect to="/" />;
     const { views, download, favorite, authorId, update, description, fileName } = this.hideout;
     const { uname } = this.users.getById(authorId);
@@ -244,7 +244,6 @@ Detail.propTypes = {}
 
 const mapStateToProps = state => {
   return {
-    hideouts: state.hideouts,
     auth: state.auth,
     database: state.database,
     storage: state.storage,

@@ -3,11 +3,6 @@ export const setLocal = locale => ({
   locale: locale,
 });
 
-export const setHideouts = hideouts => ({
-  type: 'SET_Hideouts',
-  hideouts: hideouts,
-});
-
 // DEMO ===========================
 // let nextTodoId = 0
 // export const addTodo = text => ({

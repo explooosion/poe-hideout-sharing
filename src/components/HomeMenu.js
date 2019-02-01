@@ -6,7 +6,6 @@ import { connect } from 'react-redux';
 import { Dropdown } from 'primereact/dropdown';
 import { SelectButton } from 'primereact/selectbutton';
 import { Fieldset } from 'primereact/fieldset';
-// import { Chart } from 'primereact/chart';
 
 import MenuLayout from '../layout/MenuLayout';
 
@@ -17,13 +16,13 @@ class HomeMenu extends Component {
   constructor(props) {
     super(props);
     this.dispatch = props.dispatch;
-    const { Type } = props.hideouts;
+    console.log(props.hideouts);
     this.state = {
       download: '',
       views: '',
       favorite: '',
       title: 'Hideout List',
-      types: Type,
+      types: props.hideoutTypes,
       type: '',
       mtxs: [
         { label: 'All', value: null },
@@ -282,7 +281,7 @@ HomeMenu.propTypes = {}
 
 const mapStateToProps = state => {
   return {
-    hideouts: state.hideouts,
+    hideoutTypes: state.hideoutTypes,
   }
 }
 

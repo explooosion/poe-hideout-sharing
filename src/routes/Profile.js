@@ -206,9 +206,9 @@ class Profile extends Component {
     // If has id, then read id or get owner uid
     const ID = this.id ? this.id : Session.get('auth').uid;
     // Find list by user id
-    const Hideouts = this.props.hideouts.Lists.filter(({ authorId }) => authorId === ID) || [];
+    const Hideouts = this.database.getByUserId(ID);
     // Find profile by user id
-    const user = this.props.users.getById(ID);
+    const user = this.users.getById(ID);
     return (
       <MasterLayout>
         <div className="profile">
@@ -251,7 +251,6 @@ Profile.propTypes = {}
 
 const mapStateToProps = state => {
   return {
-    hideouts: state.hideouts,
     auth: state.auth,
     database: state.database,
     storage: state.storage,

@@ -37,11 +37,12 @@ class Login extends Component {
       // Not login in google
       this.props.history.push('/');
     }
-    this.isCheckOk = true;
+    this.isCheckOk = Session.get('auth-google') ? false : true;
   }
 
   async signInByGoogle() {
     await this.auth.onSignInByGoogle();
+    this.onCheckAuth();
     this.props.history.push('/');
   }
 

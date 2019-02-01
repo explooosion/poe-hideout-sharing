@@ -25,7 +25,7 @@ class DetailMenu extends Component {
   }
 
   render() {
-    const { type, favour, version, update, create, authorId } = this.state.hideout;
+    const { type, favour, version, update, create, authorId } = this.props.hideout;
     const { uname } = this.users.getById(authorId);
     return (
       <MenuLayout title={this.state.title}>
@@ -68,7 +68,6 @@ DetailMenu.propTypes = {}
 
 const mapStateToProps = state => {
   return {
-    hideouts: state.hideouts,
     users: state.users,
   }
 }

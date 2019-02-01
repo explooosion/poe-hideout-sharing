@@ -21,15 +21,16 @@ class Home extends Component {
   constructor(props) {
     super(props);
     this.dispatch = props.dispatch;
+    this.database = props.database;
+    this.users = props.users;
     this.t = props.t;
-    const { Lists } = props.hideouts;
     this.state = {
       first: 0,
       rows: 20,
       breadcrumb: [
         { label: 'hideouts', url: '/' },
       ],
-      hideouts: Lists,
+      hideouts: this.database.get(),
     }
     this.props.history.listen(() => this.onlazyLoadImage());
   }
@@ -71,10 +72,10 @@ class Home extends Component {
    * @param {string} value
    */
   onFilterChange(key, value) {
-    const { Lists } = this.props.hideouts;
+    const Hideouts = this.database.get();
     this.setState({
-      hideouts: Lists.filter(hideout => {
-        if (value) return hideout[key] === value;
+      hideouts: Hideouts.filter(hideout => {
+        if (value) return hideout[key] === `${value} Hideout`;
         return hideout[key];
       }),
     });
@@ -147,10 +148,12 @@ class Home extends Component {
   }
 
   render() {
-    const { Lists } = this.props.hideouts;
+    this.users = this.props.users;
+    this.database = this.props.database;
+    const Hideouts = this.props.database.get();
 
     // Fake Data
-    // let { Lists } = this.props.hideouts;
+    // let Hideouts = this.props.database.get();
     // const ALists = [];
     // const FAKETOTAL = 100;
     // if (Lists.length > 0) {
@@ -161,19 +164,20 @@ class Home extends Component {
     return (
       <div className="home">
         <HomeMenu
+          hideouts={Hideouts || []}
           onSortChange={(key, value) => this.onSortChange(key, value)}
           onFilterChange={(key, value) => this.onFilterChange(key, value)}
         />
         <ContentLayout breadcrumb={this.state.breadcrumb}>
           {
-            Lists.length === 0
+            Hideouts.length === 0
               ? <ProgressBar mode="indeterminate" style={{ height: '10px' }} />
               :
               (
                 <div className="card-group">
-                  <div className="p-grid">{this.renderCards(Lists)}</div>
+                  <div className="p-grid">{this.renderCards(Hideouts)}</div>
                   <br />
-                  <Paginator first={this.state.first} rows={this.state.rows} rowsPerPageOptions={[20, 40, 60]} totalRecords={Lists.length} onPageChange={e => this.onPageChange(e)}></Paginator>
+                  <Paginator first={this.state.first} rows={this.state.rows} rowsPerPageOptions={[20, 40, 60]} totalRecords={Hideouts.length} onPageChange={e => this.onPageChange(e)}></Paginator>
                 </div>
               )
           }
@@ -188,6 +192,7 @@ Home.propTypes = {}
 const mapStateToProps = state => {
   return {
     hideouts: state.hideouts,
+    database: state.database,
     users: state.users,
   }
 }
