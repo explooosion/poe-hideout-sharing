@@ -140,7 +140,7 @@ class Detail extends Component {
                 <th>{this.t('DetailQuantity')}</th>
                 <th>{this.t('DetailIcon')}</th>
                 <th>{this.t('DetailName')}</th>
-                <th>{this.t('DetailIcon')}</th>
+                <th>{this.t('DetailCost')}</th>
                 <th>{this.t('DetailMasterLevel')}</th>
                 <th>{this.t('DetailMasterName')}</th>
               </tr>
