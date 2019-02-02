@@ -158,7 +158,7 @@ class Step1 extends Component {
               modal={true}
               onHide={() => onSetState({ screenshotModel: false })}
             /* dismissableMask={true} */
-            >d
+            >
               <div className="model-row">
                 <label htmlFor="txtScreenshotUrl">{this.t('Create1ScreenshotModelType')}:</label>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
