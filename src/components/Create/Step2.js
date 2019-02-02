@@ -63,7 +63,7 @@ class Step2 extends Component {
       <div className="create-group">
         <h1 className="create-title">{this.t('Create2Title')}</h1>
         <br />
-        <div className="p-grid p-justify-center group-upload">
+        <div className="p-grid p-justify-center p-align-center p-dir-col group-upload">
           <Files
             className="files-dropzone"
             onChange={files => this.onFilesChange(files)}
@@ -80,11 +80,7 @@ class Step2 extends Component {
             </span>
             {this.state.fileProgressShow ? <ProgressBar mode="indeterminate" style={{ height: '10px' }} /> : null}
           </Files>
-          {
-            process.env.NODE_ENV !== 'development'
-              ? <Captcha siteKey={process.env.REACT_APP_CAPTCHA_KEY} onResponse={res => this.onResponseCaptcha(res)}></Captcha>
-              : null
-          }
+          <Captcha siteKey={process.env.REACT_APP_CAPTCHA_KEY} onResponse={res => this.onResponseCaptcha(res)}></Captcha>
         </div>
         <div className="create-control">
           <Button label={this.t('CreatePrevious')} icon="pi pi-arrow-left" iconPos="left" className="p-button-secondary p-button-raised create-control-button" onClick={(e) => onPrev()} />

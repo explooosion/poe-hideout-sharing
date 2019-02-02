@@ -153,7 +153,7 @@ class Step1 extends Component {
             <Button label={this.t('Create1ScreenshotReset')} icon="pi pi-replay" iconPos="left" className="p-button-secondary p-button-raised" onClick={() => onSetState({ screenshotList: [] })} />
             <Dialog
               className="screenshot-model"
-              header="Add Screenshot"
+              header={this.t('Create1ScreenshotModelHeader')}
               visible={this.state.screenshotModel}
               modal={true}
               onHide={() => onSetState({ screenshotModel: false })}
