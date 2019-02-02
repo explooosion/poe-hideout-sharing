@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './Detail.scss';
 
+import { withNamespaces } from 'react-i18next';
 import { connect } from 'react-redux';
 import { FaHeart, FaEye, FaDownload, FaEdit } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
@@ -29,6 +30,7 @@ class Detail extends Component {
   constructor(props) {
     super(props);
     this.dispatch = props.dispatch;
+    this.t = props.t;
     this.storage = props.storage;
     this.database = props.database;
     this.users = props.users;
@@ -37,12 +39,11 @@ class Detail extends Component {
     this.id = props.match.params.id;
     this.hideout = new HideoutList();
     this.fileContent = { Objects: [] };
-
     this.state = {
-      tabmenu: [
-        { label: 'Preview', icon: 'pi pi-images' },
-        { label: 'Items', icon: 'pi pi-list' },
-        { label: 'Code', icon: 'pi pi-file' },
+      tabMenu: [
+        { label: this.t('DetailPreview'), icon: 'pi pi-images' },
+        { label: this.t('DetailItems'), icon: 'pi pi-list' },
+        { label: this.t('DetailCode'), icon: 'pi pi-file' },
       ],
       activeItem: 0,
       breadcrumb: [
@@ -54,6 +55,16 @@ class Detail extends Component {
 
   componentWillMount() {
     this.database.onUpdateHideoutViews(this.id);
+  }
+
+  componentWillReceiveProps() {
+    this.setState({
+      tabMenu: [
+        { label: this.t('DetailPreview'), icon: 'pi pi-images' },
+        { label: this.t('DetailItems'), icon: 'pi pi-list' },
+        { label: this.t('DetailCode'), icon: 'pi pi-file' },
+      ],
+    });
   }
 
   onTabChange(value) {
@@ -111,9 +122,9 @@ class Detail extends Component {
   renderDetail({ screenshots, fileContent }) {
     const { label } = this.state.activeItem;
     switch (label) {
-      case 'Image': return this.renderImages(screenshots);
-      case 'Items': return this.renderItems(fileContent);
-      case 'Code': return this.renderCode(fileContent);
+      case this.t('DetailPreview'): return this.renderImages(screenshots);
+      case this.t('DetailItems'): return this.renderItems(fileContent);
+      case this.t('DetailCode'): return this.renderCode(fileContent);
       default: return this.renderImages(screenshots);
     }
   }
@@ -126,12 +137,12 @@ class Detail extends Component {
           <table className="detail-items">
             <thead>
               <tr>
-                <th>Quantity</th>
-                <th>Icon</th>
-                <th>Name</th>
-                <th>Cost</th>
-                <th>MasterLevel</th>
-                <th>MasterName</th>
+                <th>{this.t('DetailQuantity')}</th>
+                <th>{this.t('DetailIcon')}</th>
+                <th>{this.t('DetailName')}</th>
+                <th>{this.t('DetailIcon')}</th>
+                <th>{this.t('DetailMasterLevel')}</th>
+                <th>{this.t('DetailMasterName')}</th>
               </tr>
             </thead>
             <tbody>
@@ -161,6 +172,7 @@ class Detail extends Component {
   }
 
   renderCode() {
+    this.t = this.props.t;
     const c = this.fileContent;
     return (
       <div className="detail-content">
@@ -245,7 +257,7 @@ class Detail extends Component {
         <ContentLayout breadcrumb={this.state.breadcrumb}>
           <Toolbar className="detail-author">
             <summary className="p-toolbar-group-left">
-              Posted by <Link to={`/profile/${authorId}`}>{uname}</Link> {moment().startOf('hour').from(update)}
+              {this.t('DetailPostedby')} <Link to={`/profile/${authorId}`}>{uname}</Link> {moment().startOf('hour').from(update)}
               {
                 /* Edit button */
                 (Session.get('auth') ? (authorId === Session.get('auth').uid) : false)
@@ -267,21 +279,21 @@ class Detail extends Component {
               {this.renderTitle(this.hideout)}
             </div>
             <div className="p-toolbar-group-right">
-              <Button label="Download" icon="pi pi-download" style={{ marginRight: '.25em' }} onClick={e => this.onDownloadFileClick(fileName)} />
+              <Button label={this.t('DetailDownload')} icon="pi pi-download" style={{ marginRight: '.25em' }} onClick={e => this.onDownloadFileClick(fileName)} />
               <Button icon="pi pi-star" className="p-button-success" style={{ marginRight: '.25em' }} onClick={e => this.onFavoriteClick()} />
               <Button icon="pi pi-exclamation-triangle" className="p-button-danger" style={{ marginRight: '.25em' }} />
               <SplitButton icon="pi pi-share-alt" className="p-button-warning" style={{ marginRight: '.25em' }} onClick={this.save} model={this.getShareButtonItems()}></SplitButton>
             </div>
           </Toolbar>
           <div className="detail-description">
-            <h4 className="detail-description-title">Description</h4>
+            <h4 className="detail-description-title">{this.t('DetailDescription')}</h4>
             {description}
           </div>
-          <TabMenu className="detaild-tabmenu" model={this.state.tabmenu} activeItem={this.state.activeItem} onTabChange={(e) => this.onTabChange(e.value)} />
+          <TabMenu className="detaild-tabmenu" model={this.state.tabMenu} activeItem={this.state.activeItem} onTabChange={(e) => this.onTabChange(e.value)} />
           <Growl ref={(el) => this.growl = el} />
           {this.renderDetail(this.hideout)}
           <div className="detail-footer">
-            <Button label="Back" icon="pi pi-arrow-left" iconPos="left" onClick={() => this.props.history.push('/')} />
+            <Button label={this.t('DetailBack')} icon="pi pi-arrow-left" iconPos="left" onClick={() => this.props.history.push('/')} />
           </div>
         </ContentLayout>
       </article>
@@ -301,4 +313,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps)(Detail);
+export default withNamespaces()(connect(mapStateToProps)(Detail));

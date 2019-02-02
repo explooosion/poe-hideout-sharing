@@ -100,13 +100,13 @@ class Header extends Component {
 
                 : null
             }
-            <li><Link to="/create" alt="create" title="create"><MdNoteAdd size="2rem" /></Link></li>
+            <li><Link to="/create" alt={this.t('HeaderCreate')} title={this.t('HeaderCreate')}><MdNoteAdd size="2rem" /></Link></li>
             {
               auth
-                ? <li><a href="#logout" onClick={() => this.onLogout()} alt="logout" title="logout"><GiExitDoor size="2rem" /></a></li>
-                : <li><Link to="/login" alt="login" title="login"><GiEntryDoor size="2rem" /></Link></li>
+                ? <li><a href="#logout" onClick={() => this.onLogout()} alt={this.t('HeaderLogout')} title={this.t('HeaderLogout')}><GiExitDoor size="2rem" /></a></li>
+                : <li><Link to="/login" alt={this.t('HeaderLogin')} title={this.t('HeaderLogin')}><GiEntryDoor size="2rem" /></Link></li>
             }
-            <li><a href="https://github.com/explooosion/poe-hideout-sharing" target="_blank" rel="noopener noreferrer" alt="github" title="github"><IoLogoGithub size="2rem" /></a></li>
+            <li><a href="https://github.com/explooosion/poe-hideout-sharing" target="_blank" rel="noopener noreferrer" alt={this.t('HeaderGithub')} title={this.t('HeaderGithub')}><IoLogoGithub size="2rem" /></a></li>
             <li style={{ paddingLeft: '1rem', height: 'auto' }}>
               <Dropdown
                 value={this.state.locale}

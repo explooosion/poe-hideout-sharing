@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './HomeMenu.scss';
 
 import { connect } from 'react-redux';
+import { withNamespaces } from 'react-i18next';
 // import PropTypes from 'prop-types';
 import { Dropdown } from 'primereact/dropdown';
 import { SelectButton } from 'primereact/selectbutton';
@@ -9,7 +10,6 @@ import { Fieldset } from 'primereact/fieldset';
 import _ from 'lodash';
 
 import MenuLayout from '../layout/MenuLayout';
-import logo from '../images/logo.svg';
 
 class HomeMenu extends Component {
 
@@ -17,21 +17,21 @@ class HomeMenu extends Component {
     super(props);
     this.dispatch = props.dispatch;
     this.hideoutType = props.hideoutType;
+    this.t = props.t;
     this.state = {
       download: '',
       views: '',
       favorite: '',
-      title: 'Hideout List',
       types: this.hideoutType,
       type: '',
       mtxs: [
-        { label: 'All', value: null },
-        { label: 'Yes', value: true },
-        { label: 'No', value: false },
+        { label: this.t('HomeAll'), value: null },
+        { label: this.t('HomeYes'), value: true },
+        { label: this.t('HomeNo'), value: false },
       ],
       mtx: null,
       mini_ratings: [
-        { label: 'All', value: null },
+        { label: this.t('HomeAll'), value: null },
         { label: '1', value: 1 },
         { label: '2', value: 2 },
         { label: '3', value: 3 },
@@ -40,7 +40,7 @@ class HomeMenu extends Component {
       ],
       mini_rating: null,
       alva_levels: [
-        { label: 'All', value: null },
+        { label: this.t('HomeAll'), value: null },
         { label: '1', value: 1 },
         { label: '2', value: 2 },
         { label: '3', value: 3 },
@@ -51,7 +51,7 @@ class HomeMenu extends Component {
       ],
       alva_level: null,
       einhar_levels: [
-        { label: 'All', value: null },
+        { label: this.t('HomeAll'), value: null },
         { label: '1', value: 1 },
         { label: '2', value: 2 },
         { label: '3', value: 3 },
@@ -62,7 +62,7 @@ class HomeMenu extends Component {
       ],
       einhar_level: null,
       niko_levels: [
-        { label: 'All', value: null },
+        { label: this.t('HomeAll'), value: null },
         { label: '1', value: 1 },
         { label: '2', value: 2 },
         { label: '3', value: 3 },
@@ -73,7 +73,7 @@ class HomeMenu extends Component {
       ],
       niko_level: null,
       zana_levels: [
-        { label: 'All', value: null },
+        { label: this.t('HomeAll'), value: null },
         { label: '1', value: 1 },
         { label: '2', value: 2 },
         { label: '3', value: 3 },
@@ -85,6 +85,64 @@ class HomeMenu extends Component {
       zana_level: null,
       panelOptions: true,
     };
+  }
+
+  componentWillReceiveProps() {
+    this.setState({
+      mtxs: [
+        { label: this.t('HomeAll'), value: null },
+        { label: this.t('HomeYes'), value: true },
+        { label: this.t('HomeNo'), value: false },
+      ],
+      mini_ratings: [
+        { label: this.t('HomeAll'), value: null },
+        { label: '1', value: 1 },
+        { label: '2', value: 2 },
+        { label: '3', value: 3 },
+        { label: '4', value: 4 },
+        { label: '5', value: 5 },
+      ],
+      alva_levels: [
+        { label: this.t('HomeAll'), value: null },
+        { label: '1', value: 1 },
+        { label: '2', value: 2 },
+        { label: '3', value: 3 },
+        { label: '4', value: 4 },
+        { label: '5', value: 5 },
+        { label: '6', value: 6 },
+        { label: '7', value: 7 },
+      ],
+      einhar_levels: [
+        { label: this.t('HomeAll'), value: null },
+        { label: '1', value: 1 },
+        { label: '2', value: 2 },
+        { label: '3', value: 3 },
+        { label: '4', value: 4 },
+        { label: '5', value: 5 },
+        { label: '6', value: 6 },
+        { label: '7', value: 7 },
+      ],
+      niko_levels: [
+        { label: this.t('HomeAll'), value: null },
+        { label: '1', value: 1 },
+        { label: '2', value: 2 },
+        { label: '3', value: 3 },
+        { label: '4', value: 4 },
+        { label: '5', value: 5 },
+        { label: '6', value: 6 },
+        { label: '7', value: 7 },
+      ],
+      zana_levels: [
+        { label: this.t('HomeAll'), value: null },
+        { label: '1', value: 1 },
+        { label: '2', value: 2 },
+        { label: '3', value: 3 },
+        { label: '4', value: 4 },
+        { label: '5', value: 5 },
+        { label: '6', value: 6 },
+        { label: '7', value: 7 },
+      ],
+    });
   }
 
   onSortChange(state) {
@@ -102,28 +160,6 @@ class HomeMenu extends Component {
 
   onSelectChange(state) {
     this.setState(state);
-    // const key = Object.keys(state)[0];
-    // this.props.onFilterChange(key, state[key]);
-  }
-
-  getChartData() {
-    return {
-      labels: ['A', 'B', 'C'],
-      datasets: [
-        {
-          data: [300, 50, 100],
-          backgroundColor: [
-            "#ff6384",
-            "#36a2eb",
-            "#ffcE56",
-          ],
-          hoverBackgroundColor: [
-            "#ff6384",
-            "#36a2eb",
-            "#ffce56",
-          ],
-        }],
-    };
   }
 
   renderHideoutTemplate(option) {
@@ -135,47 +171,32 @@ class HomeMenu extends Component {
     );
   }
 
-  renderHideoutSelectedTemplate(value) {
-    if (value) {
-      return (
-        <div className="p-clearfix item-group">
-          <img alt={value} src={logo} />
-          <span>{value}</span>
-        </div>
-      );
-    }
-    else {
-      return <span className="my-multiselected-empty-token">Choose</span>
-    }
-  }
-
   renderSelectButton() {
     return [
-      { label: 'Increment', value: 'Increment' },
-      { label: 'Decrement', value: 'Decrement' },
+      { label: this.t('HomeIncrement'), value: 'Increment' },
+      { label: this.t('HomeDecrement'), value: 'Decrement' },
     ];
   }
 
   render() {
     return (
-      <MenuLayout title={this.state.title}>
+      <MenuLayout title={this.t('HomeHideout')}>
         <div className="home-menu">
           <div className="item">
-            <h4 className="item-title">Hideout Type</h4>
+            <h4 className="item-title">{this.t('HomeHideoutType')}</h4>
             <Dropdown
               style={{ width: '100%' }}
               value={this.state.type}
               options={this.state.types}
               onChange={(e) => this.onFilterChange({ type: e.value })}
               filter={true}
-              filterPlaceholder="Filter..."
-              placeholder="Select type"
+              filterPlaceholder={`${this.t('HomeFilter')}...`}
+              placeholder={this.t('HomeSelectType')}
               itemTemplate={this.renderHideoutTemplate}
               showClear={true}
-            // selectedItemTemplate={this.renderHideoutSelectedTemplate}
             />
           </div>
-          <Fieldset legend="Options" toggleable={true} collapsed={this.state.panelOptions} onToggle={(e) => this.setState({ panelOptions: e.value })}>
+          <Fieldset legend={this.t('HomeOptions')} toggleable={true} collapsed={this.state.panelOptions} onToggle={(e) => this.setState({ panelOptions: e.value })}>
             <div className="item">
               <h4 className="item-title">MTX</h4>
               <Dropdown
@@ -238,7 +259,7 @@ class HomeMenu extends Component {
             </div>
           </Fieldset>
           <div className="item">
-            <h4 className="item-title">Download</h4>
+            <h4 className="item-title">{this.t('HomeDownload')}</h4>
             <SelectButton
               value={this.state.download}
               options={this.renderSelectButton()}
@@ -247,7 +268,7 @@ class HomeMenu extends Component {
             </SelectButton>
           </div>
           <div className="item">
-            <h4 className="item-title">Views</h4>
+            <h4 className="item-title">{this.t('HomeViews')}</h4>
             <SelectButton
               value={this.state.views}
               options={this.renderSelectButton()}
@@ -256,7 +277,7 @@ class HomeMenu extends Component {
             </SelectButton>
           </div>
           <div className="item">
-            <h4 className="item-title">Favorite</h4>
+            <h4 className="item-title">{this.t('HomeFavorite')}</h4>
             <SelectButton
               value={this.state.favorite}
               options={this.renderSelectButton()}
@@ -264,14 +285,6 @@ class HomeMenu extends Component {
             >
             </SelectButton>
           </div>
-          {
-            /*
-            <div className="item">
-              <h4 className="item-title">Analysis</h4>
-              <Chart type="doughnut" data={this.getChartData()} />
-            </div>
-            */
-          }
         </div>
       </MenuLayout>
     );
@@ -286,4 +299,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps)(HomeMenu);
+export default withNamespaces()(connect(mapStateToProps)(HomeMenu));

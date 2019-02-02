@@ -116,41 +116,41 @@ class Step1 extends Component {
         <h1 className="create-title">{this.state.title}</h1>
         <div className="p-grid p-justify-center">
           <div className="p-col-3">
-            <label htmlFor="txtDescription">Description:</label>
+            <label htmlFor="txtDescription">{this.t('Create1Description')}:</label>
           </div>
           <div className="p-col-8">
-            <InputText id="txtDescription" value={this.state.description} onChange={(e) => onSetState({ description: e.target.value })} placeholder="Please Input your hideout description." autoFocus />
-            <span className="form-valid" style={onValid(this.state.description)}>Please set the description.</span>
+            <InputText id="txtDescription" value={this.state.description} onChange={(e) => onSetState({ description: e.target.value })} placeholder={this.t('Create1DescriptionInput')} autoFocus />
+            <span className="form-valid" style={onValid(this.state.description)}>{this.t('Create1DescriptionAlert')}</span>
           </div>
         </div>
         <div className="p-grid p-justify-center group-version">
           <div className="p-col-3">
-            <label htmlFor="txtVersion">Version:</label>
+            <label htmlFor="txtVersion">{this.t('Create1Version')}:</label>
           </div>
           <div className="p-col-8">
-            <Spinner id="txtVersion" keyfilter="int" min={1} max={100} step={1} value={this.state.version} onChange={(e) => onSetState({ version: e.target.value })} placeholder="Please Input your hideout version." />
-            <span className="form-valid" style={onValid(this.state.version)}>Please set the version.</span>
+            <Spinner id="txtVersion" keyfilter="int" min={1} max={100} step={1} value={this.state.version} onChange={(e) => onSetState({ version: e.target.value })} />
+            <span className="form-valid" style={onValid(this.state.version)}>{this.t('Create1VersionAlert')}</span>
           </div>
         </div>
         <div className="p-grid p-justify-center group-thumbnail">
           <div className="p-col-3">
-            <label htmlFor="txtThumbnail">Thumbnail:</label>
+            <label htmlFor="txtThumbnail">{this.t('Create1Thumbnail')}:</label>
             <small>( jpg | png | gif )</small>
           </div>
           <div className="p-col-8">
-            <InputText className="form-thumbnail" id="txtThumbnail" value={this.state.thumbnail} onChange={(e) => onSetState({ thumbnail: e.target.value })} placeholder="Please Input your hideout thumbnail url." />
-            <span className="form-valid" style={onValid(this.state.thumbnail)}>Please set the thumbnail.</span>
+            <InputText className="form-thumbnail" id="txtThumbnail" value={this.state.thumbnail} onChange={(e) => onSetState({ thumbnail: e.target.value })} placeholder={this.t('Create1ThumbnailInput')} />
+            <span className="form-valid" style={onValid(this.state.thumbnail)}>{this.t('Create1ThumbnailAlert')}</span>
             <img src={this.state.thumbnail} alt={this.state.thumbnail} />
-            <a href="https://imgur.com/" target="_blank" rel="noopener noreferrer">Need to upload?</a>
+            <a href="https://imgur.com/" target="_blank" rel="noopener noreferrer">{this.t('Create1ThumbnailHelp')}</a>
           </div>
         </div>
         <div className="p-grid p-justify-center group-screenshot">
           <div className="p-col-3">
-            <label htmlFor="txtThumbnail">Screenshot:</label>
+            <label htmlFor="txtThumbnail">{this.t('Create1Screenshot')}:</label>
           </div>
           <div className="p-col-8">
-            <Button label="Add" icon="pi pi-plus" iconPos="left" className="p-button-raised" onClick={() => onSetState({ screenshotModel: true })} />
-            <Button label="Reset" icon="pi pi-replay" iconPos="left" className="p-button-secondary p-button-raised" onClick={() => onSetState({ screenshotList: [] })} />
+            <Button label={this.t('Create1ScreenshotAdd')} icon="pi pi-plus" iconPos="left" className="p-button-raised" onClick={() => onSetState({ screenshotModel: true })} />
+            <Button label={this.t('Create1ScreenshotReset')} icon="pi pi-replay" iconPos="left" className="p-button-secondary p-button-raised" onClick={() => onSetState({ screenshotList: [] })} />
             <Dialog
               className="screenshot-model"
               header="Add Screenshot"
@@ -158,9 +158,9 @@ class Step1 extends Component {
               modal={true}
               onHide={() => onSetState({ screenshotModel: false })}
             /* dismissableMask={true} */
-            >
+            >d
               <div className="model-row">
-                <label htmlFor="txtScreenshotUrl">Type:</label>
+                <label htmlFor="txtScreenshotUrl">{this.t('Create1ScreenshotModelType')}:</label>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                   <SelectButton
                     style={{ marginTop: '.25rem' }}
@@ -169,12 +169,12 @@ class Step1 extends Component {
                     onChange={(e) => onSetState({ screenshotModelType: e.value, screenshotModelUrl: '', screenshotModelImg: defaultModelImg })}
                   >
                   </SelectButton>
-                  <Button label="Add" className="p-button-raised" style={{ width: '80px' }} onClick={() => this.onAddScreenshot()} />
+                  <Button label={this.t('Create1ScreenshotModelAdd')} className="p-button-raised" style={{ width: '80px' }} onClick={() => this.onAddScreenshot()} />
                 </div>
-                <label htmlFor="txtScreenshotUrl">Url or Youtube ID:</label>
+                <label htmlFor="txtScreenshotUrl">{this.t('Create1ScreenshotModelInput')}:</label>
                 <InputText id="txtScreenshotUrl" value={this.state.screenshotModelUrl} onChange={(e) => this.onScreenshotModelUrlChange(e.target.value)}></InputText>
-                <span className="form-valid" style={onValid(this.state.screenshotModelUrl)}>Please set the url or youtube id.</span>
-                <label htmlFor="txtScreenshotUrl">*.Example</label>
+                <span className="form-valid" style={onValid(this.state.screenshotModelUrl)}>{this.t('Create1ScreenshotModelAlert')}</span>
+                <label htmlFor="txtScreenshotUrl">*.{this.t('Create1ScreenshotModelExample')}</label>
                 <span>Imgur: <b>https://imgur.com/A5iSyj1.jpg</b></span>
                 <span>Youtube: https://www.youtube.com/watch?v=<b>DDx1fysX5oo</b></span>
               </div>
@@ -198,14 +198,14 @@ class Step1 extends Component {
               className="form-valid"
               style={onValid(this.state.screenshotList)}
             >
-              Please add screenshotLists.
+              {this.t('Create1ScreenshotAlert')}
             </span>
             {this.renderGroupPreview()}
           </div>
         </div>
         <div className="create-control">
-          <Button label="Previous" icon="pi pi-arrow-left" iconPos="left" className="p-button-secondary p-button-raised create-control-button" onClick={(e) => onPrev()} />
-          <Button label="Next" icon="pi pi-arrow-right" iconPos="right" className="p-button-raised create-control-button" onClick={(e) => onNext()} />
+          <Button label={this.t('CreatePrevious')} icon="pi pi-arrow-left" iconPos="left" className="p-button-secondary p-button-raised create-control-button" onClick={(e) => onPrev()} />
+          <Button label={this.t('CreateNext')} icon="pi pi-arrow-right" iconPos="right" className="p-button-raised create-control-button" onClick={(e) => onNext()} />
         </div>
         <Growl ref={(el) => this.growl = el} />
       </div>

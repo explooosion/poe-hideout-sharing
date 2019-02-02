@@ -20,7 +20,6 @@ class DetailMenu extends Component {
     this.t = props.t;
     this.state = {
       hideout: props.hideout,
-      title: 'Hideout Detail',
     };
   }
 
@@ -28,33 +27,33 @@ class DetailMenu extends Component {
     const { type, version, update, create, authorId } = this.props.hideout;
     const { uname } = this.users.getById(authorId);
     return (
-      <MenuLayout title={this.state.title}>
+      <MenuLayout title={this.t('DetailHideout')}>
         <div className="detail-menu">
           <div className="list">
             <div className="item">
-              <h4 className="item-title">Hideout Type</h4>
+              <h4 className="item-title">{this.t('DetailHideoutType')}</h4>
               <h4 className="item-value">{type}</h4>
             </div>
             <div className="item">
-              <h4 className="item-title">Total Cost</h4>
+              <h4 className="item-title">{this.t('DetailTotalCost')}</h4>
               <h4 className="item-value">
                 <NumberFormat value={this.props.cost} displayType={'text'} thousandSeparator={true} />
               </h4>
             </div>
             <div className="item">
-              <h4 className="item-title">Author</h4>
+              <h4 className="item-title">{this.t('DetailAuthor')}</h4>
               <h4 className="item-value">{uname}</h4>
             </div>
             <div className="item">
-              <h4 className="item-title">Version</h4>
+              <h4 className="item-title">{this.t('DetailVersion')}</h4>
               <h4 className="item-value">{version}</h4>
             </div>
             <div className="item">
-              <h4 className="item-title">Update</h4>
+              <h4 className="item-title">{this.t('DetailUpdate')}</h4>
               <h4 className="item-value">{moment(update).format('YYYY/MM/DD HH:mm:ss')}</h4>
             </div>
             <div className="item">
-              <h4 className="item-title">Create</h4>
+              <h4 className="item-title">{this.t('DetailCreate')}</h4>
               <h4 className="item-value">{moment(create).format('YYYY/MM/DD HH:mm:ss')}</h4>
             </div>
           </div>

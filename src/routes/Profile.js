@@ -185,14 +185,14 @@ class Profile extends Component {
               this.isOwner ?
                 (
                   <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                    <Link to={`/detail/${h.id}`}><Button icon="pi pi-external-link" style={{ marginRight: '.25rem', marginBottom: '.08rem' }} /></Link>
-                    <Link to={`/edit/${h.id}`}><Button className="p-button-success" icon="pi pi-pencil" style={{ marginRight: '.25rem', marginBottom: '.08rem' }} /></Link>
-                    <Button className="p-button-danger" icon="pi pi-trash" onClick={() => window.confirm(`Delete 「${h.title}」 ???`) ? this.onDeleteHideout(h) : null} />
+                    <Link to={`/detail/${h.id}`} alt={this.t('ProfileBrowse')} title={this.t('ProfileBrowse')}><Button icon="pi pi-external-link" style={{ marginRight: '.25rem', marginBottom: '.08rem' }} /></Link>
+                    <Link to={`/edit/${h.id}`} alt={this.t('ProfileEdit')} title={this.t('ProfileEdit')}><Button className="p-button-success" icon="pi pi-pencil" style={{ marginRight: '.25rem', marginBottom: '.08rem' }} /></Link>
+                    <Button className="p-button-danger" icon="pi pi-trash"  alt={this.t('ProfileDelete')} title={this.t('ProfileDelete')} onClick={() => window.confirm(`${this.t('ProfileDeleteQuestion')} 「${h.title}」 ???`) ? this.onDeleteHideout(h) : null} />
                   </div>
                 ) :
                 (
                   <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                    <Link to={`/detail/${h.id}`}><Button icon="pi pi-external-link" style={{ marginRight: '.25rem', marginBottom: '.08rem' }} /></Link>
+                    <Link to={`/detail/${h.id}`} alt={this.t('ProfileBrowse')} title={this.t('ProfileBrowse')}><Button icon="pi pi-external-link" style={{ marginRight: '.25rem', marginBottom: '.08rem' }} /></Link>
                   </div>
                 )
             }
@@ -222,13 +222,13 @@ class Profile extends Component {
                     <table className="profile-list">
                       <thead>
                         <tr>
-                          <th style={{ width: '100px' }}>Thumbnail</th>
-                          <th>Type</th>
-                          <th>Title</th>
-                          <th><FaEye /></th>
-                          <th><FaDownload /></th>
-                          <th><FaHeart /></th>
-                          <th>Update</th>
+                          <th style={{ width: '100px' }}>{this.t('ProfileThumbnail')}</th>
+                          <th>{this.t('ProfileType')}</th>
+                          <th>{this.t('ProfileTitle')}</th>
+                          <th><FaEye size="1.3rem" /></th>
+                          <th><FaDownload size="1.2rem" /></th>
+                          <th><FaHeart size="1rem" /></th>
+                          <th>{this.t('ProfileUpdate')}</th>
                           <th style={{ width: this.isOwner ? '130px' : '50px' }}></th>
                         </tr>
                       </thead>

@@ -26,13 +26,13 @@ class Step3 extends Component {
     const { timer } = this.props;
     return (
       <div className="create-group">
-        <h1 className="create-title">Publish!</h1>
+        <h1 className="create-title">{this.t('Create3Publish')}!</h1>
         <div className="create-control">
           <Link to='/'>
             <Button
-              label={`Finish (${this.state.finishTimer})`}
+              label={`${this.t('CreateFinish')} (${this.state.finishTimer})`}
               className="p-button-raised create-control-button"
-              onClick={(e) => clearInterval(timer)}
+              onClick={() => clearInterval(timer)}
             />
           </Link>
         </div>

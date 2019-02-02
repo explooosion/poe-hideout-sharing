@@ -26,14 +26,14 @@ class Step0 extends Component {
     const { onSetState, onValid, onNext, history } = this.props;
     return (
       <div className="create-group">
-        <h1 className="create-title">What is your hideout name?</h1>
+        <h1 className="create-title">{this.t('Create0Title')}</h1>
         <div className="p-grid p-justify-center group-title">
-          <InputText className="p-col-11 form-title" value={this.state.title} onChange={(e) => onSetState({ title: e.target.value })} placeholder="Please Input your hideout name." autoFocus />
-          <span className="form-valid" style={onValid(this.state.title)}>Please set the a title.</span>
+          <InputText className="p-col-11 form-title" value={this.state.title} onChange={(e) => onSetState({ title: e.target.value })} placeholder={this.t('Create0TitleInput')} autoFocus />
+          <span className="form-valid" style={onValid(this.state.title)}>{this.t('Create0TitleAlert')}</span>
         </div>
         <div className="create-control">
-          <Button label="Cancel" className="p-button-secondary p-button-raised create-control-button" onClick={() => history.push('/')} />
-          <Button label="Next" icon="pi pi-arrow-right" iconPos="right" className="p-button-raised create-control-button" onClick={() => onNext()} />
+          <Button label={this.t('CreateCancel')} className="p-button-secondary p-button-raised create-control-button" onClick={() => history.push('/')} />
+          <Button label={this.t('CreateNext')} icon="pi pi-arrow-right" iconPos="right" className="p-button-raised create-control-button" onClick={() => onNext()} />
         </div>
       </div>
     );

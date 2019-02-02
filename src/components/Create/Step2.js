@@ -7,6 +7,7 @@ import Files from 'react-files';
 import { Button } from 'primereact/button';
 import { ProgressBar } from 'primereact/progressbar';
 import { Captcha } from 'primereact/captcha';
+import { Growl } from 'primereact/growl';
 
 import HideoutParse from 'hideout-parse';
 
@@ -28,23 +29,23 @@ class Step2 extends Component {
 
   onFilesChange(files) {
     // Single file
-    const r = new FileReader();
-    const f = files[0];
-    r.readAsText(f);
-    r.onload = (e) => {
-      let fileContent;
-      try {
-        fileContent = HideoutParse(e.target.result);
-      } catch (err) {
-        fileContent = {};
-        console.error('onFilesChange', err);
+    try {
+      const r = new FileReader();
+      const f = files[0];
+      r.readAsText(f);
+      r.onload = (e) => {
+        let fileContent;
+        try {
+          fileContent = HideoutParse(e.target.result);
+          this.props.onSetState({ fileContent: JSON.stringify(fileContent) });
+        } catch (err) { console.error('HideoutParse', err); }
       }
-      this.props.onSetState({ fileContent: JSON.stringify(fileContent) });
-    }
-    this.props.onSetState({ file: files[0], fileChoose: files[0].name });
+      this.props.onSetState({ file: files[0], fileChoose: files[0].name });
+    } catch (err) { console.error('onFilesChange', err); }
   }
 
   onFilesError(error, file) {
+    this.growl.show({ severity: 'error', summary: 'Oops!', detail: error.message });
     console.error('error code ' + error.code + ': ' + error.message, file);
   }
 
@@ -60,7 +61,7 @@ class Step2 extends Component {
     const { onValid, onNext, onPrev, id } = this.props;
     return (
       <div className="create-group">
-        <h1 className="create-title">Choose your hideout file.</h1>
+        <h1 className="create-title">{this.t('Create2Title')}</h1>
         <br />
         <div className="p-grid p-justify-center group-upload">
           <Files
@@ -69,12 +70,13 @@ class Step2 extends Component {
             onError={(error, file) => this.onFilesError(error, file)}
             accepts={['.hideout', 'hideout/*']}
             minFileSize={0}
+            maxFileSize={200 * 1024}
             clickable
           >
-            <div className="files-title">Drop files here or click to upload</div>
+            <div className="files-title">{this.t('Create2File')}</div>
             <p style={{ color: '#f00', textAlign: 'center' }}>{this.state.fileChoose}</p>
             <span className="form-valid" style={Object.assign({}, onValid(this.state.file), { textAlign: 'center' })}>
-              {id ? 'Please choose the new file or ignoring.' : 'Please choose the file.'}
+              {id ? this.t('Create2FileAlertIgnore') : this.t('Create2FileAlert')}
             </span>
             {this.state.fileProgressShow ? <ProgressBar mode="indeterminate" style={{ height: '10px' }} /> : null}
           </Files>
@@ -85,9 +87,10 @@ class Step2 extends Component {
           }
         </div>
         <div className="create-control">
-          <Button label="Previous" icon="pi pi-arrow-left" iconPos="left" className="p-button-secondary p-button-raised create-control-button" onClick={(e) => onPrev()} />
-          <Button label="Submit" icon="pi pi-arrow-right" iconPos="right" className="p-button-raised create-control-button" onClick={(e) => onNext()} />
+          <Button label={this.t('CreatePrevious')} icon="pi pi-arrow-left" iconPos="left" className="p-button-secondary p-button-raised create-control-button" onClick={(e) => onPrev()} />
+          <Button label={this.t('CreateSubmit')} icon="pi pi-arrow-right" iconPos="right" className="p-button-raised create-control-button" onClick={(e) => onNext()} />
         </div>
+        <Growl ref={(el) => this.growl = el} />
       </div>
     );
   }

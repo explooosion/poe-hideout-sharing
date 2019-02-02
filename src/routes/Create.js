@@ -351,6 +351,7 @@ class Create extends Component {
             onNext={this.onNext.bind(this)}
             onPrev={this.onPrev.bind(this)}
             onValid={this.onValid.bind(this)}
+            growl={this.growl}
           />
         );
       case 3:
