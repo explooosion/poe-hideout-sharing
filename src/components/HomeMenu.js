@@ -16,13 +16,17 @@ class HomeMenu extends Component {
   constructor(props) {
     super(props);
     this.dispatch = props.dispatch;
-    this.hideoutType = props.hideoutType;
+    this.hideoutAPI = props.hideoutAPI;
     this.t = props.t;
     this.state = {
       download: '',
       views: '',
       favorite: '',
-      types: this.hideoutType,
+      types: this.hideoutAPI.get().map(({ Icon, Name }) => ({
+        img: Icon,
+        label: Name.replace('Hideout', '').trim(),
+        value: Name.replace('Hideout', '').trim(),
+      })),
       type: '',
       mtxs: [
         { label: this.t('HomeAll'), value: null },
@@ -295,7 +299,7 @@ HomeMenu.propTypes = {}
 
 const mapStateToProps = state => {
   return {
-    hideoutType: state.hideoutType,
+    hideoutAPI: state.hideoutAPI,
   }
 }
 
