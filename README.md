@@ -39,7 +39,9 @@ yarn start # npm start
 
 ## Credit
 
-- [http://poedb.tw](http://poedb.tw)
+- [poedb.tw](http://poedb.tw)
+- [poedb.tw - hideout doodads](http://poedb.tw/us/api.php/HideoutDoodads)
+- [poedb.tw - hideouts](http://poedb.tw/us/api.php/Hideouts)
 - [create-react-app](https://github.com/facebook/create-react-app)
 - [react-icons](https://react-icons.netlify.com/#/)
 - [firebase](https://firebase.google.com/)
