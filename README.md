@@ -4,12 +4,6 @@
 
 # POE Hideout Sharing
 
----
-
-***This site is under construction.***
-
----
-
 [Path Of Exile](https://www.pathofexile.com/game) Hideout Sharing Website.
 
 ## ToDo
