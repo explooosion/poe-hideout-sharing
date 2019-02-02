@@ -72,11 +72,10 @@ class Home extends Component {
    * @param {string} value
    */
   onFilterChange(key, value) {
-    const Hideouts = this.database.get();
     this.setState({
-      hideouts: Hideouts.filter(hideout => {
+      hideouts: this.database.get().filter(hideout => {
         if (value) return hideout[key] === `${value} Hideout`;
-        return hideout[key];
+        return hideout;
       }),
     });
   }
@@ -150,7 +149,7 @@ class Home extends Component {
   render() {
     this.users = this.props.users;
     this.database = this.props.database;
-    const Hideouts = this.props.database.get();
+    const Hideouts = this.state.hideouts;
 
     // Fake Data
     // let Hideouts = this.props.database.get();
@@ -170,7 +169,7 @@ class Home extends Component {
         />
         <ContentLayout breadcrumb={this.state.breadcrumb}>
           {
-            Hideouts.length === 0
+            this.database.get().length === 0
               ? <ProgressBar mode="indeterminate" style={{ height: '10px' }} />
               :
               (
@@ -191,7 +190,6 @@ Home.propTypes = {}
 
 const mapStateToProps = state => {
   return {
-    hideouts: state.hideouts,
     database: state.database,
     users: state.users,
   }

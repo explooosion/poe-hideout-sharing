@@ -5,7 +5,9 @@ import { connect } from 'react-redux';
 import { FaHeart, FaEye, FaDownload, FaEdit } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { Redirect } from 'react-router';
+import NumberFormat from 'react-number-format';
 import moment from 'moment';
+import _ from 'lodash';
 // import PropTypes from 'prop-types';
 
 import { Button } from 'primereact/button';
@@ -31,13 +33,16 @@ class Detail extends Component {
     this.database = props.database;
     this.users = props.users;
     this.auth = props.auth;
+    this.hideoutAPI = props.hideoutAPI;
     this.id = props.match.params.id;
     this.hideout = new HideoutList();
+    this.fileContent = { Objects: [] };
 
     this.state = {
       tabmenu: [
         { label: 'Preview', icon: 'pi pi-images' },
-        { label: 'Code', icon: 'pi pi-fw pi-file' },
+        { label: 'Items', icon: 'pi pi-list' },
+        { label: 'Code', icon: 'pi pi-file' },
       ],
       activeItem: 0,
       breadcrumb: [
@@ -107,24 +112,56 @@ class Detail extends Component {
     const { label } = this.state.activeItem;
     switch (label) {
       case 'Image': return this.renderImages(screenshots);
+      case 'Items': return this.renderItems(fileContent);
       case 'Code': return this.renderCode(fileContent);
       default: return this.renderImages(screenshots);
     }
   }
 
-  renderCode(code = '') {
-    let c;
-    try {
-      c = JSON.parse(code);
-    } catch (e) {
-      c = {
-        Language: '',
-        'Hideout Hash': '',
-        'Hideout Name': '',
-        Objects: [],
-      }
-      console.error('renderCode', e);
-    }
+  renderItems() {
+    const c = this.fileContent;
+    return (
+      <div className="detail-content">
+        <section className="section">
+          <table className="detail-items">
+            <thead>
+              <tr>
+                <th>Quantity</th>
+                <th>Icon</th>
+                <th>Name</th>
+                <th>Cost</th>
+                <th>MasterLevel</th>
+                <th>MasterName</th>
+              </tr>
+            </thead>
+            <tbody>
+              {
+                // remove duplicates from Objects
+                _.uniqBy(c.Objects, 'Name').map((objUniq, index) => {
+                  const quantity = c.Objects.filter((obj) => obj.Name === objUniq.Name).length;
+                  const { Hash, Icon, Name, Cost, MasterLevel, MasterName } = this.hideoutAPI.getDoodadByName(objUniq.Name);
+                  // If unfind then null
+                  return Hash ? (
+                    <tr key={`code-${index}-${Hash}`}>
+                      <td>{quantity}</td>
+                      <td><img src={Icon} alt={Name} title={Name} /></td>
+                      <td>{Name}</td>
+                      <td><NumberFormat value={Cost} displayType={'text'} thousandSeparator={true} /></td>
+                      <td>{MasterLevel}</td>
+                      <td>{MasterName}</td>
+                    </tr>
+                  ) : null; // console.warn('Can not find ', objUniq.Name);
+                })
+              }
+            </tbody>
+          </table>
+        </section>
+      </div>
+    );
+  }
+
+  renderCode() {
+    const c = this.fileContent;
     return (
       <div className="detail-content">
         <section className="section detail-code">
@@ -154,7 +191,7 @@ class Detail extends Component {
           screenshots.map((screenshot, index) => {
             return (
               <DeferredContent key={`content-${index}`}>
-                <section className="section">
+                <section className="section detail-image">
                   {this.renderImageContent(screenshot)}
                 </section>
               </DeferredContent>
@@ -167,8 +204,8 @@ class Detail extends Component {
 
   /**
    * Render Hideout Content
-   * @param {screenshot} object
-   */
+* @param {screenshot} object
+    */
   renderImageContent({ type, url, alt } = {}) {
     switch (type) {
       case 'image':
@@ -188,11 +225,23 @@ class Detail extends Component {
   render() {
     this.hideout = this.database.get().find(({ id }) => id === this.id);
     if (!this.hideout) return <Redirect to="/" />;
-    const { views, download, favorite, authorId, update, description, fileName } = this.hideout;
+    const { views, download, favorite, authorId, update, description, fileName, fileContent } = this.hideout;
     const { uname } = this.users.getById(authorId);
+
+    try {
+      this.fileContent = JSON.parse(fileContent);
+    } catch (e) {
+      console.error('renderItems', e);
+    }
+
+    // Caculate total cost
+    const COST = this.fileContent.Objects
+      .map(c => Number(this.hideoutAPI.getDoodadByName(c.Name).Cost) || 0)
+      .reduce((p, c) => p + c);
+
     return (
       <article className="detail">
-        <DetailMenu hideout={this.hideout} />
+        <DetailMenu hideout={this.hideout} cost={COST} />
         <ContentLayout breadcrumb={this.state.breadcrumb}>
           <Toolbar className="detail-author">
             <summary className="p-toolbar-group-left">
@@ -246,6 +295,7 @@ const mapStateToProps = state => {
   return {
     auth: state.auth,
     database: state.database,
+    hideoutAPI: state.hideoutAPI,
     storage: state.storage,
     users: state.users,
   }

@@ -35,11 +35,6 @@ class HideoutList {
   thumbnail = '';
 
   /**
-   * Hideout Favour
-   */
-  favour = 0;
-
-  /**
    * Version
    */
   version = 1;
@@ -100,7 +95,6 @@ class HideoutList {
       authorId: this.authorId,
       type: this.type,
       thumbnail: this.thumbnail,
-      favour: this.favour,
       version: this.version,
       update: this.update,
       create: this.create,

@@ -223,7 +223,6 @@ class Create extends Component {
 
       List.type = JSON.parse(this.state.fileContent)['Hideout Name'] || ''; // fake
       List.thumbnail = this.state.thumbnail;
-      List.favour = Math.floor(Math.random() * 10000000); // Hideout favour
       List.version = this.state.version;
 
       const date = moment();

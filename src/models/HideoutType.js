@@ -112,6 +112,4 @@ const HideoutType = [
   },
 ];
 
-export default {
-  HideoutType,
-}
+export default HideoutType;

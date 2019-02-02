@@ -6,9 +6,9 @@ import { connect } from 'react-redux';
 import { Dropdown } from 'primereact/dropdown';
 import { SelectButton } from 'primereact/selectbutton';
 import { Fieldset } from 'primereact/fieldset';
+import _ from 'lodash';
 
 import MenuLayout from '../layout/MenuLayout';
-
 import logo from '../images/logo.svg';
 
 class HomeMenu extends Component {
@@ -16,13 +16,13 @@ class HomeMenu extends Component {
   constructor(props) {
     super(props);
     this.dispatch = props.dispatch;
-    console.log(props.hideouts);
+    this.hideoutType = props.hideoutType;
     this.state = {
       download: '',
       views: '',
       favorite: '',
       title: 'Hideout List',
-      types: props.hideoutTypes,
+      types: this.hideoutType,
       type: '',
       mtxs: [
         { label: 'All', value: null },
@@ -93,7 +93,8 @@ class HomeMenu extends Component {
     this.props.onSortChange(key, state[key]);
   }
 
-  onFilterChange(state) {
+  onFilterChange(states = { type: '' }) {
+    const state = _.pick(states, 'type');
     this.setState(state);
     const key = Object.keys(state)[0];
     this.props.onFilterChange(key, state[key]);
@@ -281,7 +282,7 @@ HomeMenu.propTypes = {}
 
 const mapStateToProps = state => {
   return {
-    hideoutTypes: state.hideoutTypes,
+    hideoutType: state.hideoutType,
   }
 }
 

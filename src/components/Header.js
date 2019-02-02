@@ -74,10 +74,21 @@ class Header extends Component {
           <Link to="/" className="menu-button" onClick={() => this.setState({ visible: true })}>
             <i className="pi pi-bars" />
           </Link>
-          <a href="/" className="logo">
-            <img className="logo-img" alt="logo" title="logo" src={logo} />
-            <span className="logo-title">POEHoS</span>
-          </a>
+          {
+            this.props.database.get() ?
+              (
+                <Link to="/" className="logo">
+                  <img className="logo-img" alt="logo" title="logo" src={logo} />
+                  <span className="logo-title">POEHoS</span>
+                </Link>
+              ) :
+              (
+                <a href="/" className="logo">
+                  <img className="logo-img" alt="logo" title="logo" src={logo} />
+                  <span className="logo-title">POEHoS</span>
+                </a>
+              )
+          }
           <div className="mobile-menu">
             <Menu model={this.state.items} popup={true} ref={el => this.menu = el} />
             <Button className="p-button-secondary" icon="pi pi-bars" onClick={(event) => this.menu.toggle(event)} />
@@ -116,8 +127,8 @@ Header.propTypes = {}
 
 const mapStateToProps = state => {
   return {
-    hideouts: state.hideouts,
     settings: state.settings,
+    database: state.database,
     auth: state.auth,
   }
 }

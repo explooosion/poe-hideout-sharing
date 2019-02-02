@@ -25,7 +25,7 @@ class DetailMenu extends Component {
   }
 
   render() {
-    const { type, favour, version, update, create, authorId } = this.props.hideout;
+    const { type, version, update, create, authorId } = this.props.hideout;
     const { uname } = this.users.getById(authorId);
     return (
       <MenuLayout title={this.state.title}>
@@ -36,9 +36,9 @@ class DetailMenu extends Component {
               <h4 className="item-value">{type}</h4>
             </div>
             <div className="item">
-              <h4 className="item-title">Total Favor</h4>
+              <h4 className="item-title">Total Cost</h4>
               <h4 className="item-value">
-                <NumberFormat value={favour} displayType={'text'} thousandSeparator={true} />
+                <NumberFormat value={this.props.cost} displayType={'text'} thousandSeparator={true} />
               </h4>
             </div>
             <div className="item">

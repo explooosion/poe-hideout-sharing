@@ -174,7 +174,7 @@ class Profile extends Component {
       return (
         <tr key={`profile-list-${h.id}`}>
           <td><Link to={`/detail/${h.id}`}><img src={h.thumbnail} style={{ width: '100px', borderRadius: '.25rem' }} alt={h.title} title={h.title} /></Link></td>
-          <td>{h.type}</td>
+          <td>{h.type.replace(' Hideout', '')}</td>
           <td>{h.title}</td>
           <td>{h.views}</td>
           <td>{h.download}</td>

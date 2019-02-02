@@ -88,6 +88,12 @@
     margin: 1.5rem 0;
   }
 
+  .detail-image {
+    img {
+      border: 2px solid $gray;
+    }
+  }
+
   .detail-code {
     p {
       color: $light-warning;
@@ -103,8 +109,32 @@
     }
   }
 
-  img {
-    border: 2px solid $gray;
+  .detail-items {
+    margin: 0 auto;
+    width: 90%;
+    border-collapse: collapse;
+    color: #fff;
+    text-align: center;
+    font-size: 1.2rem;
+
+    th {
+      color: $light-warning;
+    }
+
+    th,
+    td {
+      padding: .5rem 0;
+      border-bottom: 1px solid $light-gray;
+    }
+
+    td:nth-child(1) {
+      color: $warning;
+    }
+
+    thead,
+    tbody {
+      border-bottom: 1px solid #fff;
+    }
   }
 
   .youtube-container {
