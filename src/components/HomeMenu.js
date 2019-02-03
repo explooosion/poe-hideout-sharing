@@ -22,131 +22,15 @@ class HomeMenu extends Component {
       download: '',
       views: '',
       favorite: '',
-      types: this.hideoutAPI.get().map(({ Icon, Name }) => ({
-        img: Icon,
-        label: Name.replace('Hideout', '').trim(),
-        value: Name.replace('Hideout', '').trim(),
-      })),
       type: '',
-      mtxs: [
-        { label: this.t('HomeAll'), value: null },
-        { label: this.t('HomeYes'), value: true },
-        { label: this.t('HomeNo'), value: false },
-      ],
       mtx: null,
-      mini_ratings: [
-        { label: this.t('HomeAll'), value: null },
-        { label: '1', value: 1 },
-        { label: '2', value: 2 },
-        { label: '3', value: 3 },
-        { label: '4', value: 4 },
-        { label: '5', value: 5 },
-      ],
       mini_rating: null,
-      alva_levels: [
-        { label: this.t('HomeAll'), value: null },
-        { label: '1', value: 1 },
-        { label: '2', value: 2 },
-        { label: '3', value: 3 },
-        { label: '4', value: 4 },
-        { label: '5', value: 5 },
-        { label: '6', value: 6 },
-        { label: '7', value: 7 },
-      ],
       alva_level: null,
-      einhar_levels: [
-        { label: this.t('HomeAll'), value: null },
-        { label: '1', value: 1 },
-        { label: '2', value: 2 },
-        { label: '3', value: 3 },
-        { label: '4', value: 4 },
-        { label: '5', value: 5 },
-        { label: '6', value: 6 },
-        { label: '7', value: 7 },
-      ],
       einhar_level: null,
-      niko_levels: [
-        { label: this.t('HomeAll'), value: null },
-        { label: '1', value: 1 },
-        { label: '2', value: 2 },
-        { label: '3', value: 3 },
-        { label: '4', value: 4 },
-        { label: '5', value: 5 },
-        { label: '6', value: 6 },
-        { label: '7', value: 7 },
-      ],
       niko_level: null,
-      zana_levels: [
-        { label: this.t('HomeAll'), value: null },
-        { label: '1', value: 1 },
-        { label: '2', value: 2 },
-        { label: '3', value: 3 },
-        { label: '4', value: 4 },
-        { label: '5', value: 5 },
-        { label: '6', value: 6 },
-        { label: '7', value: 7 },
-      ],
       zana_level: null,
       panelOptions: true,
     };
-  }
-
-  componentWillReceiveProps() {
-    this.setState({
-      mtxs: [
-        { label: this.t('HomeAll'), value: null },
-        { label: this.t('HomeYes'), value: true },
-        { label: this.t('HomeNo'), value: false },
-      ],
-      mini_ratings: [
-        { label: this.t('HomeAll'), value: null },
-        { label: '1', value: 1 },
-        { label: '2', value: 2 },
-        { label: '3', value: 3 },
-        { label: '4', value: 4 },
-        { label: '5', value: 5 },
-      ],
-      alva_levels: [
-        { label: this.t('HomeAll'), value: null },
-        { label: '1', value: 1 },
-        { label: '2', value: 2 },
-        { label: '3', value: 3 },
-        { label: '4', value: 4 },
-        { label: '5', value: 5 },
-        { label: '6', value: 6 },
-        { label: '7', value: 7 },
-      ],
-      einhar_levels: [
-        { label: this.t('HomeAll'), value: null },
-        { label: '1', value: 1 },
-        { label: '2', value: 2 },
-        { label: '3', value: 3 },
-        { label: '4', value: 4 },
-        { label: '5', value: 5 },
-        { label: '6', value: 6 },
-        { label: '7', value: 7 },
-      ],
-      niko_levels: [
-        { label: this.t('HomeAll'), value: null },
-        { label: '1', value: 1 },
-        { label: '2', value: 2 },
-        { label: '3', value: 3 },
-        { label: '4', value: 4 },
-        { label: '5', value: 5 },
-        { label: '6', value: 6 },
-        { label: '7', value: 7 },
-      ],
-      zana_levels: [
-        { label: this.t('HomeAll'), value: null },
-        { label: '1', value: 1 },
-        { label: '2', value: 2 },
-        { label: '3', value: 3 },
-        { label: '4', value: 4 },
-        { label: '5', value: 5 },
-        { label: '6', value: 6 },
-        { label: '7', value: 7 },
-      ],
-    });
   }
 
   onSortChange(state) {
@@ -164,6 +48,76 @@ class HomeMenu extends Component {
 
   onSelectChange(state) {
     this.setState(state);
+  }
+
+  /**
+   * Get options by key
+   * @param {string} key
+   */
+  getOptions(key) {
+    return {
+      mtxs: [
+        { label: this.t('HomeAll'), value: null },
+        { label: this.t('HomeYes'), value: true },
+        { label: this.t('HomeNo'), value: false },
+      ],
+      mini_ratings: [
+        { label: this.t('HomeAll'), value: null },
+        { label: '1', value: 1 },
+        { label: '2', value: 2 },
+        { label: '3', value: 3 },
+        { label: '4', value: 4 },
+        { label: '5', value: 5 },
+      ],
+      alva_levels: [
+        { label: this.t('HomeAll'), value: null },
+        { label: '1', value: 1 },
+        { label: '2', value: 2 },
+        { label: '3', value: 3 },
+        { label: '4', value: 4 },
+        { label: '5', value: 5 },
+        { label: '6', value: 6 },
+        { label: '7', value: 7 },
+      ],
+      einhar_levels: [
+        { label: this.t('HomeAll'), value: null },
+        { label: '1', value: 1 },
+        { label: '2', value: 2 },
+        { label: '3', value: 3 },
+        { label: '4', value: 4 },
+        { label: '5', value: 5 },
+        { label: '6', value: 6 },
+        { label: '7', value: 7 },
+      ],
+      niko_levels: [
+        { label: this.t('HomeAll'), value: null },
+        { label: '1', value: 1 },
+        { label: '2', value: 2 },
+        { label: '3', value: 3 },
+        { label: '4', value: 4 },
+        { label: '5', value: 5 },
+        { label: '6', value: 6 },
+        { label: '7', value: 7 },
+      ],
+      zana_levels: [
+        { label: this.t('HomeAll'), value: null },
+        { label: '1', value: 1 },
+        { label: '2', value: 2 },
+        { label: '3', value: 3 },
+        { label: '4', value: 4 },
+        { label: '5', value: 5 },
+        { label: '6', value: 6 },
+        { label: '7', value: 7 },
+      ],
+    }[key];
+  }
+
+  getHideoutsType() {
+    return this.hideoutAPI.get(this.props.lng).map(({ Icon, Name }) => ({
+      img: Icon,
+      label: Name.replace('Hideout', '').trim(),
+      value: Name.replace('Hideout', '').trim(),
+    }))
   }
 
   renderHideoutTemplate(option) {
@@ -191,7 +145,7 @@ class HomeMenu extends Component {
             <Dropdown
               style={{ width: '100%' }}
               value={this.state.type}
-              options={this.state.types}
+              options={this.getHideoutsType()}
               onChange={(e) => this.onFilterChange({ type: e.value })}
               filter={true}
               filterPlaceholder={`${this.t('HomeFilter')}...`}
@@ -206,7 +160,7 @@ class HomeMenu extends Component {
               <Dropdown
                 style={{ width: '100%' }}
                 value={this.state.mtx}
-                options={this.state.mtxs}
+                options={this.getOptions('mtxs')}
                 onChange={(e) => this.onSelectChange({ mtx: e.value })}
                 placeholder="Select MTX"
               />
@@ -216,7 +170,7 @@ class HomeMenu extends Component {
               <Dropdown
                 style={{ width: '100%' }}
                 value={this.state.mini_rating}
-                options={this.state.mini_ratings}
+                options={this.getOptions('mini_ratings')}
                 onChange={(e) => this.onSelectChange({ mini_rating: e.value })}
                 placeholder="Select Minimum Rating"
               />
@@ -226,7 +180,7 @@ class HomeMenu extends Component {
               <Dropdown
                 style={{ width: '100%' }}
                 value={this.state.alva_level}
-                options={this.state.alva_levels}
+                options={this.getOptions('alva_levels')}
                 onChange={(e) => this.onSelectChange({ alva_level: e.value })}
                 placeholder="Select Alva Level"
               />
@@ -236,7 +190,7 @@ class HomeMenu extends Component {
               <Dropdown
                 style={{ width: '100%' }}
                 value={this.state.einhar_level}
-                options={this.state.einhar_levels}
+                options={this.getOptions('einhar_levels')}
                 onChange={(e) => this.onSelectChange({ einhar_level: e.value })}
                 placeholder="Select Einhar Level"
               />
@@ -246,7 +200,7 @@ class HomeMenu extends Component {
               <Dropdown
                 style={{ width: '100%' }}
                 value={this.state.niko_level}
-                options={this.state.niko_levels}
+                options={this.getOptions('niko_levels')}
                 onChange={(e) => this.onSelectChange({ niko_level: e.value })}
                 placeholder="Select Niko Level"
               />
@@ -256,7 +210,7 @@ class HomeMenu extends Component {
               <Dropdown
                 style={{ width: '100%' }}
                 value={this.state.zana_level}
-                options={this.state.zana_levels}
+                options={this.getOptions('zana_levels')}
                 onChange={(e) => this.onSelectChange({ zana_level: e.value })}
                 placeholder="Select Zana Level"
               />
@@ -300,6 +254,7 @@ HomeMenu.propTypes = {}
 const mapStateToProps = state => {
   return {
     hideoutAPI: state.hideoutAPI,
+    settings: state.settings,
   }
 }
 

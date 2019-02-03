@@ -46,10 +46,8 @@ class Header extends Component {
   }
 
   onChangeLanguage(value) {
-    this.setState(
-      { locale: value },
-      () => this.dispatch(setLocal(this.state.locale))
-    );
+    this.dispatch(setLocal(value));
+    this.setState({ locale: value });
   }
 
   async onLogout() {
