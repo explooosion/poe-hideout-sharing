@@ -18,6 +18,9 @@
   width: 100%;
   height: calc(100vh - #{$header-height});
   background-image: url('../images/bg.jpg');
+  background-repeat: no-repeat;
+  background-position: center top;
+  background-size: cover;
 
   .create-steps {
   }

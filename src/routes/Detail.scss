@@ -4,6 +4,7 @@
   display: flex;
   margin-top: $header-height;
   background-image: url('../images/bg.jpg');
+  background-size: cover;
 
   .detail-author {
     margin: .25rem 0;

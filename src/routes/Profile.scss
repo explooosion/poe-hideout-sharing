@@ -8,7 +8,7 @@
   background-image: url('../images/bg.jpg');
   background-repeat: no-repeat;
   background-position: center top;
-  background-size: 100%;
+  background-size: cover;
 
   .profile-form {
     position: relative;
@@ -20,118 +20,125 @@
     text-align: center;
     background-color: rgba($dark, .85);
     border: 2px solid $gray;
+  }
+}
 
-    .profile-avatar-edit {
+.profile-form {
+  .profile-avatar-edit {
+    position: absolute;
+    top: 90px;
+    left: 0;
+    right: 0;
+    z-index: 1;
+  }
+
+  .profile-avatar {
+    overflow: hidden;
+    position: relative;
+    display: inline-flex;
+    justify-content: center;
+    align-items: flex-end;
+    border-radius: 100%;
+
+    &:hover::after,
+    &:hover svg {
+      opacity: 1;
+      cursor: pointer;
+    }
+
+    &::after {
+      content: '';
       position: absolute;
-      top: 90px;
-      left: 0;
-      right: 0;
+      width: 80px;
+      height: 25px;
+      background: rgba(#222, .5);
+      opacity: 0;
+      transition: all .2s ease-in-out;
+    }
+
+    svg {
+      position: absolute;
+      bottom: 3px;
+      color: $warning;
       z-index: 1;
+      opacity: 0;
+      transition: all .2s ease-in-out;
+    }
+  }
+
+  .profile-name {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 1rem;
+    margin-bottom: .5rem;
+    color: #fff;
+    border-bottom: 1px solid $gray;
+    user-select: none;
+
+    &:hover svg {
+      opacity: 1;
     }
 
-    .profile-avatar {
-      overflow: hidden;
-      position: relative;
-      display: inline-flex;
-      justify-content: center;
-      align-items: flex-end;
-      border-radius: 100%;
-
-      &:hover::after,
-      &:hover svg {
-        opacity: 1;
-        cursor: pointer;
-      }
-
-      &::after {
-        content: '';
-        position: absolute;
-        width: 80px;
-        height: 25px;
-        background: rgba(#222, .5);
-        opacity: 0;
-        transition: all .2s ease-in-out;
-      }
-
-      svg {
-        position: absolute;
-        bottom: 3px;
-        color: $warning;
-        z-index: 1;
-        opacity: 0;
-        transition: all .2s ease-in-out;
-      }
+    .profile-name-edit {
+      position: absolute;
+      top: 0;
+      left: 40%;
     }
 
-    .profile-name {
-      position: relative;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding-bottom: 1rem;
-      margin-bottom: .5rem;
-      color: #fff;
+    svg {
+      margin-left: .25rem;
+      color: $warning;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    &::before {
+      content: '@';
+    }
+  }
+
+  .profile-list-container {
+    overflow: auto;
+    padding-bottom: 10rem;
+    height: 100%;
+  }
+
+  .profile-list {
+    margin: 0 auto;
+    width: 90%;
+    border-collapse: collapse;
+    color: #fff;
+
+    th,
+    td {
+      padding: .75rem .5rem;
+    }
+
+    tr:not(:last-child)  td {
       border-bottom: 1px solid $gray;
-      user-select: none;
-
-      &:hover svg {
-        opacity: 1;
-      }
-
-      .profile-name-edit {
-        position: absolute;
-        top: 0;
-        left: 40%;
-      }
-
-      svg {
-        margin-left: .25rem;
-        color: $warning;
-        opacity: 0;
-        cursor: pointer;
-      }
-
-      &::before {
-        content: '@';
-      }
     }
 
-    .profile-list-container {
-      overflow: auto;
-      padding-bottom: 10rem;
-      height: 100%;
+    thead,
+    tbody {
+      border-bottom: 1px solid #fff;
     }
 
-    .profile-list {
+    .profile-list-thumbnail {
       margin: 0 auto;
-      width: 90%;
-      border-collapse: collapse;
-      color: #fff;
+      width: 120px;
+      height: 100px;
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center;
+    }
 
-      th,
-      td {
-        padding: .75rem .5rem;
-      }
-
-      thead,
-      tbody {
-        border-bottom: 1px solid #fff;
-      }
-
-      .profile-list-thumbnail {
-        width: 120px;
-        height: 100px;
-        background-repeat: no-repeat;
-        background-size: cover;
-        background-position: center;
-      }
-
-      .profile-list-title {
-        overflow: hidden;
-        max-width: 200px;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
+    .profile-list-title {
+      overflow: hidden;
+      max-width: 200px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
   }
 }
