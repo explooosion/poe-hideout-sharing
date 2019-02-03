@@ -170,9 +170,10 @@ class Profile extends Component {
    * @param {array} hideouts
    */
   renderHideouts(hideouts = []) {
-    return hideouts.map(h => {
+    return hideouts.map((h, index) => {
       return (
         <tr key={`profile-list-${h.id}`}>
+          <td>{index + 1}</td>
           <td><Link to={`/detail/${h.id}`}><img src={h.thumbnail} style={{ width: '100px', borderRadius: '.25rem' }} alt={h.title} title={h.title} /></Link></td>
           <td>{h.type.replace(' Hideout', '')}</td>
           <td>{h.title}</td>
@@ -187,7 +188,7 @@ class Profile extends Component {
                   <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                     <Link to={`/detail/${h.id}`} alt={this.t('ProfileBrowse')} title={this.t('ProfileBrowse')}><Button icon="pi pi-external-link" style={{ marginRight: '.25rem', marginBottom: '.08rem' }} /></Link>
                     <Link to={`/edit/${h.id}`} alt={this.t('ProfileEdit')} title={this.t('ProfileEdit')}><Button className="p-button-success" icon="pi pi-pencil" style={{ marginRight: '.25rem', marginBottom: '.08rem' }} /></Link>
-                    <Button className="p-button-danger" icon="pi pi-trash"  alt={this.t('ProfileDelete')} title={this.t('ProfileDelete')} onClick={() => window.confirm(`${this.t('ProfileDeleteQuestion')} 「${h.title}」 ???`) ? this.onDeleteHideout(h) : null} />
+                    <Button className="p-button-danger" icon="pi pi-trash" alt={this.t('ProfileDelete')} title={this.t('ProfileDelete')} onClick={() => window.confirm(`${this.t('ProfileDeleteQuestion')} 「${h.title}」 ???`) ? this.onDeleteHideout(h) : null} />
                   </div>
                 ) :
                 (
@@ -222,6 +223,7 @@ class Profile extends Component {
                     <table className="profile-list">
                       <thead>
                         <tr>
+                          <th>#</th>
                           <th style={{ width: '100px' }}>{this.t('ProfileThumbnail')}</th>
                           <th>{this.t('ProfileType')}</th>
                           <th>{this.t('ProfileTitle')}</th>
@@ -229,7 +231,7 @@ class Profile extends Component {
                           <th><FaDownload size="1.2rem" /></th>
                           <th><FaHeart size="1rem" /></th>
                           <th>{this.t('ProfileUpdate')}</th>
-                          <th style={{ width: this.isOwner ? '130px' : '50px' }}></th>
+                          <th style={{ width: this.isOwner ? '130px' : '50px' }}>{this.t('ProfileActoin')}</th>
                         </tr>
                       </thead>
                       <tbody>
