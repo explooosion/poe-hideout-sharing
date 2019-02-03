@@ -7,10 +7,6 @@ class HideoutAPI {
 
   hideouts = Hideouts;
 
-  // getDoodadByName(name) {
-
-  // }
-
   get() {
     return this.hideouts.data || [];
   }
@@ -19,8 +15,12 @@ class HideoutAPI {
     return this.hideoutDoodads.data || [];
   }
 
-  getDoodadByName(name = '') {
-    return this.hideoutDoodads.data.find(hd => hd.Name === name) || {};
+  /**
+   * Get by hash
+   * @param {*} hash
+   */
+  getDoodadByHash(hash = '') {
+    return this.hideoutDoodads.data.find(hd => String(hd.Hash) === String(hash)) || {};
   }
 }
 

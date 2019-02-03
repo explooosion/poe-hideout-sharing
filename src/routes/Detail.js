@@ -148,15 +148,15 @@ class Detail extends Component {
             <tbody>
               {
                 // remove duplicates from Objects
-                _.uniqBy(c.Objects, 'Name').map((objUniq, index) => {
-                  const quantity = c.Objects.filter((obj) => obj.Name === objUniq.Name).length;
-                  const { Hash, Icon, Name, Cost, MasterLevel, MasterName } = this.hideoutAPI.getDoodadByName(objUniq.Name);
+                _.uniqBy(c.Objects, 'Hash').map((objUniq, index) => {
+                  const quantity = c.Objects.filter((obj) => obj.Hash === objUniq.Hash).length;
+                  const { Hash, Icon, Cost, MasterLevel, MasterName } = this.hideoutAPI.getDoodadByHash(objUniq.Hash);
                   // If unfind then null
                   return Hash ? (
                     <tr key={`code-${index}-${Hash}`}>
                       <td>{quantity}</td>
-                      <td><img src={Icon} alt={Name} title={Name} /></td>
-                      <td>{Name}</td>
+                      <td><img src={Icon} alt={objUniq.Name} title={objUniq.Name} /></td>
+                      <td>{objUniq.Name}</td>
                       <td><NumberFormat value={Cost} displayType={'text'} thousandSeparator={true} /></td>
                       <td>{MasterLevel}</td>
                       <td>{MasterName}</td>
@@ -248,7 +248,7 @@ class Detail extends Component {
 
     // Caculate total cost
     const COST = this.fileContent.Objects
-      .map(c => Number(this.hideoutAPI.getDoodadByName(c.Name).Cost) || 0)
+      .map(c => Number(this.hideoutAPI.getDoodadByHash(c.Hash).Cost) || 0)
       .reduce((p, c) => p + c);
 
     return (
