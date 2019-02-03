@@ -41,17 +41,26 @@
   }
 
   .card-item {
+    overflow: hidden;
     border: 2px solid $gray;
     background-color: $light-black;
+
+    .card-image {
+      position: relative;
+      height: 150px;
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: cover;
+      transition: all .2s ease-in-out;
+
+      &:hover {
+        transform: scale(1.02);
+      }
+    }
   }
 
   .card-title {
     display: flex;
-  }
-
-  .card-image {
-    position: relative;
-    min-height: 115px;
   }
 
   .card-counts {

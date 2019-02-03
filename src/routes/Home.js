@@ -131,8 +131,8 @@ class Home extends Component {
   renderCardHeader(hideout = {}) {
     const { id, thumbnail, title } = hideout;
     return (
-      <Link to={`/detail/${id}`}>
-        <img className="card-image" alt={title} title={title} src={thumbnail} />
+      <Link to={`/detail/${id}`} alt={title} title={title}>
+        <div className="card-image" style={{ backgroundImage: `url(${thumbnail})` }} />
       </Link>
     );
   }
