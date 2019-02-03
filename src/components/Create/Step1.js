@@ -71,9 +71,11 @@ class Step1 extends Component {
 
   onScreenshotModelUrlChange(url) {
     const URL = url === '' ? defaultModelImg : url;
+    let mURL = String(URL).replace('https://youtu.be/', '');
+    mURL = String(mURL).replace('https://www.youtube.com/watch?v=', '');
     this.props.onSetState({
-      screenshotModelUrl: url,
-      screenshotModelImg: URL,
+      screenshotModelUrl: mURL,
+      screenshotModelImg: mURL,
     });
   }
 
