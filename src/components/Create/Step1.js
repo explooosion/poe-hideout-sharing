@@ -152,7 +152,7 @@ class Step1 extends Component {
           </div>
           <div className="p-col-8">
             <Button label={this.t('Create1ScreenshotAdd')} icon="pi pi-plus" iconPos="left" className="p-button-raised" onClick={() => onSetState({ screenshotModel: true })} />
-            <Button label={this.t('Create1ScreenshotReset')} icon="pi pi-replay" iconPos="left" className="p-button-secondary p-button-raised" onClick={() => onSetState({ screenshotList: [] })} />
+            <Button style={{ marginLeft: '.5rem' }} label={this.t('Create1ScreenshotReset')} icon="pi pi-replay" iconPos="left" className="p-button-secondary p-button-raised" onClick={() => onSetState({ screenshotList: [] })} />
             <Dialog
               className="screenshot-model"
               header={this.t('Create1ScreenshotModelHeader')}

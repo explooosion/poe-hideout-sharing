@@ -154,7 +154,7 @@ class HomeMenu extends Component {
               showClear={true}
             />
           </div>
-          <Fieldset legend={this.t('HomeOptions')} toggleable={true} collapsed={this.state.panelOptions} onToggle={(e) => this.setState({ panelOptions: e.value })}>
+          <Fieldset legend={`${this.t('HomeOptions')}(NotYet)`} toggleable={true} collapsed={this.state.panelOptions} onToggle={(e) => this.setState({ panelOptions: e.value })}>
             <div className="item">
               <h4 className="item-title">MTX</h4>
               <Dropdown

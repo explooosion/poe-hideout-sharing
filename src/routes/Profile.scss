@@ -98,7 +98,7 @@
 
     .profile-list-container {
       overflow: auto;
-      padding-bottom: 1.5rem;
+      padding-bottom: 10rem;
       height: 100%;
     }
 
@@ -116,6 +116,21 @@
       thead,
       tbody {
         border-bottom: 1px solid #fff;
+      }
+
+      .profile-list-thumbnail {
+        width: 120px;
+        height: 100px;
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center;
+      }
+
+      .profile-list-title {
+        overflow: hidden;
+        max-width: 200px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
     }
   }

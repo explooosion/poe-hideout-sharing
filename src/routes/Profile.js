@@ -174,9 +174,9 @@ class Profile extends Component {
       return (
         <tr key={`profile-list-${h.id}`}>
           <td>{index + 1}</td>
-          <td><Link to={`/detail/${h.id}`}><img src={h.thumbnail} style={{ width: '100px', borderRadius: '.25rem' }} alt={h.title} title={h.title} /></Link></td>
-          <td>{h.type.replace(' Hideout', '')}</td>
-          <td>{h.title}</td>
+          <td><Link to={`/detail/${h.id}`} alt={h.title} title={h.title}><div className="profile-list-thumbnail" style={{ backgroundImage: `url(${h.thumbnail})` }} /></Link></td>
+          <td>{h.type.replace('Hideout', '').replace('藏身處 -', '').trim()}</td>
+          <td><p className="profile-list-title">{h.title}</p></td>
           <td>{h.views}</td>
           <td>{h.download}</td>
           <td>{h.favorite}</td>
@@ -224,7 +224,7 @@ class Profile extends Component {
                       <thead>
                         <tr>
                           <th>#</th>
-                          <th style={{ width: '100px' }}>{this.t('ProfileThumbnail')}</th>
+                          <th>{this.t('ProfileThumbnail')}</th>
                           <th>{this.t('ProfileType')}</th>
                           <th>{this.t('ProfileTitle')}</th>
                           <th><FaEye size="1.3rem" /></th>
