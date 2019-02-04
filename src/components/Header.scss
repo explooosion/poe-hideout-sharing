@@ -1,4 +1,5 @@
 @import '../scss/index';
+@import url('https://fonts.googleapis.com/css?family=Lobster+Two');
 
 .header {
   position: fixed;
@@ -51,6 +52,7 @@
       font-size: 24px;
       font-weight: bold;
       color: #fff;
+      font-family: Lobster Two, cursive;
     }
   }
 
