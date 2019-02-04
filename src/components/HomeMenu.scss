@@ -3,6 +3,10 @@
 .home-menu {
   /* overwrite */
 
+  *:not(.pi) {
+    font-family: $global-font;
+  }
+
   .item-title {
     color: $light-warning;
   }

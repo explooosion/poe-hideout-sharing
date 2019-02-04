@@ -1,6 +1,9 @@
 @import '../scss/index';
 
 .home {
+  *:not(.pi) {
+    font-family: $global-font;
+  }
   display: flex;
   margin-top: $header-height;
   width: 100vw;

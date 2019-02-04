@@ -1,6 +1,9 @@
 @import '../scss/index';
 
 .detail {
+  *:not(.pi):not(code) {
+    font-family: $global-font;
+  }
   display: flex;
   margin-top: $header-height;
   background-image: url('../images/bg.jpg');
@@ -49,7 +52,7 @@
     z-index: 100;
 
     h2 {
-      margin-top: .25rem;
+      margin-top: .15rem;
     }
 
     @media only screen and (min-width: $screen-xl) {

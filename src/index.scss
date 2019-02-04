@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css?family=Lobster+Two');
 @import '~primereact/resources/themes/nova-light/theme.css';
 @import '~primereact/resources/primereact.min.css';
 @import '~primeicons/primeicons.css';
@@ -5,16 +6,10 @@
 @import '~flag-icon-css/css/flag-icon.min.css';
 @import './scss/index';
 
-* {
-  font-family: 'STHeiti', 'Microsoft JhengHei', Segoe UI, Helvetica, Arial, Helvetica, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
 body {
   margin: 0;
   padding: 0;
-  font-family: 'STHeiti', 'Microsoft JhengHei', Segoe UI, Helvetica, Arial, Helvetica, sans-serif;
+  font-family: $global-font;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
