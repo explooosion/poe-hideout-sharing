@@ -49,6 +49,7 @@ class Profile extends Component {
 
   onCheckIsOwner() {
     this.id = this.props.match.params.id;
+
     // Both null
     if (!Session.get('auth') && !this.id) this.props.history.push('/');
     if (!this.id) {
@@ -204,6 +205,12 @@ class Profile extends Component {
   }
 
   render() {
+    // Update props
+    this.auth = this.props.auth;
+    this.database = this.props.database;
+    this.storage = this.props.storage;
+    this.users = this.props.users;
+
     // If has id, then read id or get owner uid
     const ID = this.id ? this.id : Session.get('auth').uid;
     // Find list by user id
