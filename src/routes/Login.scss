@@ -23,6 +23,7 @@
       margin-bottom: 2rem;
       color: #fff;
       border-bottom: 1px solid $gray;
+      font-family: $header-font;
     }
 
     .login-google {
@@ -34,6 +35,7 @@
       width: 350px;
       color: #fff;
       background-color: $danger-google;
+      font-family: $header-font;
       cursor: pointer;
       user-select: none;
       transition: all .2s ease-in-out;

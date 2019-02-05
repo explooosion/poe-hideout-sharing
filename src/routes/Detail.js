@@ -286,7 +286,7 @@ class Detail extends Component {
             </div>
           </Toolbar>
           <div className="detail-description">
-            <h4 className="detail-description-title">{this.t('DetailDescription')}</h4>
+            <h3 className="detail-description-title">{this.t('DetailDescription')}</h3>
             {description}
           </div>
           <TabMenu className="detaild-tabmenu" model={this.state.tabMenu} activeItem={this.state.activeItem} onTabChange={(e) => this.onTabChange(e.value)} />

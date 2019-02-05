@@ -1,9 +1,6 @@
 @import '../scss/index';
 
 .detail {
-  *:not(.pi):not(code) {
-    font-family: $global-font;
-  }
   display: flex;
   margin-top: $header-height;
   background-image: url('../images/bg.jpg');
@@ -49,6 +46,7 @@
     color: $warning;
     background-color: rgba($dark, .85);
     border: 2px solid $black;
+    font-family: $header-font;
     z-index: 100;
 
     h2 {
@@ -71,6 +69,7 @@
     border-radius: 3px;
 
     .detail-description-title {
+      font-family: $header-font;
       margin-bottom: .25rem;
     }
   }

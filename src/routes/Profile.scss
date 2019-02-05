@@ -111,6 +111,10 @@
     border-collapse: collapse;
     color: #fff;
 
+    th {
+      font-family: $header-font;
+    }
+
     th,
     td {
       padding: .75rem .5rem;
