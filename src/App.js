@@ -11,6 +11,7 @@ import Home from './routes/Home';
 import Detail from './routes/Detail';
 import Login from './routes/Login';
 import Create from './routes/Create';
+import ReCreate from './routes/ReCreate';
 import Profile from './routes/Profile';
 
 import loading from './images/loading.gif';
@@ -33,7 +34,7 @@ class App extends Component {
         clearInterval(this.load);
         return;
       }
-      this.setState({ time: l - 1 })
+      this.setState({ time: l - 1 });
     }, 1000);
   }
 
@@ -53,7 +54,7 @@ class App extends Component {
                   <Route exact path="/profile" component={Profile} />
                   <Route exact path="/profile/:id" component={Profile} />
                   <Route exact path="/login" component={Login} />
-                  <Route exact path="/create" component={Create} />
+                  <Route exact path="/create" component={ReCreate} />
                   <Route exact path="/edit/:id" component={Create} />
                   <Route exact path="/detail/:id" component={Detail} />
                 </Switch>
