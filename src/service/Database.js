@@ -45,23 +45,29 @@ class Database {
   }
 
   /**
-   * Create or update hideout data
+   * Create hideout data
    * @param {HideoutList} hideout
-   * @param {boolean} isCreate
    */
-  async onSetHideouts(hideout, isCreate) {
-    if (isCreate) {
-      await this.db.ref(`hideouts${REF_PICK}/${hideout.id}`).set(hideout);
-    } else {
-      await this.db.ref(`hideouts${REF_PICK}/${hideout.id}`).update(hideout);
-    }
+  async onCreateHideout(hideout = { id: null }) {
+    if (!hideout.id) return;
+    await this.db.ref(`hideouts${REF_PICK}/${hideout.id}`).set(hideout);
+  }
+
+  /**
+   * Update hideout data
+   * @param {HideoutList} hideout
+   */
+  async onUpdateHideout(hideout = { id: null }) {
+    if (!hideout.id) return;
+    await this.db.ref(`hideouts${REF_PICK}/${hideout.id}`).update(hideout);
   }
 
   /**
    * Delete hideout data
    * @param {string} id
    */
-  async onDeleteHideouts(id) {
+  async onDeleteHideout(id = null) {
+    if (!id) return;
     await this.db.ref(`hideouts${REF_PICK}/${id}`).remove();
   }
 

@@ -77,7 +77,7 @@ class Profile extends Component {
    */
   async onDeleteHideout(hideout = {}) {
     if (!hideout.id && !hideout.fileName) return;
-    await this.database.onDeleteHideouts(hideout.id);
+    await this.database.onDeleteHideout(hideout.id);
     await this.storage.onDeleteHideout(hideout.fileName);
     this.growl.show({ severity: 'success', summary: 'Delete Hideout', detail: 'Delete successfully.' });
   }
