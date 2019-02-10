@@ -6,6 +6,7 @@ import './ReCreate.scss';
 import { connect } from 'react-redux';
 import { withNamespaces } from 'react-i18next';
 import { TiFeather } from "react-icons/ti";
+// import { Link } from 'react-router-dom';
 // import jsFileDownload from 'js-file-download';
 import Files from 'react-files';
 import HideoutParse from 'hideout-parse';
@@ -50,6 +51,25 @@ class ReCreate extends Component {
       fileProgressShow: false,
       captcha: false,
     };
+  }
+
+  componentDidMount() {
+    if (this.id) {
+      const h = this.database.getById(this.id);
+      if (!h) return;
+      this.setState({
+        title: h.title,
+        description: h.description,
+        version: h.version,
+        formContent: h.formContent,
+        thumbnail: h.thumbnail,
+        fileContent: h.fileContent,
+      });
+    }
+  }
+
+  componentWillReceiveProps() {
+    this.id = this.props.match.params.id;
   }
 
   /**
@@ -110,44 +130,65 @@ class ReCreate extends Component {
 
   onNextStep() {
     const step = this.state.step + 1;
-    if (step >= 3) {
-      this.onCheckMode();
-    } else {
-      this.setState({ step: step });
-      window.scrollTo(0, 0);
-    };
+    if (step >= 3) this.onCheckMode();
+    else this.setState({ step: step }, () => window.scrollTo(0, 0));
   }
 
   onPreviousStep() {
     const step = this.state.step - 1;
     if (step <= 0) return;
-    this.setState({ step: step });
-    window.scrollTo(0, 0);
+    else this.setState({ step: step }, () => window.scrollTo(0, 0));
   }
 
   /**
    * Check data is create or update
    */
   onCheckMode() {
-    if (!this.state.captcha) {
-      this.growl.show({ severity: 'warn', summary: 'Oops!', detail: 'Please check the captcha.' });
-      return;
-    }
-    if (this.id) {
-      this.onUpdate();
-    } else {
-      this.onPublish();
-    }
+    if (!this.state.captcha) this.growl.show({ severity: 'warn', summary: 'Oops!', detail: 'Please check the captcha.' });
+    else if (this.id) this.onUpdate();
+    else this.onPublish();
   }
 
   async onUpdate() {
+    const List = {};
+    List.id = this.id;
+    List.title = this.state.title;
+    List.description = this.state.description;
+    List.thumbnail = this.state.thumbnail;
+    List.version = this.state.version;
 
+    const date = moment();
+    List.update = date.toString();
+    List.formContent = this.state.formContent;
+    if (this.state.fileChoose !== '') List.fileContent = this.state.fileContent;
+
+    // Check payload
+    let valid = true;
+    Object.keys(List).forEach(key => {
+      if (List[key].length === 0) {
+        valid = false;
+        console.warn('Invalid:', key);
+        this.growl.show({ severity: 'warn', summary: 'Oops!', detail: `Missing ${key}` });
+      }
+    });
+
+    if (valid) {
+      this.setState({ fileProgressShow: true });
+      await this.database.onUpdateHideout(List);
+      this.setState({ fileProgressShow: false });
+      this.growl.show({
+        severity: 'success',
+        summary: 'Success Update',
+        detail: this.state.title,
+      });
+      this.setState({ step: 3 });
+    }
   }
 
   async onPublish() {
     const List = new HideoutList();
-    List.title = this.state.title;
     List.id = uuid();
+    List.title = this.state.title;
     List.description = this.state.description;
     List.authorId = Session.get('auth').uid || {};
     List.thumbnail = this.state.thumbnail;
@@ -177,14 +218,15 @@ class ReCreate extends Component {
 
     if (valid) {
       this.setState({ fileProgressShow: true });
-      await this.database.onSetHideouts(List, !this.id ? true : false);
+      await this.database.onCreateHideout(List);
       this.setState({ fileProgressShow: false });
-      this.setState({ step: 3 });
       this.growl.show({
         severity: 'success',
-        summary: this.id ? 'Success Update' : 'Success Publish',
+        summary: 'Success Publish',
         detail: this.state.title,
       });
+      this.setState({ step: 3 });
+      this.id = List.id;
     }
   }
 
@@ -270,19 +312,21 @@ class ReCreate extends Component {
       case 2: return (
         <div>
           <div className="p-grid p-justify-center p-align-center p-dir-col">
-            <h2 className="require">Hideout File</h2>
+            <h2 className={this.id ? null : 'require'}>Hideout File</h2>
             <Files
               className="create-file"
               onChange={files => this.onFilesChange(files)}
               onError={(error, file) => this.onFilesError(error, file)}
               accepts={['.hideout', 'hideout/*']}
+              multiple={false}
               minFileSize={0}
               maxFileSize={200 * 1024}
-              clickable={true}
             >
               <div className="files-title">
                 {this.state.fileChoose.length === 0 ? this.t('Create2File') : this.state.fileChoose}
               </div>
+              <span className="files-message">{this.id ? this.t('Create2FileAlertIgnore') : this.t('Create2FileAlert')}
+              </span>
               {this.state.fileProgressShow ? <ProgressBar mode="indeterminate" style={{ height: '10px', marginTop: '1rem', borderRadius: '.25rem' }} /> : null}
             </Files>
             <Captcha style={{ background: '#fff' }} siteKey={process.env.REACT_APP_CAPTCHA_KEY} onResponse={res => this.onResponseCaptcha(res)}></Captcha>
@@ -294,7 +338,7 @@ class ReCreate extends Component {
         </div>
       );
       case 3: return (
-        <div>
+        <div className="p-grid p-justify-center p-align-center">
           <h2>Successful!</h2>
         </div>
       );

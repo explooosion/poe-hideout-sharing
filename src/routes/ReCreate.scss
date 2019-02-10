@@ -44,6 +44,7 @@
 
   .create-file {
     margin: 1rem 0;
+    text-align: center;
     cursor: pointer;
 
     .files-title {
@@ -52,7 +53,6 @@
       max-width: 365px;
       width: 365px;
       font-size: 17px;
-      text-align: center;
       text-overflow: ellipsis;
       background-color: rgba($dark, .85);
       color: #fff;
@@ -79,6 +79,12 @@
           content: ' 】';
         }
       }
+    }
+
+    .files-message {
+      display: block;
+      margin-top: .5rem;
+      color: $danger;
     }
   }
 
