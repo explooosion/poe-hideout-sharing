@@ -26,7 +26,8 @@ import MasterLayout from '../layout/MasterLayout';
 import HideoutList from '../interface/HideoutList';
 import Session from '../service/Session';
 
-const defaultModelImg = 'https://via.placeholder.com/392x220?text=Path+Of+Exile';
+// const defaultModelImg = 'https://via.placeholder.com/392x220?text=Path+Of+Exile';
+import defaultModelImg from '../images/default-thumbnail.jpg';
 
 class ReCreate extends Component {
 
