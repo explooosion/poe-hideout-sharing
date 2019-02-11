@@ -50,6 +50,7 @@
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
     "react-files": "^2.4.8",
+    "react-html-parser": "^2.0.2",
     "react-i18next": "^9.0.9",
     "react-icons": "^3.3.0",
     "react-number-format": "^4.0.6",

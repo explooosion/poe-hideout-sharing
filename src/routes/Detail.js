@@ -9,6 +9,7 @@ import { Redirect } from 'react-router';
 import NumberFormat from 'react-number-format';
 import moment from 'moment';
 import _ from 'lodash';
+import ReactHtmlParser from 'react-html-parser';
 // import PropTypes from 'prop-types';
 
 import { Button } from 'primereact/button';
@@ -115,17 +116,13 @@ class Detail extends Component {
     ];
   }
 
-  renderTitle({ title, type }) {
-    return <h2>【{type}】{title}</h2>;
-  }
-
-  renderDetail({ screenshots, fileContent }) {
+  renderDetail({ formContent, fileContent }) {
     const { label } = this.state.activeItem;
     switch (label) {
-      case this.t('DetailPreview'): return this.renderImages(screenshots);
+      default:
+      case this.t('DetailPreview'): return this.renderForm(formContent);
       case this.t('DetailItems'): return this.renderItems(fileContent);
       case this.t('DetailCode'): return this.renderCode(fileContent);
-      default: return this.renderImages(screenshots);
     }
   }
 
@@ -196,55 +193,27 @@ class Detail extends Component {
     )
   }
 
-  renderImages(screenshots = []) {
+  renderForm(formContent = '') {
     return (
       <div className="detail-content">
-        {
-          screenshots.map((screenshot, index) => {
-            return (
-              <DeferredContent key={`content-${index}`}>
-                <section className="section detail-image">
-                  {this.renderImageContent(screenshot)}
-                </section>
-              </DeferredContent>
-            );
-          })
-        }
+        <DeferredContent>
+          <section className="section detail-form">
+            {ReactHtmlParser(formContent)}
+          </section>
+        </DeferredContent>
       </div>
     );
-  }
-
-  /**
-   * Render Hideout Content
-* @param {screenshot} object
-    */
-  renderImageContent({ type, url, alt } = {}) {
-    switch (type) {
-      case 'image':
-        // Use debug local img
-        // return <img alt={alt || url} title={alt || url} src={require(`../images/${url}`)} width="100%" />;
-        return <img alt={alt || url} title={alt || url} src={url} style={{ maxWidth: '100%' }} />;
-      case 'youtube':
-        return (
-          <div className="youtube-container">
-            <iframe title="share" src={url} frameBorder="0" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
-          </div>
-        );
-      default: return null;
-    }
   }
 
   render() {
     this.hideout = this.database.get().find(({ id }) => id === this.id);
     if (!this.hideout) return <Redirect to="/" />;
-    const { views, download, favorite, authorId, update, description, fileName, fileContent } = this.hideout;
+
+    const { title, views, download, favorite, authorId, update, description, fileName, fileContent } = this.hideout;
     const { uname } = this.users.getById(authorId);
 
-    try {
-      this.fileContent = JSON.parse(fileContent);
-    } catch (e) {
-      console.error('renderItems', e);
-    }
+    try { this.fileContent = JSON.parse(fileContent); }
+    catch (e) { console.error('renderItems', e); }
 
     // Caculate total cost
     const COST = this.fileContent.Objects
@@ -276,7 +245,7 @@ class Detail extends Component {
           </Toolbar>
           <Toolbar className="detail-title">
             <div className="p-toolbar-group-left">
-              {this.renderTitle(this.hideout)}
+              <h2 style={{ marginLeft: '.5rem' }}>{title}</h2>
             </div>
             <div className="p-toolbar-group-right">
               <Button label={this.t('DetailDownload')} icon="pi pi-download" style={{ marginRight: '.25em' }} onClick={e => this.onDownloadFileClick(fileName)} />
@@ -286,7 +255,6 @@ class Detail extends Component {
             </div>
           </Toolbar>
           <div className="detail-description">
-            <h3 className="detail-description-title">{this.t('DetailDescription')}</h3>
             {description}
           </div>
           <TabMenu className="detaild-tabmenu" model={this.state.tabMenu} activeItem={this.state.activeItem} onTabChange={(e) => this.onTabChange(e.value)} />
