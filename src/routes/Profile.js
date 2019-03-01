@@ -7,6 +7,7 @@ import { withNamespaces } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { FaHeart, FaEye, FaDownload, FaEdit } from 'react-icons/fa';
 import moment from 'moment';
+import _ from 'lodash';
 
 import { Growl } from 'primereact/growl';
 import { InputText } from 'primereact/inputtext';
@@ -26,6 +27,7 @@ class Profile extends Component {
     this.database = props.database;
     this.storage = props.storage;
     this.users = props.users;
+    this.hideoutAPI = props.hideoutAPI;
     this.isOwner = false;
     this.state = {
       name: '',
@@ -172,11 +174,16 @@ class Profile extends Component {
    */
   renderHideouts(hideouts = []) {
     return hideouts.map((h, index) => {
+      let hash = null;
+      try {
+        hash = _.get(JSON.parse(h.fileContent), 'Hideout Hash');
+      } catch (e) { console.warn('renderHideouts', e); }
+
       return (
         <tr key={`profile-list-${h.id}`}>
           <td>{index + 1}</td>
           <td><Link to={`/detail/${h.id}`} alt={h.title} title={h.title}><div className="profile-list-thumbnail" style={{ backgroundImage: `url(${h.thumbnail})` }} /></Link></td>
-          <td>{h.type.replace('Hideout', '').replace('藏身處 -', '').trim()}</td>
+          <td>{hash ? _.get(this.hideoutAPI.getByHash(hash, this.props.lng), 'Name') : ''}</td>
           <td><p className="profile-list-title">{h.title}</p></td>
           <td>{h.views}</td>
           <td>{h.download}</td>
@@ -262,6 +269,7 @@ const mapStateToProps = state => {
   return {
     auth: state.auth,
     database: state.database,
+    hideoutAPI: state.hideoutAPI,
     storage: state.storage,
     users: state.users,
   }

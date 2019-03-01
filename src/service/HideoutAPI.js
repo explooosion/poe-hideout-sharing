@@ -14,7 +14,7 @@ class HideoutAPI {
   hideoutszhTW = HideoutszhTW;
 
   /**
-   * Detault En
+   * Get hideout place data
    * @param {string} locale
    */
   get(locale = 'en') {
@@ -44,13 +44,25 @@ class HideoutAPI {
     }) || [];
   }
 
+  /**
+   * Get hideout place data by hash
+   * @param {string} hash
+   * @param {string} locale
+   */
+  getByHash(hash = '', locale = 'en') {
+    return this.get(locale).find(hd => String(hd.Hash) === String(hash)) || {};
+  }
+
+  /**
+   * Get hideout object
+   */
   getDoodads() {
     return this.hideoutDoodads.data || [];
   }
 
   /**
-   * Get by hash
-   * @param {*} hash
+   * Get hideout object by hash
+   * @param {string} hash
    */
   getDoodadByHash(hash = '') {
     return this.hideoutDoodads.data.find(hd => String(hd.Hash) === String(hash)) || {};
