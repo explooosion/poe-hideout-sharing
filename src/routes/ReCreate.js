@@ -6,23 +6,24 @@ import './ReCreate.scss';
 import { connect } from 'react-redux';
 import { withNamespaces } from 'react-i18next';
 import { TiFeather } from "react-icons/ti";
-// import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 // import jsFileDownload from 'js-file-download';
 import Files from 'react-files';
 import HideoutParse from 'hideout-parse';
 import uuid from 'uuid/v1';
 import moment from 'moment';
+import Cookies from 'js-cookie';
 
 import { InputText } from 'primereact/inputtext';
 import { Spinner } from 'primereact/spinner';
 import { Button } from 'primereact/button';
-import { Editor } from 'primereact/editor';
+// import { Editor } from 'primereact/editor';
 import { ProgressBar } from 'primereact/progressbar';
 import { Captcha } from 'primereact/captcha';
 import { Growl } from 'primereact/growl';
 
+import Editor from '../components/Editor';
 import MasterLayout from '../layout/MasterLayout';
-
 import HideoutList from '../interface/HideoutList';
 import Session from '../service/Session';
 
@@ -45,7 +46,7 @@ class ReCreate extends Component {
       title: 'my hideout ',
       description: 'this is an hideout.',
       version: 1,
-      formContent: '',
+      formContent: Cookies.get('formContent') || '',
       thumbnail: defaultModelImg,
       fileContent: '',
       fileChoose: '',
@@ -77,9 +78,10 @@ class ReCreate extends Component {
    * Update editor formContent
    * @param {string} value
    */
-  onEditorUpdate(value) {
-    // Save to cookie
+  onEditorUpdate = value => {
     this.setState({ formContent: value });
+    // Backup formContent
+    Cookies.set('formContent', value);
   }
 
   /**
@@ -125,7 +127,7 @@ class ReCreate extends Component {
   onCancelCreate() {
     if (this.state.formContent === '') return this.props.history.push('/');
     return window.confirm('Leave without saving changes?')
-      ? this.props.history.push('/')
+      ? Cookies.remove('formContent') & this.props.history.push('/')
       : null;
   }
 
@@ -226,57 +228,11 @@ class ReCreate extends Component {
         summary: 'Success Publish',
         detail: this.state.title,
       });
+      Cookies.remove('formContent');
       this.setState({ step: 3 });
       this.id = List.id;
     }
   }
-
-  renderEditorHeader() {
-    return (
-      <div>
-        <span className="ql-formats">
-          <select className="ql-header" defaultValue="0">
-            <option value="1">Heading</option>
-            <option value="2">Subheading</option>
-            <option value="0">Normal</option>
-          </select>
-          <select className="ql-font">
-            <option></option>
-            <option value="serif"></option>
-            <option value="monospace"></option>
-          </select>
-        </span>
-        <span className="ql-formats">
-          <button className="ql-bold" aria-label="Bold"></button>
-          <button className="ql-italic" aria-label="Italic"></button>
-          <button className="ql-underline" aria-label="Underline"></button>
-        </span>
-        <span className="ql-formats">
-          <select className="ql-color"></select>
-          <select className="ql-background"></select>
-        </span>
-        <span className="ql-formats">
-          <button className="ql-list" value="ordered" aria-label="Ordered List"></button>
-          <button className="ql-list" value="bullet" aria-label="Unordered List"></button>
-          <select className="ql-align">
-            <option defaultValue></option>
-            <option value="center"></option>
-            <option value="right"></option>
-            <option value="justify"></option>
-          </select>
-        </span>
-        <span className="ql-formats">
-          <button className="ql-link" aria-label="Insert Link"></button>
-          <button className="ql-image" aria-label="Insert Image"></button>
-          <button className="ql-video" aria-label="Insert Video"></button>
-          <button className="ql-code-block" aria-label="Insert Code Block"></button>
-        </span>
-        <span className="ql-formats">
-          <button className="ql-clean" aria-label="Remove Styles"></button>
-        </span>
-      </div>
-    )
-  };
 
   renderStep() {
     switch (this.state.step) {
@@ -297,8 +253,9 @@ class ReCreate extends Component {
           </div>
           <div className="p-grid create-item">
             <h2 className="require">Content</h2>
-            <h4 style={{ marginBottom: '.5rem' }}><TiFeather size="1rem" style={{ marginRight: '.25rem' }} />You can insert the image with copy paste.</h4>
-            <Editor className="create-editor-panel" style={{ height: '500px' }} value={this.state.formContent} onTextChange={(e) => this.onEditorUpdate(e.htmlValue)} headerTemplate={this.renderEditorHeader()} />
+            <Editor className="create-editor-panel" value={this.state.formContent} onChange={this.onEditorUpdate} />
+            <h4 style={{ marginTop: '.5rem', width: '100%' }}><TiFeather size="1rem" style={{ marginRight: '.25rem' }} />You can insert the image with copy paste.</h4>
+            <h4 style={{ marginTop: '.5rem', width: '100%' }}><TiFeather size="1rem" style={{ marginRight: '.25rem' }} />Need to upload? <a href="https://imgur.com/" target="_blank" rel="noopener noreferrer">imgur</a></h4>
           </div>
           <div className="p-grid create-item">
             <h2 className="require">{this.t('Create1Thumbnail')}</h2>
@@ -341,6 +298,7 @@ class ReCreate extends Component {
       case 3: return (
         <div className="p-grid p-justify-center p-align-center">
           <h2>Successful!</h2>
+          <Link to="/"><Button label="Goback" /></Link>
         </div>
       );
     }
