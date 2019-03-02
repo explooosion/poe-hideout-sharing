@@ -30,6 +30,8 @@ class Profile extends Component {
     this.hideoutAPI = props.hideoutAPI;
     this.isOwner = false;
     this.state = {
+      user: null,
+      Hideouts: [],
       name: '',
       nameEdit: false,
       avatar: '',
@@ -39,6 +41,16 @@ class Profile extends Component {
 
   componentWillMount() {
     this.onCheckIsOwner();
+  }
+
+  componentDidMount() {
+    // If has id, then read id or get owner uid
+    const ID = this.id ? this.id : Session.get('auth').uid;
+
+    this.setState({
+      Hideouts: this.database.getByUserId(ID),
+      user: this.users.getById(ID),
+    });
   }
 
   componentWillReceiveProps() {
@@ -81,6 +93,10 @@ class Profile extends Component {
     if (!hideout.id && !hideout.fileName) return;
     await this.database.onDeleteHideout(hideout.id);
     await this.storage.onDeleteHideout(hideout.fileName);
+
+    const ID = this.id ? this.id : Session.get('auth').uid;
+    this.setState({ Hideouts: this.database.getByUserId(ID) });
+
     this.growl.show({ severity: 'success', summary: 'Delete Hideout', detail: 'Delete successfully.' });
   }
 
@@ -212,26 +228,14 @@ class Profile extends Component {
   }
 
   render() {
-    // Update props
-    this.auth = this.props.auth;
-    this.database = this.props.database;
-    this.storage = this.props.storage;
-    this.users = this.props.users;
-
-    // If has id, then read id or get owner uid
-    const ID = this.id ? this.id : Session.get('auth').uid;
-    // Find list by user id
-    const Hideouts = this.database.getByUserId(ID);
-    // Find profile by user id
-    const user = this.users.getById(ID);
     return (
       <MasterLayout>
         <div className="profile">
           <div className="profile-form">
-            {this.renderAvatar(user)}
-            {this.renderName(user)}
+            {this.state.user ? this.renderAvatar(this.state.user) : null}
+            {this.state.user ? this.renderName(this.state.user) : null}
             {
-              Hideouts.length > 0 ?
+              this.state.Hideouts.length > 0 ?
                 (
                   <div className="profile-list-container">
                     <table className="profile-list">
@@ -249,7 +253,7 @@ class Profile extends Component {
                         </tr>
                       </thead>
                       <tbody>
-                        {this.renderHideouts(Hideouts)}
+                        {this.renderHideouts(this.state.Hideouts)}
                       </tbody>
                     </table>
                   </div>
