@@ -80,7 +80,6 @@ class ReCreate extends Component {
    */
   onEditorUpdate = value => {
     this.setState({ formContent: value });
-    console.log(value);
     // Backup formContent
     Cookies.set('formContent', value);
   }
