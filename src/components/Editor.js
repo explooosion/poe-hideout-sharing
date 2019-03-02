@@ -4,7 +4,7 @@ import './Editor.scss';
 // import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withNamespaces } from 'react-i18next';
-import CKEditor from "react-ckeditor-component";
+import CKEditor from './plugins/CKEditor';
 
 class Editor extends Component {
   onChange = evt => {
@@ -31,6 +31,7 @@ class Editor extends Component {
           "afterPaste": this.afterPaste,
           "change": this.onChange,
         }}
+        config={{ extraPlugins: 'youtube' }}
       />
     )
   }

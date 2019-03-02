@@ -51,7 +51,7 @@ class ReCreate extends Component {
       fileContent: '',
       fileChoose: '',
       fileProgressShow: false,
-      captcha: false,
+      captcha: process.env.NODE_ENV === 'development',
     };
   }
 
@@ -80,6 +80,7 @@ class ReCreate extends Component {
    */
   onEditorUpdate = value => {
     this.setState({ formContent: value });
+    console.log(value);
     // Backup formContent
     Cookies.set('formContent', value);
   }
@@ -296,9 +297,9 @@ class ReCreate extends Component {
         </div>
       );
       case 3: return (
-        <div className="p-grid p-justify-center p-align-center">
-          <h2>Successful!</h2>
-          <Link to="/"><Button label="Goback" /></Link>
+        <div className="p-grid p-justify-center p-align-center" style={{ flexFlow: 'column' }}>
+          <h2 style={{ marginBottom: '1rem' }}>Successful!</h2>
+          <Link to="/"><Button label="GoBack" /></Link>
         </div>
       );
     }
