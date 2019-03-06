@@ -13,6 +13,7 @@ import HideoutParse from 'hideout-parse';
 import uuid from 'uuid/v1';
 import moment from 'moment';
 import Cookies from 'js-cookie';
+import HTML from 'html-parse-stringify';
 
 import { InputText } from 'primereact/inputtext';
 import { Spinner } from 'primereact/spinner';
@@ -48,6 +49,7 @@ class ReCreate extends Component {
       version: 1,
       formContent: Cookies.get('formContent') || '',
       thumbnail: defaultModelImg,
+      thumbnails: [],
       fileContent: '',
       fileChoose: '',
       fileProgressShow: false,
@@ -66,7 +68,7 @@ class ReCreate extends Component {
         formContent: h.formContent,
         thumbnail: h.thumbnail,
         fileContent: h.fileContent,
-      });
+      }, () => this.onThumbnailsUpdate(this.state.formContent));
     }
   }
 
@@ -74,11 +76,26 @@ class ReCreate extends Component {
     this.id = this.props.match.params.id;
   }
 
+  onThumbnailUpdate = (e) => {
+    this.setState({ thumbnail: e.target.getAttribute('src') });
+  }
+
+  onThumbnailsUpdate(formContent = '') {
+    // eslint-disable-next-line no-useless-escape
+    const thumbnail = String(formContent).match(/<img\s[^>]*?src\s*=\s*['\"]([^'\"]*?)['\"][^>]*?>/g) || [];
+    if (thumbnail.length > 0) {
+      this.setState({
+        thumbnails: HTML.parse(thumbnail.join('')).map(t => t.attrs.src),
+      });
+    }
+  }
+
   /**
    * Update editor formContent
    * @param {string} value
    */
   onEditorUpdate = value => {
+    this.onThumbnailsUpdate(value);
     this.setState({ formContent: value });
     // Backup formContent
     Cookies.set('formContent', value);
@@ -260,6 +277,7 @@ class ReCreate extends Component {
           <div className="p-grid create-item">
             <h2 className="require">{this.t('Create1Thumbnail')}</h2>
             <span>Choose images in editor content for thumbnail.</span>
+            <div className="create-thumbnails">{this.state.thumbnails.map((t, index) => (<img src={t} alt={t} title={t} className={this.state.thumbnail === t ? 'selected' : ''} key={`thumbnail-${index}`} onClick={this.onThumbnailUpdate} />))}</div>
           </div>
           <div className="p-grid create-button" style={{ marginTop: '1rem' }}>
             <Button label={this.t('CreateCancel')} className="p-button-secondary p-button-raised" onClick={() => this.onCancelCreate()} />

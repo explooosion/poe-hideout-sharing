@@ -42,6 +42,29 @@
     border-bottom: 1px solid $gray;
   }
 
+  .create-thumbnails {
+    margin-top: 1rem;
+    width: 100%;
+
+    img {
+      margin: 0 .5rem;
+      height: 80px;
+      border: 2px solid transparent;
+      opacity: .5;
+      transition: all .2s ease;
+      cursor: pointer;
+
+      &:hover {
+        opacity: 1;
+      }
+
+      &.selected {
+        border: 2px solid $light-warning;
+        opacity: 1;
+      }
+    }
+  }
+
   .create-file {
     margin: 1rem 0;
     text-align: center;
