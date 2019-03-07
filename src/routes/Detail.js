@@ -83,10 +83,9 @@ class Detail extends Component {
   /**
    * Download file and update counter
    */
-  async onDownloadFileClick(fileName) {
+  async onDownloadFileClick(fileContent = '') {
     this.growl.show({ severity: 'info', summary: 'Download Hideout', detail: 'Start to download...' });
-    const URL = await this.storage.getHideoutLink(fileName);
-    window.open(URL, '_blank');
+    this.database.getFileByfileContent(this.id, fileContent);
     await this.database.onUpdateHideoutDownload(this.id);
   }
 
@@ -209,7 +208,7 @@ class Detail extends Component {
     this.hideout = this.database.get().find(({ id }) => id === this.id);
     if (!this.hideout) return <Redirect to="/" />;
 
-    const { title, views, download, favorite, authorId, update, description, fileName, fileContent } = this.hideout;
+    const { title, views, download, favorite, authorId, update, description, fileContent } = this.hideout;
     const { uname } = this.users.getById(authorId);
 
     try { this.fileContent = JSON.parse(fileContent); }
@@ -248,7 +247,7 @@ class Detail extends Component {
               <h2 style={{ marginLeft: '.5rem' }}>{title}</h2>
             </div>
             <div className="p-toolbar-group-right">
-              <Button label={this.t('DetailDownload')} icon="pi pi-download" style={{ marginRight: '.25em' }} onClick={e => this.onDownloadFileClick(fileName)} />
+              <Button label={this.t('DetailDownload')} icon="pi pi-download" style={{ marginRight: '.25em' }} onClick={e => this.onDownloadFileClick(fileContent)} />
               <Button icon="pi pi-star" className="p-button-success" style={{ marginRight: '.25em' }} onClick={e => this.onFavoriteClick()} />
               <Button icon="pi pi-exclamation-triangle" className="p-button-danger" style={{ marginRight: '.25em' }} />
               <SplitButton icon="pi pi-share-alt" className="p-button-warning" style={{ marginRight: '.25em' }} onClick={this.save} model={this.getShareButtonItems()}></SplitButton>
