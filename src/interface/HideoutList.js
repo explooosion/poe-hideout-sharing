@@ -1,7 +1,5 @@
 import uuid from 'uuid/v1';
 
-import HideoutScreenshot from './HideoutScreenshot';
-
 class HideoutList {
 
   /**
@@ -23,11 +21,6 @@ class HideoutList {
    * AuthorId
    */
   authorId = '';
-
-  /**
-   * Type
-   */
-  type = '';
 
   /**
    * Thumnnail
@@ -65,48 +58,19 @@ class HideoutList {
   favorite = 0;
 
   /**
-   * Screenshot List
-   */
-  screenshots = [HideoutScreenshot];
-
-  /**
-   * File name
-   */
-  fileName = '';
-
-  /**
    * File content
    */
   fileContent = '';
 
   /**
+   * Form content
+   */
+  formContent = '';
+
+  /**
    * timestamp
    */
   timestamp = null;
-
-  /**
-   * Convert to json
-   */
-  toJSON() {
-    return {
-      id: this.id,
-      title: this.title,
-      description: this.description,
-      authorId: this.authorId,
-      type: this.type,
-      thumbnail: this.thumbnail,
-      version: this.version,
-      update: this.update,
-      create: this.create,
-      download: this.download,
-      views: this.views,
-      favorite: this.favorite,
-      screenshots: [],
-      fileName: this.fileName,
-      fileContent: this.fileContent,
-      timestamp: this.timestamp,
-    }
-  }
 }
 
 export default HideoutList;

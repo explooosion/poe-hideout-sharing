@@ -10,7 +10,7 @@ import Loading from './components/Animation/Loading';
 import Home from './routes/Home';
 import Detail from './routes/Detail';
 import Login from './routes/Login';
-import Create from './routes/Create';
+import Create from './routes/ReCreate';
 import Profile from './routes/Profile';
 
 import loading from './images/loading.gif';
@@ -29,11 +29,8 @@ class App extends Component {
   componentDidMount() {
     this.load = setInterval(() => {
       const l = this.state.time;
-      if (l === 0) {
-        clearInterval(this.load);
-        return;
-      }
-      this.setState({ time: l - 1 })
+      if (l === 0) clearInterval(this.load);
+      else this.setState({ time: l - 1 });
     }, 1000);
   }
 

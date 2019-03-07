@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 import Session from './Session';
 import { db, REF_PICK } from './config';
 
@@ -30,6 +32,50 @@ class Database {
   }
 
   /**
+   * Download file by fileContent
+   * @param {string} fileName
+   * @param {string} fileContent
+   */
+  getFileByfileContent(fileName = '', fileContent = '') {
+
+    // Rebuild Constructor
+    const { Objects, ...Args } = JSON.parse(fileContent);
+
+    const Title = Object.keys(Args).map(o => {
+      return (`${o} = ${o === 'Hideout Hash' ? _.get(Args, o) : JSON.stringify(_.get(Args, o))}\n`);
+    })
+
+    const Files = Objects.map(o => {
+      const { Name, ...args } = o;
+      // eslint-disable-next-line no-useless-escape
+      return (`${Name} = ${JSON.stringify(args).replace(/\"/g, '').replace(/\:/g, '=')}\n`)
+    });
+
+    const filesTest = [
+      ...Title,
+      ['\n'],
+      ...Files,
+    ];
+
+    // File Download
+    const fileType = 'text';
+    // eslint-disable-next-line no-underscore-dangle
+    const _fileName = fileName + '.hideout';
+    const blob = new Blob(filesTest, { type: fileType });
+
+    const a = document.createElement('a');
+    a.download = _fileName;
+    a.href = URL.createObjectURL(blob);
+    a.dataset.downloadurl = [fileType, a.download, a.href].join(':');
+    a.style.display = "none";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+    setTimeout(() => URL.revokeObjectURL(a.href), 1500);
+  }
+
+  /**
    * Hideouts handler
    */
   onHideoutsSnapshot() {
@@ -45,23 +91,29 @@ class Database {
   }
 
   /**
-   * Create or update hideout data
+   * Create hideout data
    * @param {HideoutList} hideout
-   * @param {boolean} isCreate
    */
-  async onSetHideouts(hideout, isCreate) {
-    if (isCreate) {
-      await this.db.ref(`hideouts${REF_PICK}/${hideout.id}`).set(hideout);
-    } else {
-      await this.db.ref(`hideouts${REF_PICK}/${hideout.id}`).update(hideout);
-    }
+  async onCreateHideout(hideout = { id: null }) {
+    if (!hideout.id) return;
+    await this.db.ref(`hideouts${REF_PICK}/${hideout.id}`).set(hideout);
+  }
+
+  /**
+   * Update hideout data
+   * @param {HideoutList} hideout
+   */
+  async onUpdateHideout(hideout = { id: null }) {
+    if (!hideout.id) return;
+    await this.db.ref(`hideouts${REF_PICK}/${hideout.id}`).update(hideout);
   }
 
   /**
    * Delete hideout data
    * @param {string} id
    */
-  async onDeleteHideouts(id) {
+  async onDeleteHideout(id = null) {
+    if (!id) return;
     await this.db.ref(`hideouts${REF_PICK}/${id}`).remove();
   }
 
