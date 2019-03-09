@@ -2,6 +2,7 @@ import _ from 'lodash';
 
 import Session from './Session';
 import { db, REF_PICK } from './config';
+import { formatHideoutObject } from '../utils/format';
 
 class Database {
 
@@ -47,15 +48,11 @@ class Database {
 
     const Files = Objects.map(o => {
       const { Name, ...args } = o;
-      // eslint-disable-next-line no-useless-escape
-      return (`${Name} = ${JSON.stringify(args).replace(/\"/g, '').replace(/\:/g, '=')}\n`)
+      return `${Name} = ${formatHideoutObject(args)}\n`;
     });
 
-    const filesTest = [
-      ...Title,
-      ['\n'],
-      ...Files,
-    ];
+    // Combine hideout object
+    const filesTest = [...Title, ['\n'], ...Files];
 
     // File Download
     const fileType = 'text';
