@@ -13,6 +13,7 @@ import uuid from 'uuid/v1';
 import moment from 'moment';
 import Cookies from 'js-cookie';
 import HTML from 'html-parse-stringify';
+import _ from 'lodash';
 
 import { InputText } from 'primereact/inputtext';
 import { Spinner } from 'primereact/spinner';
@@ -55,6 +56,10 @@ class ReCreate extends Component {
       fileProgressShow: false,
       captcha: process.env.NODE_ENV === 'development',
     };
+  }
+
+  componentWillMount() {
+    if (!Session.get('auth')) this.props.history.push('/login');
   }
 
   componentDidMount() {
@@ -209,7 +214,7 @@ class ReCreate extends Component {
     List.id = uuid();
     List.title = this.state.title;
     List.description = this.state.description;
-    List.authorId = Session.get('auth').uid || {};
+    List.authorId = _.get(Session.get('auth'), 'uid') || {};
     List.thumbnail = this.state.thumbnail;
     List.version = this.state.version;
 
