@@ -1,246 +1,158 @@
 @import '../scss/index';
 
-.form-valid {
-  display: block;
-  padding: .25rem;
-  width: 100%;
-  text-align: left;
-  color: $danger;
-  font-size: 0.8rem;
-}
-
 .create {
-  position: relative;
-  display: flex;
-  justify-content: center;
   overflow: auto;
-  margin: 0 auto;
-  width: 100%;
-  height: calc(100vh - #{$header-height});
+  position: relative;
+  display: block;
+  width: 100vw;
+  min-height: 100vh;
   background-image: url('../images/bg.jpg');
   background-repeat: no-repeat;
   background-position: center top;
   background-size: cover;
 
-  .create-steps {
-  }
+  .create-form {
+    margin: 2rem auto 3rem;
+    padding: 1rem 0 0;
+    width: $screen-lg;
+    color: #fff;
+    background-color: rgba($dark, .85);
+    border: 2px solid $gray;
 
-  .create-group {
-    margin: .5rem 0 2rem;
-    padding: 2rem 0;
-    background-color: #fff;
-
-    .create-title {
-      margin-bottom: 1rem;
-      text-align: center;
-      color: $gray;
-    }
-
-    input {
-      width: 100%;
-    }
-
-    .p-col-3 {
-      line-height: 30px;
-    }
-
-    .p-col-8 {
-      padding-left: 0;
-    }
-
-    .group-title {
-      .form-title {
-        height: 40px;
-        font-size: 1.2rem;
-      }
-    }
-
-    .group-thumbnail {
-      small {
-        display: block;
-        color: $danger;
-      }
-
-      .form-thumbnail {
-        width: 100%;
-        margin-bottom: .5rem;
-
-        & ~ img {
-          width: 100%;
-        }
-      }
-    }
-
-    .group-screenshot {
-      margin-top: 4rem;
-
-      .screenshot-model {
-        width: 50vw;
-
-        @media only screen and (max-width: $screen-md) {
-          width: 90vw;
-        }
-      }
-
-      .model-row {
-        margin-bottom: .5rem;
-
-        > label {
-          display: block;
-          margin-top: .75rem;
-          font-size: 16px;
-        }
-
-        > input {
-          margin: .5rem 0;
-        }
-
-        > span {
-          display: block;
-          margin-top: .15rem;
-
-          b {
-            color: $danger;
-          }
-        }
-      }
-
-      .form-screenshot {
-        margin-top: .25rem;
-        // width: 100%;
-        max-height: 300px;
-      }
-
-      .youtube-container {
-        position: relative;
-        width: 100%;
-        height: 350px;
-
-        iframe {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-        }
-      }
-    }
-
-    .group-upload {
-      .files-dropzone {
-        margin-bottom: 2rem;
-        cursor: pointer;
-
-        .files-title {
-          padding: 2rem;
-          text-align: center;
-          border: 1px solid $dark;
-          background-color: $light-gray;
-          border-radius: .5rem;
-
-          &:hover {
-            color: $gray;
-          }
-        }
-      }
+    @media only screen and (max-width: $screen-md) {
+      width: 90vw;
     }
   }
+}
 
-  .group-preview {
-    .group-preview-image {
-      position: relative;
-      margin-bottom: 2rem;
-      width: 100%;
-      height: 300px;
+.create-form {
+  .require::after {
+    content: '*';
+    margin-left: .15rem;
+    color: $danger;
+    font-family: $header-font;
+  }
 
-      &:hover .group-preview-delete {
+  .create-title {
+    margin-bottom: 2rem;
+    padding: .5rem 0 1rem;
+    text-align: center;
+    font-family: $header-font;
+    color: #fff;
+    border-bottom: 1px solid $gray;
+  }
+
+  .create-thumbnails {
+    margin-top: 1rem;
+    width: 100%;
+
+    img {
+      margin: 0 .5rem;
+      height: 80px;
+      border: 2px solid transparent;
+      opacity: .5;
+      transition: all .2s ease;
+      cursor: pointer;
+
+      &:hover {
         opacity: 1;
       }
 
-      .group-preview-delete {
-        position: absolute;
-        top: 4px;
-        left: 4px;
-        padding: .5rem;
-        width: 40px;
-        height: 40px;
-        color: $light-gray;
-        background: rgba($danger, .5);
-        transition: all .2s ease-in-out;
-        opacity: 0;
-        z-index: 1;
-        cursor: pointer;
-
-        &:hover {
-          padding: .4rem;
-          background: rgba($danger, .8);
-        }
-      }
-    }
-
-    img {
-      margin: .25rem;
-      height: 300px;
-    }
-
-    .youtube-container {
-      position: relative;
-      margin: .25rem;
-      width: 100%;
-      height: 300px;
-      // padding-bottom: 56.25%;
-
-      iframe {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
+      &.selected {
+        border: 2px solid $light-warning;
+        opacity: 1;
       }
     }
   }
 
-  .create-control {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    margin: 3rem auto 0;
-    padding-top: 1.8rem;
-    max-width: 500px;
-    border-top: 2px solid $light-gray;
+  .create-file {
+    margin: 1rem 0;
+    text-align: center;
+    cursor: pointer;
 
-    @media only screen and (max-width: $screen-md) {
-      flex-flow: column;
-      padding-top: .25rem;
+    .files-title {
+      overflow: hidden;
+      padding: 2rem;
+      max-width: 365px;
+      width: 365px;
+      font-size: 17px;
+      text-overflow: ellipsis;
+      background-color: rgba($dark, .85);
+      color: #fff;
+      letter-spacing: 1px;
+      border: 1px solid $gray;
+      border-radius: .5rem;
+      white-space: nowrap;
+      transition: all .2s ease-in-out;
 
-      a {
-        margin-top: 1rem;
-        width: 100%;
+      &:hover {
+        background-color: rgba($gray, .55);
       }
     }
+  }
 
-    .create-control-button {
+  .files-message {
+    display: block;
+    margin: 1rem 0 .5rem;
+    color: $warning;
+
+    &::before {
+      content: '【 ';
+    }
+
+    &::after {
+      content: ' 】';
+    }
+  }
+
+  .create-item {
+    margin-bottom: 1.75rem;
+
+    > h2 {
+      font-size: 20px;
+      width: 100%;
+      margin-bottom: .5rem;
+      font-family: $global-font;
+    }
+
+    > input {
+      padding: .65rem .5rem;
+      font-size: 16px;
+      font-family: $input-font;
+    }
+  }
+
+  .create-button {
+    justify-content: center;
+    border-top: 1px solid $gray;
+
+    button {
+      margin-top: 1.5rem;
       width: 200px;
       height: 40px;
+      font-family: $global-font;
 
-      @media only screen and (max-width: $screen-md) {
-        margin-top: 1rem;
-        width: 100%;
+      &:first-child {
+        margin-right: 1rem;
       }
     }
   }
 
   /* overwrite */
-  .p-menuitem-link:focus {
-    box-shadow: none !important;
-  }
-
   .p-grid {
-    margin: .75rem auto;
-    max-width: 600px;
+    margin: 0 0 1.5rem;
+    padding: 0 1.5rem;
+    max-width: 100%;
   }
 
-  .p-steps-title {
-    color: #fff !important;
+  .p-editor-container {
+    width: 100%;
+
+    /* Edit content basic style */
+    .p-editor-content.ql-container,
+    .ql-editor {
+      font-size: 17px;
+      line-height: 1.7;
+    }
   }
 }

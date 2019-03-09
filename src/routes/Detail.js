@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './Detail.scss';
 
-import { withNamespaces } from 'react-i18next';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { FaHeart, FaEye, FaDownload, FaEdit } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
@@ -10,6 +10,7 @@ import NumberFormat from 'react-number-format';
 import moment from 'moment';
 import _ from 'lodash';
 import ReactHtmlParser from 'react-html-parser';
+import jsFileDownload from 'js-file-download';
 // import PropTypes from 'prop-types';
 
 import { Button } from 'primereact/button';
@@ -21,10 +22,9 @@ import { TabMenu } from 'primereact/tabmenu';
 
 import ContentLayout from '../layout/ContentLayout';
 import DetailMenu from '../components/DetailMenu';
-
 import HideoutList from '../interface/HideoutList';
-
 import Session from '../service/Session';
+import { formatHideoutObject, formatHideoutFromFileContent } from '../utils/format';
 
 class Detail extends Component {
 
@@ -32,7 +32,6 @@ class Detail extends Component {
     super(props);
     this.dispatch = props.dispatch;
     this.t = props.t;
-    this.storage = props.storage;
     this.database = props.database;
     this.users = props.users;
     this.auth = props.auth;
@@ -47,10 +46,6 @@ class Detail extends Component {
         { label: this.t('DetailCode'), icon: 'pi pi-file' },
       ],
       activeItem: 0,
-      breadcrumb: [
-        { label: 'hideouts', url: '/' },
-        { label: `${this.id}` },
-      ],
     }
   }
 
@@ -68,6 +63,10 @@ class Detail extends Component {
     });
   }
 
+  /**
+   * Update active tab
+   * @param {object} value
+   */
   onTabChange(value) {
     this.setState({ activeItem: value });
   }
@@ -85,7 +84,7 @@ class Detail extends Component {
    */
   async onDownloadFileClick(fileContent = '') {
     this.growl.show({ severity: 'info', summary: 'Download Hideout', detail: 'Start to download...' });
-    this.database.getFileByfileContent(this.id, fileContent);
+    jsFileDownload(formatHideoutFromFileContent(fileContent), `${this.id}.hideout`);
     await this.database.onUpdateHideoutDownload(this.id);
   }
 
@@ -94,27 +93,25 @@ class Detail extends Component {
       {
         label: 'FaceBook',
         // icon: 'pi pi-star-o',
-        command: (e) => {
-          window.open(`https://www.facebook.com/sharer/sharer.php?u=${document.URL}`, '_blank');
-        },
+        command: () => window.open(`https://www.facebook.com/sharer/sharer.php?u=${document.URL}`, '_blank'),
       },
       {
         label: 'Google',
         // icon: 'pi pi-star-o',
-        command: (e) => {
-          window.open(`https://plus.google.com/share?url=${document.URL}`, '_blank');
-        },
+        command: () => window.open(`https://plus.google.com/share?url=${document.URL}`, '_blank'),
       },
       {
         label: 'Twitter',
         // icon: 'pi pi-star-o',
-        command: (e) => {
-          window.open(`https://twitter.com/intent/tweet?text=${document.URL}`, '_blank');
-        },
+        command: () => window.open(`https://twitter.com/intent/tweet?text=${document.URL}`, '_blank'),
       },
     ];
   }
 
+  /**
+   * Switch active tab content
+   * @param {object} param0
+   */
   renderDetail({ formContent, fileContent }) {
     const { label } = this.state.activeItem;
     switch (label) {
@@ -125,6 +122,9 @@ class Detail extends Component {
     }
   }
 
+  /**
+   * Render items tab
+   */
   renderItems() {
     const c = this.fileContent;
     return (
@@ -143,11 +143,13 @@ class Detail extends Component {
             </thead>
             <tbody>
               {
-                // remove duplicates from Objects
+                // use uniqBy to remove duplicates from Objects
                 _.uniqBy(c.Objects, 'Hash').map((objUniq, index) => {
+                  // caculate quantity
                   const quantity = c.Objects.filter((obj) => obj.Hash === objUniq.Hash).length;
+                  // pick up attributes
                   const { Hash, Icon, Cost, MasterLevel, MasterName } = this.hideoutAPI.getDoodadByHash(objUniq.Hash);
-                  // If unfind then null
+                  // If not find then return null
                   return Hash ? (
                     <tr key={`code-${index}-${Hash}`}>
                       <td>{quantity}</td>
@@ -167,6 +169,9 @@ class Detail extends Component {
     );
   }
 
+  /**
+   * Render code tab
+   */
   renderCode() {
     this.t = this.props.t;
     const c = this.fileContent;
@@ -174,18 +179,21 @@ class Detail extends Component {
       <div className="detail-content">
         <section className="section detail-code">
           <p><b>Language</b><code className="section-title">{c.Language}</code></p>
-          <p><b>Hideout Hash</b><code className="section-title">{c['Hideout Hash']}</code></p>
-          <p><b>Hideout Name</b><code className="section-title">{c['Hideout Name']}</code></p>
+          <p><b>Hideout Hash</b><code className="section-title">{_.get(c, 'Hideout Hash')}</code></p>
+          <p><b>Hideout Name</b><code className="section-title">{_.get(c, 'Hideout Name')}</code></p>
           <hr />
           {
-            c.Objects.map((o, index) => {
-              return (
+            c.Objects.map((o, index) =>
+              (
                 <div key={`code-${index}-${o.Hash}`}>
                   {index % 10 === 0 && index > 0 ? <hr /> : null}
-                  <p key={`hideout-object-${index}`}><b>{o.Name}</b><code className="section-title">{JSON.stringify(o)}</code></p>
+                  {/* eslint-disable-next-line no-useless-escape */}
+                  <p key={`hideout-object-${index}`}>
+                    <b>{o.Name}</b><code className="section-title">{formatHideoutObject(_.omit(o, 'Name'))}</code>
+                  </p>
                 </div>
               )
-            })
+            )
           }
         </section>
       </div>
@@ -222,7 +230,7 @@ class Detail extends Component {
     return (
       <article className="detail">
         <DetailMenu hideout={this.hideout} cost={COST} />
-        <ContentLayout breadcrumb={this.state.breadcrumb}>
+        <ContentLayout>
           <Toolbar className="detail-author">
             <summary className="p-toolbar-group-left">
               {this.t('DetailPostedby')} <Link to={`/profile/${authorId}`}>{uname}</Link> {moment().startOf('hour').from(update)}
@@ -275,9 +283,8 @@ const mapStateToProps = state => {
     auth: state.auth,
     database: state.database,
     hideoutAPI: state.hideoutAPI,
-    storage: state.storage,
     users: state.users,
   }
 }
 
-export default withNamespaces()(connect(mapStateToProps)(Detail));
+export default withTranslation()(connect(mapStateToProps)(Detail));

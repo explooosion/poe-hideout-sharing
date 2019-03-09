@@ -3,7 +3,7 @@ import './Profile.scss';
 
 // import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { withNamespaces } from 'react-i18next';
+import { withTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { FaHeart, FaEye, FaDownload, FaEdit } from 'react-icons/fa';
 import moment from 'moment';
@@ -25,7 +25,6 @@ class Profile extends Component {
     this.id = props.match.params.id;
     this.auth = props.auth;
     this.database = props.database;
-    this.storage = props.storage;
     this.users = props.users;
     this.hideoutAPI = props.hideoutAPI;
     this.isOwner = false;
@@ -44,7 +43,7 @@ class Profile extends Component {
   }
 
   componentDidMount() {
-    // If has id, then read id or get owner uid
+    // If url has id, then read id or get owner(login) uid
     const ID = this.id ? this.id : Session.get('auth').uid;
 
     this.setState({
@@ -61,45 +60,54 @@ class Profile extends Component {
     this.onCheckIsOwner();
   }
 
+  /**
+   * Check profile page is login user
+   */
   onCheckIsOwner() {
     this.id = this.props.match.params.id;
 
-    // Both null
+    // Case: both null (url'id not find, and not login)
     if (!Session.get('auth') && !this.id) this.props.history.push('/');
+
+    // Case: url'id not find then re-check the login id
     if (!this.id) {
-      // View by auth
+      // if also not login then return
       if (!Session.get('auth')) this.props.history.push('/');
+      // if login data crash
       if (!Object.keys(Session.get('auth')).includes('uid')) this.props.history.push('/');
       return this.isOwner = Session.get('auth') ? true : false;
     } else {
-      // View by id
+      // if not login, just show the profile by url id
       if (!Session.get('auth')) return this.isOwner = false;
+      // else check the profile if is the owner profile
       return this.isOwner = Session.get('auth').uid === this.id ? true : false;
     }
   }
 
+  /**
+   * Update avatar or uname
+   * @param {object} payload
+   */
   async onUpdateProfile(payload = {}) {
+    if (Object.keys(payload).length === 0) return
     try {
       const { uid } = Session.get('auth');
       await this.users.onUpdateUser(uid, payload);
-    } catch (e) { console.error('onUpdateProfile', e); }
+    } catch (e) { console.warn('onUpdateProfile', e); }
   }
 
   /**
-   * Delete this hideout and file
+   * Delete this hideout
    * @param {object} hideout
    */
   async onDeleteHideout(hideout = {}) {
-    if (!hideout.id && !hideout.fileName) return;
+    if (!_.get(hideout, 'id') && !_.get(hideout, 'fileName')) return;
     await this.database.onDeleteHideout(hideout.id);
-    await this.storage.onDeleteHideout(hideout.fileName);
-
+    this.growl.show({ severity: 'success', summary: 'Delete Hideout', detail: 'Delete successfully.' });
+    // reload profile data
     const ID = this.id ? this.id : Session.get('auth').uid;
     this.setState({ Hideouts: this.database.getByUserId(ID) });
-
-    this.growl.show({ severity: 'success', summary: 'Delete Hideout', detail: 'Delete successfully.' });
   }
-
 
   /**
    * Render user avatar
@@ -274,9 +282,8 @@ const mapStateToProps = state => {
     auth: state.auth,
     database: state.database,
     hideoutAPI: state.hideoutAPI,
-    storage: state.storage,
     users: state.users,
   }
 }
 
-export default withNamespaces()(connect(mapStateToProps)(Profile));
+export default withTranslation()(connect(mapStateToProps)(Profile));

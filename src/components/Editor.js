@@ -3,7 +3,7 @@ import './Editor.scss';
 
 // import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { withNamespaces } from 'react-i18next';
+import { withTranslation } from 'react-i18next';
 import CKEditor from './plugins/CKEditor';
 
 class Editor extends Component {
@@ -46,4 +46,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default withNamespaces()(connect(mapStateToProps)(Editor));
+export default withTranslation()(connect(mapStateToProps)(Editor));
