@@ -10,7 +10,7 @@ import Loading from './components/Animation/Loading';
 import Home from './routes/Home';
 import Detail from './routes/Detail';
 import Login from './routes/Login';
-import Create from './routes/ReCreate';
+import Create from './routes/Create';
 import Profile from './routes/Profile';
 
 import loading from './images/loading.gif';

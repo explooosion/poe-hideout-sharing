@@ -32,20 +32,6 @@ class Home extends Component {
       ],
       hideouts: this.database.get(),
     }
-    this.props.history.listen(() => this.onlazyLoadImage());
-  }
-
-  componentDidMount() {
-    setTimeout(() => this.onlazyLoadImage());
-  }
-
-  componentDidUpdate() {
-    setTimeout(() => this.onlazyLoadImage());
-  }
-
-  onlazyLoadImage() {
-    document.querySelectorAll('.lazy-image')
-      .forEach(node => node.childNodes[2].classList.add('loaded'));
   }
 
   /**

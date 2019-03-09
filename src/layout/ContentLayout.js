@@ -4,25 +4,6 @@ import './ContentLayout.scss';
 // import { BreadCrumb } from 'primereact/breadcrumb';
 
 class ContentLayout extends Component {
-  constructor(props) {
-    super(props);
-    const { breadcrumb } = this.props;
-    this.state = {
-      breadcrumb: breadcrumb,
-    }
-  }
-
-  renderBreadCrumbItems() {
-    return this.state.breadcrumb;
-  }
-
-  renderBreadCrumbHome() {
-    return {
-      icon: 'pi pi-home',
-      url: '/',
-    };
-  }
-
   renderChildren() {
     const { children, type } = this.props;
     const layoutClassName = type ? `layout-${type} ` : '';
@@ -43,13 +24,6 @@ class ContentLayout extends Component {
     return (
       <Fragment>
         <div className="content">
-          {/*
-          <BreadCrumb
-            className="bread"
-            model={this.renderBreadCrumbItems()}
-            home={this.renderBreadCrumbHome()}
-          />
-          */}
           <div className="block">
 
             {this.renderChildren()}
