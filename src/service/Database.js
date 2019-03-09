@@ -1,8 +1,5 @@
-import _ from 'lodash';
-
 import Session from './Session';
 import { db, REF_PICK } from './config';
-import { formatHideoutObject } from '../utils/format';
 
 class Database {
 
@@ -30,46 +27,6 @@ class Database {
    */
   getByUserId(uid = '') {
     return this.hideouts.filter((hideout) => hideout.authorId === uid) || [];
-  }
-
-  /**
-   * Download file by fileContent
-   * @param {string} fileName
-   * @param {string} fileContent
-   */
-  getFileByfileContent(fileName = '', fileContent = '') {
-
-    // Rebuild Constructor
-    const { Objects, ...Args } = JSON.parse(fileContent);
-
-    const Title = Object.keys(Args).map(o => {
-      return (`${o} = ${o === 'Hideout Hash' ? _.get(Args, o) : JSON.stringify(_.get(Args, o))}\n`);
-    })
-
-    const Files = Objects.map(o => {
-      const { Name, ...args } = o;
-      return `${Name} = ${formatHideoutObject(args)}\n`;
-    });
-
-    // Combine hideout object
-    const filesTest = [...Title, ['\n'], ...Files];
-
-    // File Download
-    const fileType = 'text';
-    // eslint-disable-next-line no-underscore-dangle
-    const _fileName = fileName + '.hideout';
-    const blob = new Blob(filesTest, { type: fileType });
-
-    const a = document.createElement('a');
-    a.download = _fileName;
-    a.href = URL.createObjectURL(blob);
-    a.dataset.downloadurl = [fileType, a.download, a.href].join(':');
-    a.style.display = "none";
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-
-    setTimeout(() => URL.revokeObjectURL(a.href), 1500);
   }
 
   /**

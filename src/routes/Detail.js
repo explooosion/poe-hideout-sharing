@@ -10,7 +10,7 @@ import NumberFormat from 'react-number-format';
 import moment from 'moment';
 import _ from 'lodash';
 import ReactHtmlParser from 'react-html-parser';
-// import jsFileDownload from 'js-file-download';
+import jsFileDownload from 'js-file-download';
 // import PropTypes from 'prop-types';
 
 import { Button } from 'primereact/button';
@@ -24,7 +24,7 @@ import ContentLayout from '../layout/ContentLayout';
 import DetailMenu from '../components/DetailMenu';
 import HideoutList from '../interface/HideoutList';
 import Session from '../service/Session';
-import { formatHideoutObject } from '../utils/format';
+import { formatHideoutObject, formatHideoutFromFileContent } from '../utils/format';
 
 class Detail extends Component {
 
@@ -84,7 +84,7 @@ class Detail extends Component {
    */
   async onDownloadFileClick(fileContent = '') {
     this.growl.show({ severity: 'info', summary: 'Download Hideout', detail: 'Start to download...' });
-    this.database.getFileByfileContent(this.id, fileContent);
+    jsFileDownload(formatHideoutFromFileContent(fileContent), `${this.id}.hideout`);
     await this.database.onUpdateHideoutDownload(this.id);
   }
 
