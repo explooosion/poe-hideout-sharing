@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './Detail.scss';
 
-import { withNamespaces } from 'react-i18next';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { FaHeart, FaEye, FaDownload, FaEdit } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
@@ -289,4 +289,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default withNamespaces()(connect(mapStateToProps)(Detail));
+export default withTranslation()(connect(mapStateToProps)(Detail));

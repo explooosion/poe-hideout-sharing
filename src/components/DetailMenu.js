@@ -3,7 +3,7 @@ import './DetailMenu.scss';
 
 import { connect } from 'react-redux';
 import NumberFormat from 'react-number-format';
-import { withNamespaces } from 'react-i18next';
+import { withTranslation } from 'react-i18next';
 import moment from 'moment';
 import _ from 'lodash';
 // import 'moment/locale/zh-tw';
@@ -80,4 +80,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default withNamespaces()(connect(mapStateToProps)(DetailMenu));
+export default withTranslation()(connect(mapStateToProps)(DetailMenu));

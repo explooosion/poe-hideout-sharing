@@ -3,7 +3,7 @@ import './Profile.scss';
 
 // import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { withNamespaces } from 'react-i18next';
+import { withTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { FaHeart, FaEye, FaDownload, FaEdit } from 'react-icons/fa';
 import moment from 'moment';
@@ -288,4 +288,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default withNamespaces()(connect(mapStateToProps)(Profile));
+export default withTranslation()(connect(mapStateToProps)(Profile));

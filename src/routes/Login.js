@@ -4,7 +4,7 @@ import './Login.scss';
 // import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { FaGooglePlusG } from 'react-icons/fa';
-import { withNamespaces } from 'react-i18next';
+import { withTranslation } from 'react-i18next';
 import MasterLayout from '../layout/MasterLayout';
 import Session from '../service/Session';
 
@@ -81,4 +81,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default withNamespaces()(connect(mapStateToProps)(Login));
+export default withTranslation()(connect(mapStateToProps)(Login));

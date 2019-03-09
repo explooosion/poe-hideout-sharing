@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './HomeMenu.scss';
 
 import { connect } from 'react-redux';
-import { withNamespaces } from 'react-i18next';
+import { withTranslation } from 'react-i18next';
 // import PropTypes from 'prop-types';
 import { Dropdown } from 'primereact/dropdown';
 import { SelectButton } from 'primereact/selectbutton';
@@ -258,4 +258,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default withNamespaces()(connect(mapStateToProps)(HomeMenu));
+export default withTranslation()(connect(mapStateToProps)(HomeMenu));

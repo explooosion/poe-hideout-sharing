@@ -4,7 +4,7 @@ import './Home.scss';
 import { Link } from 'react-router-dom';
 import { FaHeart, FaEye, FaDownload } from 'react-icons/fa';
 import { connect } from 'react-redux';
-import { withNamespaces } from 'react-i18next';
+import { withTranslation } from 'react-i18next';
 // import PropTypes from 'prop-types';
 
 import { Button } from 'primereact/button';
@@ -181,4 +181,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default withNamespaces()(connect(mapStateToProps)(Home));
+export default withTranslation()(connect(mapStateToProps)(Home));

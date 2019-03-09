@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './Header.scss';
 
-import { withNamespaces } from 'react-i18next';
+import { withTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
 import { MdNoteAdd } from 'react-icons/md';
@@ -131,4 +131,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default withNamespaces()(connect(mapStateToProps)(withRouter(Header)));
+export default withTranslation()(connect(mapStateToProps)(withRouter(Header)));

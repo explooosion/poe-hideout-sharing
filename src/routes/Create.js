@@ -4,7 +4,7 @@ import './Create.scss';
 
 // import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { withNamespaces } from 'react-i18next';
+import { withTranslation } from 'react-i18next';
 import { TiFeather } from "react-icons/ti";
 import { Link } from 'react-router-dom';
 import Files from 'react-files';
@@ -356,4 +356,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default withNamespaces()(connect(mapStateToProps)(ReCreate));
+export default withTranslation()(connect(mapStateToProps)(ReCreate));
