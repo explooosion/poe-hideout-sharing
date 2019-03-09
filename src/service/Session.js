@@ -3,7 +3,7 @@ import cryptico from 'cryptico';
 import iconv from 'iconv-lite';
 
 const ENCODING = 'Big5';
-const PR_K = 'POE_HIDEOUT_@_ROBBY_^Q^';
+const PR_K = process.env.REACT_APP_SESSION_PRIVATE_KEY;
 const BITS = 1024;
 const RSAkey = cryptico.generateRSAKey(PR_K, BITS);
 const PB_K = cryptico.publicKeyString(RSAkey);
