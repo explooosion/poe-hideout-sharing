@@ -1,33 +1,36 @@
+/* eslint-disable react/button-has-type */
 import React, { Component } from 'react';
 import './Create.scss';
 
 // import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router';
 import { withNamespaces } from 'react-i18next';
+import { TiFeather } from "react-icons/ti";
+import { Link } from 'react-router-dom';
+import Files from 'react-files';
+import HideoutParse from 'hideout-parse';
 import uuid from 'uuid/v1';
 import moment from 'moment';
+import Cookies from 'js-cookie';
+import HTML from 'html-parse-stringify';
 
-import { Steps } from 'primereact/steps';
+import { InputText } from 'primereact/inputtext';
+import { Spinner } from 'primereact/spinner';
+import { Button } from 'primereact/button';
+import { ProgressBar } from 'primereact/progressbar';
+import { Captcha } from 'primereact/captcha';
 import { Growl } from 'primereact/growl';
 
-import Session from '../service/Session';
-
-// layout
+import Editor from '../components/Editor';
 import MasterLayout from '../layout/MasterLayout';
-
-// Step components
-import Step0 from '../components/Create/Step0';
-import Step1 from '../components/Create/Step1';
-import Step2 from '../components/Create/Step2';
-import Step3 from '../components/Create/Step3';
-
-// interface
 import HideoutList from '../interface/HideoutList';
+import Session from '../service/Session';
+import { formatImgTagFromContent } from '../utils/format';
 
-const defaultModelImg = 'https://via.placeholder.com/392x220?text=Path+Of+Exile';
+// const defaultModelImg = 'https://via.placeholder.com/392x220?text=Path+Of+Exile';
+import defaultModelImg from '../images/default-thumbnail.jpg';
 
-class Create extends Component {
+class ReCreate extends Component {
 
   constructor(props) {
     super(props);
@@ -38,223 +41,148 @@ class Create extends Component {
     this.storage = props.storage;
     this.auth = props.auth;
     this.users = props.users;
-    this.hideout = new HideoutList();
     this.state = {
-      steps: [
-        { label: 'Title' },
-        { label: 'Detail' },
-        { label: 'Upload' },
-        { label: 'Finish' },
-      ],
-      step: 0,
-      title: 'My-New-Hideout',
-      description: 'This is a simple hideout.',
+      step: 1,
+      stepForPublish: 4,
+      title: 'my hideout ',
+      description: 'this is an hideout.',
       version: 1,
-      thumbnail: 'https://imgur.com/A5iSyj1.jpg',
-      finishTimer: 5,
-      screenshotModel: false,
-      screenshotModelUrl: '',
-      screenshotModelImg: defaultModelImg,
-      screenshotList: [],
-      screenshotModelType: 'image',
-      screenshotModelTypes: [
-        { label: 'Image', value: 'image' },
-        { label: 'Youtube', value: 'youtube' },
-      ],
-      file: null,
+      formContent: Cookies.get('formContent') || '',
+      thumbnail: defaultModelImg,
+      thumbnails: [],
       fileContent: '',
       fileChoose: '',
       fileProgressShow: false,
-      captcha: process.env.NODE_ENV === 'development' ? true : false,
-    }
-
-    this.HKListener = this.onHotKeyNext.bind(this);
-  }
-
-  componentWillMount() {
-    if (!Session.get('auth')) this.props.history.push('/login');
+      captcha: process.env.NODE_ENV === 'development',
+    };
   }
 
   componentDidMount() {
-    if (this.id) this.onEditMode();
-    window.addEventListener('keypress', this.HKListener);
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('keypress', this.HKListener);
-  }
-
-  /**
-   * Next by press enter
-   * @param {number} keyCode
-   */
-  onHotKeyNext({ keyCode }) {
-    if (keyCode === 13 && this.state.step < 3) this.onNext();
-  }
-
-  /**
-   * Load data by id in edit mode
-   */
-  onEditMode() {
-    this.hideout = this.database.get().find(({ id }) => id === this.id);
-    if (this.hideout) {
+    if (this.id) {
+      const h = this.database.getById(this.id);
+      if (!h) return;
       this.setState({
-        title: this.hideout.title,
-        description: this.hideout.description,
-        version: this.hideout.version,
-        thumbnail: this.hideout.thumbnail,
-        screenshotList: this.hideout.screenshots,
-        fileChoose: this.hideout.fileName,
+        title: h.title,
+        description: h.description,
+        version: h.version,
+        formContent: h.formContent,
+        thumbnail: h.thumbnail,
+        fileContent: h.fileContent,
+      }, () => this.onThumbnailsUpdate(this.state.formContent));
+    }
+  }
+
+  componentWillReceiveProps() {
+    this.id = this.props.match.params.id;
+  }
+
+  onThumbnailUpdate = (e) => {
+    this.setState({ thumbnail: e.target.getAttribute('src') });
+  }
+
+  onThumbnailsUpdate(formContent = '') {
+    const thumbnail = formatImgTagFromContent(formContent);
+    if (thumbnail.length > 0) {
+      this.setState({
+        thumbnails: HTML.parse(thumbnail.join('')).map(t => t.attrs.src),
       });
     }
   }
 
-  async onNext() {
-    // STEP FROM 0 TO 3
-    let step = this.state.step;
-
-    // onNext or onPrev event
-    if (!this.onNextCheck(step)) return;
-    step = step >= 3 ? 3 : step + 1;
-
-    // onPublish event
-    if (step === this.state.steps.length - 1) {
-      const status = await this.onPublish();
-      if (!status) {
-        this.setState({ step: step - 1 });
-        return;
-      }
-    }
-
-    // Wait for onNextCheck or onPublish
-    this.setState({ step: step });
+  /**
+   * Update editor formContent
+   * @param {string} value
+   */
+  onEditorUpdate = value => {
+    this.onThumbnailsUpdate(value);
+    this.setState({ formContent: value });
+    // Backup formContent
+    Cookies.set('formContent', value);
   }
 
   /**
-   * Check form on next step
-   * @param {number} step
+   * Choose files
+   * @param {array} files
    */
-  onNextCheck(step) {
-    let valid = true;
-    switch (step) {
-      case 0: // Title
-        if (this.state.title.length === 0) {
-          valid = false;
-          this.growl.show({ severity: 'warn', summary: 'Oops!', detail: 'Missing title.' });
-        }
-        break;
-      case 1: // Detail
-        if (this.state.description.length === 0) {
-          valid = false;
-          this.growl.show({ severity: 'warn', summary: 'Oops!', detail: 'Missing description.' });
-        }
-        if (this.state.version <= 0) {
-          valid = false;
-          this.growl.show({ severity: 'warn', summary: 'Oops!', detail: 'Missing version.' });
-        }
-        if (this.state.thumbnail.length === 0) {
-          valid = false;
-          this.growl.show({ severity: 'warn', summary: 'Oops!', detail: 'Missing thumbnail.' });
-        }
-        if (this.state.screenshotList.length === 0) {
-          valid = false;
-          this.growl.show({ severity: 'warn', summary: 'Oops!', detail: 'Missing screenshots.' });
-        }
-        break;
-      case 2: // Upload
-        if (this.state.file === null && !this.id && this.state.fileContent === '') {
-          valid = false;
-          this.growl.show({ severity: 'warn', summary: 'Oops!', detail: 'Missing description.' });
-        }
-        if (!this.state.captcha) {
-          valid = false;
-          this.growl.show({ severity: 'warn', summary: 'Oops!', detail: 'Please check the captcha.' });
-        }
-        break;
-      default:
-        valid = false;
-        console.warn('Can not check step value.');
-        this.growl.show({ severity: 'warn', summary: 'Oops!', detail: 'Missing something...' });
-        break;
-    }
-    return valid;
+  onFilesChange(files = []) {
+    try {
+      const r = new FileReader();
+      const file = files[0];
+      r.readAsText(file);
+      r.onload = (e) => {
+        try {
+          this.setState({ fileContent: JSON.stringify(HideoutParse(e.target.result)) });
+          // jsFileDownload(e.target.result, 'app.hideout');
+        } catch (err) { console.error('HideoutParse', err); }
+      }
+      this.setState({ file: file, fileChoose: file.name });
+    } catch (err) { console.error('onFilesChange', err); }
   }
 
-  onPrev(value) {
-    let step;
-    if (value === undefined) {
-      step = this.state.step;
-      step = step <= 0 ? 0 : step - 1;
-    } else {
-      step = value;
-    };
-    this.setState({ step: step });
+  /**
+   * File error handler
+   * @param {object} error
+   * @param {objecgt} file
+   */
+  onFilesError(error, file) {
+    this.growl.show({ severity: 'error', summary: 'Oops!', detail: error.message });
+    console.error('error code ' + error.code + ': ' + error.message, file);
   }
 
-  async onPublish() {
+  /**
+   * Pass Captcha
+   * @param {object} response
+   */
+  onResponseCaptcha(response) {
+    if (response) this.setState({ captcha: true });
+  }
+
+  /**
+   * Cancel for create hideout
+   */
+  onCancelCreate() {
+    if (this.state.formContent === '') return this.props.history.push('/');
+    return window.confirm('Leave without saving changes?')
+      ? Cookies.remove('formContent') & this.props.history.push('/')
+      : null;
+  }
+
+  onNextStep() {
+    const step = this.state.step + 1;
+    if (step === this.state.stepForPublish) this.onCheckMode();
+    else this.setState({ step: step }, () => window.scrollTo(0, 0));
+  }
+
+  onPreviousStep() {
+    const step = this.state.step - 1;
+    if (step <= 0) return;
+    else this.setState({ step: step }, () => window.scrollTo(0, 0));
+  }
+
+  /**
+   * Check data is create or update
+   */
+  onCheckMode() {
+    if (!this.state.captcha) this.growl.show({ severity: 'warn', summary: 'Oops!', detail: 'Please check the captcha.' });
+    else if (this.id) this.onUpdate();
+    else this.onPublish();
+  }
+
+  async onUpdate() {
+    const List = {};
+    List.id = this.id;
+    List.title = this.state.title;
+    List.description = this.state.description;
+    List.thumbnail = this.state.thumbnail;
+    List.version = this.state.version;
+
+    const date = moment();
+    List.update = date.toString();
+    List.formContent = this.state.formContent;
+    if (this.state.fileChoose !== '') List.fileContent = this.state.fileContent;
+
     // Check payload
     let valid = true;
-    let fileName = this.state.fileChoose;
-
-    // Check is create or update with file
-    if ((this.id && this.state.file) || (!this.id && this.state.file)) {
-      this.setState({ fileProgressShow: true });
-      if (this.id && this.state.file) {
-        // Delete old file
-        console.log('wait for deletinng old file');
-        await this.storage.onDeleteHideout(this.hideout.fileName);
-      }
-      // Upload new file
-      const result = await this.storage.onUploadHideout(this.state.file);
-      fileName = result.fileName;
-      // console.info(result.status, result.fileName);
-      if (!result.status) valid = false;
-    }
-
-    let List = {};
-    const { uid } = Session.get('auth') || {};
-    if (!this.id) {
-      // Create new list
-      List = new HideoutList();
-      List.title = this.state.title;
-      List.id = uuid();
-      List.description = this.state.description;
-      List.authorId = uid;
-
-      List.type = JSON.parse(this.state.fileContent)['Hideout Name'] || ''; // fake
-      List.thumbnail = this.state.thumbnail;
-      List.version = this.state.version;
-
-      const date = moment();
-      List.update = date.toString();
-      List.create = date.toString();
-      List.timestamp = date.format('X');
-
-      List.download = 0; // Math.floor(Math.random() * 500);  // Fake
-      List.views = 0; // Math.floor(Math.random() * 3000);    // Fake
-      List.favorite = 0; // Math.floor(Math.random() * 300);  // Fake
-
-      List.screenshots = this.state.screenshotList;
-      List.fileName = fileName;
-      List.fileContent = this.state.fileContent;
-
-    } else {
-      // Update list
-      List.id = this.id;
-      List.title = this.state.title;
-      List.description = this.state.description;
-      List.thumbnail = this.state.thumbnail;
-      List.version = this.state.version;
-      List.update = moment().toString();
-      List.screenshots = this.state.screenshotList;
-      if (this.state.fileContent !== '') {
-        List.fileName = fileName;
-        List.fileContent = this.state.fileContent;
-        List.type = JSON.parse(this.state.fileContent)['Hideout Name'] || ''; // fake
-      }
-    }
-
-    // Check payload keys
     Object.keys(List).forEach(key => {
       if (List[key].length === 0) {
         valid = false;
@@ -263,126 +191,152 @@ class Create extends Component {
       }
     });
 
-    // Add or update hideout
     if (valid) {
-      await this.database.onSetHideouts(List, !this.id ? true : false);
+      this.setState({ fileProgressShow: true });
+      await this.database.onUpdateHideout(List);
+      this.setState({ fileProgressShow: false });
       this.growl.show({
         severity: 'success',
-        summary: this.id ? 'Success Update' : 'Success Publish',
+        summary: 'Success Update',
         detail: this.state.title,
       });
-
-      // Redirect to home pages
-      this.timer = setInterval(() => {
-        if (this.state.finishTimer <= 0) {
-          clearInterval(this.timer);
-          this.props.history.push('/');
-        } else {
-          this.setState({ finishTimer: this.state.finishTimer - 1 });
-        };
-      }, 1000);
-    } else {
-      this.setState({ fileProgressShow: false });
+      this.setState({ step: this.state.stepForPublish });
     }
-
-    return valid;
   }
 
-  /**
-   * Form validation class
-   * @param {any} data
-   */
-  onValid(data) {
+  async onPublish() {
+    const List = new HideoutList();
+    List.id = uuid();
+    List.title = this.state.title;
+    List.description = this.state.description;
+    List.authorId = Session.get('auth').uid || {};
+    List.thumbnail = this.state.thumbnail;
+    List.version = this.state.version;
+
+    const date = moment();
+    List.update = date.toString();
+    List.create = date.toString();
+    List.timestamp = date.format('X');
+
+    List.download = 0; // Math.floor(Math.random() * 500);  // Fake
+    List.views = 0; // Math.floor(Math.random() * 3000);    // Fake
+    List.favorite = 0; // Math.floor(Math.random() * 300);  // Fake
+
+    List.formContent = this.state.formContent;
+    List.fileContent = this.state.fileContent;
+
+    // Check payload
     let valid = true;
-    switch (typeof data) {
-      case 'string': valid = data.length > 0; break;
-      case 'number': valid = data > 0; break;
-      case 'object':
-        if (data !== null) {
-          valid = data.length > 0 || data.size > 0;
-          break;
-        }
-        valid = false; break; // for file upload
-      default: valid = false; console.warn(typeof data, data); break;
+    Object.keys(List).forEach(key => {
+      if (List[key].length === 0) {
+        valid = false;
+        console.warn('Invalid:', key);
+        this.growl.show({ severity: 'warn', summary: 'Oops!', detail: `Missing ${key}` });
+      }
+    });
+
+    if (valid) {
+      this.setState({ fileProgressShow: true });
+      await this.database.onCreateHideout(List);
+      this.setState({ fileProgressShow: false });
+      this.growl.show({
+        severity: 'success',
+        summary: 'Success Publish',
+        detail: this.state.title,
+      });
+      Cookies.remove('formContent');
+      this.setState({ step: this.state.stepForPublish });
+      this.id = List.id;
     }
-    return valid
-      ? { display: 'none' }
-      : { display: 'block' };
   }
 
-  /**
-   * Upadte state by child
-   * @param {object} state
-   */
-  onSetState(state) {
-    this.setState(state);
-  }
-
-  renderSteps() {
-    const { step } = this.state;
-    switch (step) {
-      case 0:
+  renderStep() {
+    switch (this.state.step) {
       default:
-        return (
-          <Step0
-            state={this.state}
-            history={this.props.history}
-            onSetState={this.onSetState.bind(this)}
-            onNext={this.onNext.bind(this)}
-            onValid={this.onValid.bind(this)}
-          />
-        );
-      case 1:
-        return (
-          <Step1
-            state={this.state}
-            onSetState={this.onSetState.bind(this)}
-            onNext={this.onNext.bind(this)}
-            onPrev={this.onPrev.bind(this)}
-            onValid={this.onValid.bind(this)}
-          />
-        );
-      case 2:
-        return (
-          <Step2
-            id={this.id}
-            state={this.state}
-            onSetState={this.onSetState.bind(this)}
-            onNext={this.onNext.bind(this)}
-            onPrev={this.onPrev.bind(this)}
-            onValid={this.onValid.bind(this)}
-            growl={this.growl}
-          />
-        );
-      case 3:
-        return (
-          <Step3
-            timer={this.timer}
-            state={this.state}
-            onSetState={this.onSetState.bind(this)}
-            onNext={this.onNext.bind(this)}
-            onPrev={this.onPrev.bind(this)}
-            onValid={this.onValid.bind(this)}
-          />
-        );
+      case 1: return (
+        <div>
+          <div className="p-grid create-item">
+            <h2 className="require">{this.t('CreateTitle')}</h2>
+            <InputText className="p-col-12" value={this.state.title} onChange={(e) => this.setState({ title: e.target.value })} placeholder={this.t('CreateTitleInput')} autoFocus />
+          </div>
+          <div className="p-grid create-item">
+            <h2>{this.t('CreateDescription')}</h2>
+            <InputText className="p-col-12" value={this.state.description} onChange={(e) => this.setState({ description: e.target.value })} placeholder={this.t('CreateDescriptionInput')} autoFocus />
+          </div>
+          <div className="p-grid create-item">
+            <h2 className="require">{this.t('CreateVersion')}</h2>
+            <Spinner keyfilter="int" min={1} max={100} step={1} value={this.state.version} onChange={(e) => this.setState({ version: e.target.value })} />
+          </div>
+          <div className="p-grid create-item">
+            <h2 className="require">{this.t('CreateContent')}</h2>
+            <Editor className="create-editor-panel" value={this.state.formContent} onChange={this.onEditorUpdate} />
+            <h4 style={{ marginTop: '.5rem', width: '100%' }}><TiFeather size="1rem" style={{ marginRight: '.25rem' }} />{this.t('CreateContentTipImage')}</h4>
+            <h4 style={{ marginTop: '.5rem', width: '100%' }}><TiFeather size="1rem" style={{ marginRight: '.25rem' }} />{this.t('CreateContentTipUpload')} <a href="https://imgur.com/" target="_blank" rel="noopener noreferrer">imgur</a></h4>
+          </div>
+          <div className="p-grid create-item">
+            <h2 className="require">{this.t('CreateThumbnail')}</h2>
+            <span>{this.t('CreateThumbnailInfo')}</span>
+            <div className="create-thumbnails">{this.state.thumbnails.map((t, index) => (<img src={t} alt={t} title={t} className={this.state.thumbnail === t ? 'selected' : ''} key={`thumbnail-${index}`} onClick={this.onThumbnailUpdate} />))}</div>
+          </div>
+          <div className="p-grid create-button" style={{ marginTop: '1rem' }}>
+            <Button label={this.t('CreateCancel')} className="p-button-secondary p-button-raised" onClick={() => this.onCancelCreate()} />
+            <Button label={this.t('CreateNext')} icon="pi pi-arrow-right" iconPos="right" className="p-button-raised" onClick={() => this.onNextStep()} />
+          </div>
+        </div>
+      );
+      case 2: return (
+        <div>
+          <div className="p-grid p-justify-center p-align-center p-dir-col">
+            <h2 className={this.id ? null : 'require'}>{this.t('CreateUploadTitle')}</h2>
+            <Files
+              className="create-file"
+              onChange={files => this.onFilesChange(files)}
+              onError={(error, file) => this.onFilesError(error, file)}
+              accepts={['.hideout', 'hideout/*']}
+              multiple={false}
+              minFileSize={0}
+              maxFileSize={200 * 1024}
+            >
+              <div className="files-title">
+                {this.state.fileChoose.length === 0 ? this.t('CreateUploadFile') : this.state.fileChoose}
+              </div>
+            </Files>
+            <span className="files-message">{this.id ? this.t('CreateUploadAlertIgnore') : this.t('CreateUploadAlert')}</span>
+            {this.state.fileProgressShow ? <ProgressBar mode="indeterminate" style={{ height: '10px', marginTop: '1rem', borderRadius: '.25rem' }} /> : null}
+          </div>
+          <div className="p-grid create-button" style={{ marginTop: '1rem' }}>
+            <Button label={this.t('CreatePrevious')} icon="pi pi-arrow-left" iconPos="left" className="p-button-secondary p-button-raised" onClick={() => this.onPreviousStep()} disabled={this.state.fileProgressShow} />
+            <Button label={this.t('CreateNext')} icon="pi pi-arrow-right" iconPos="right" className="p-button-raised" onClick={() => this.onNextStep()} />
+          </div>
+        </div>
+      );
+      case 3: return (
+        <div>
+          <div className="p-grid p-justify-center p-align-center p-dir-col">
+            <Captcha style={{ background: '#fff' }} siteKey={process.env.REACT_APP_CAPTCHA_KEY} onResponse={res => this.onResponseCaptcha(res)}></Captcha>
+          </div>
+          <div className="p-grid create-button" style={{ marginTop: '1rem' }}>
+            <Button label={this.t('CreatePrevious')} icon="pi pi-arrow-left" iconPos="left" className="p-button-secondary p-button-raised" onClick={() => this.onPreviousStep()} disabled={this.state.fileProgressShow} />
+            <Button label={this.t('CreatePublish')} icon="pi pi-arrow-right" iconPos="right" className="p-button-raised" onClick={() => this.onNextStep()} />
+          </div>
+        </div>
+      );
+      case 4: return (
+        <div className="p-grid p-justify-center p-align-center" style={{ flexFlow: 'column' }}>
+          <h2 style={{ marginBottom: '1rem' }}>{this.t('CreateResultSuccess')}</h2>
+          <Link to="/"><Button label={this.t('CreateFinish')} /></Link>
+        </div>
+      );
     }
   }
 
   render() {
-    this.hideout = this.database.getById(this.id);
-    // Edit mode check
-    if (this.id && Session.get('auth')) {
-      // Not find hideout by id
-      if (!this.hideout) return <Redirect to="/" />;
-      // Auth 401
-      if (this.hideout.authorId !== this.auth.user.uid) return <Redirect to="/" />;
-    }
     return (
       <MasterLayout>
         <div className="create">
-          <div className="container">
-            <Steps className="create-steps" model={this.state.steps} activeIndex={this.state.step} readOnly={true} />
-            {this.renderSteps()}
+          <div className="create-form">
+            <h1 className="create-title">{this.t('CreatePageTitle')}</h1>
+            {this.renderStep()}
           </div>
         </div>
         <Growl ref={(el) => this.growl = el} />
@@ -391,7 +345,7 @@ class Create extends Component {
   }
 }
 
-Create.propTypes = {}
+ReCreate.propTypes = {}
 
 const mapStateToProps = state => {
   return {
@@ -402,4 +356,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default withNamespaces()(connect(mapStateToProps)(Create));
+export default withNamespaces()(connect(mapStateToProps)(ReCreate));
