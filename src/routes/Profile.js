@@ -25,7 +25,6 @@ class Profile extends Component {
     this.id = props.match.params.id;
     this.auth = props.auth;
     this.database = props.database;
-    this.storage = props.storage;
     this.users = props.users;
     this.hideoutAPI = props.hideoutAPI;
     this.isOwner = false;
@@ -283,7 +282,6 @@ const mapStateToProps = state => {
     auth: state.auth,
     database: state.database,
     hideoutAPI: state.hideoutAPI,
-    storage: state.storage,
     users: state.users,
   }
 }

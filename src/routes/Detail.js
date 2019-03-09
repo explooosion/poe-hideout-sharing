@@ -32,7 +32,6 @@ class Detail extends Component {
     super(props);
     this.dispatch = props.dispatch;
     this.t = props.t;
-    this.storage = props.storage;
     this.database = props.database;
     this.users = props.users;
     this.auth = props.auth;
@@ -284,7 +283,6 @@ const mapStateToProps = state => {
     auth: state.auth,
     database: state.database,
     hideoutAPI: state.hideoutAPI,
-    storage: state.storage,
     users: state.users,
   }
 }

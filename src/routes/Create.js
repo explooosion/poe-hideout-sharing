@@ -39,7 +39,6 @@ class ReCreate extends Component {
     this.t = props.t;
     this.id = props.match.params.id;
     this.database = props.database;
-    this.storage = props.storage;
     this.auth = props.auth;
     this.users = props.users;
     this.state = {
@@ -356,7 +355,6 @@ const mapStateToProps = state => {
   return {
     auth: state.auth,
     database: state.database,
-    storage: state.storage,
     users: state.users,
   }
 }
