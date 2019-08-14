@@ -14,6 +14,7 @@ import moment from 'moment';
 import Cookies from 'js-cookie';
 import HTML from 'html-parse-stringify';
 import _ from 'lodash';
+// import LZ4 from 'lz4';
 
 import { InputText } from 'primereact/inputtext';
 import { Spinner } from 'primereact/spinner';
@@ -183,6 +184,8 @@ class ReCreate extends Component {
     const date = moment();
     List.update = date.toString();
     List.formContent = this.state.formContent;
+
+
     if (this.state.fileChoose !== '') List.fileContent = this.state.fileContent;
 
     // Check payload
