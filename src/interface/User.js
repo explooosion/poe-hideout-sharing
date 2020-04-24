@@ -1,5 +1,5 @@
 
-class User {
+export default class User {
 
   /**
    * User id from google
@@ -40,5 +40,3 @@ class User {
     }
   }
 }
-
-export default User;

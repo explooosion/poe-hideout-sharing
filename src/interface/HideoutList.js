@@ -1,6 +1,6 @@
-import uuid from 'uuid/v1';
+import { v1 as uuid } from 'uuid';
 
-class HideoutList {
+export default class HideoutList {
 
   /**
    * Id
@@ -72,5 +72,3 @@ class HideoutList {
    */
   timestamp = null;
 }
-
-export default HideoutList;

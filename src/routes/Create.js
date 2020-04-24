@@ -9,7 +9,7 @@ import { TiFeather } from "react-icons/ti";
 import { Link } from 'react-router-dom';
 import Files from 'react-files';
 import HideoutParse from 'hideout-parse';
-import uuid from 'uuid/v1';
+import { v1 as uuid } from 'uuid';
 import moment from 'moment';
 import Cookies from 'js-cookie';
 import HTML from 'html-parse-stringify';
