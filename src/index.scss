@@ -1,10 +1,16 @@
-@import url('https://fonts.googleapis.com/css?family=Lobster+Two');
-@import '~primereact/resources/themes/nova-light/theme.css';
-@import '~primereact/resources/primereact.min.css';
-@import '~primeicons/primeicons.css';
-@import '~primeflex/primeflex.css';
-@import '~flag-icon-css/css/flag-icon.min.css';
-@import './scss/index';
+@import url("https://fonts.googleapis.com/css?family=Lobster+Two");
+@import "~primereact/resources/themes/nova-light/theme.css";
+@import "~primereact/resources/primereact.min.css";
+@import "~primeicons/primeicons.css";
+@import "~primeflex/primeflex.css";
+@import "~flag-icon-css/css/flag-icon.min.css";
+@import "./scss/index";
+
+*,
+::after,
+::before {
+  box-sizing: border-box;
+}
 
 body {
   margin: 0;
