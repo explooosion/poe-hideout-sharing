@@ -40,7 +40,6 @@ class Database {
       this.hideouts = Object.keys(datas)
         .map(key => datas[key])
         .sort((a, b) => (a[SORTKEY] < b[SORTKEY]) ? 1 : ((b[SORTKEY] < a[SORTKEY]) ? -1 : 0));
-      // console.info('snapshot', this.hideouts);
     });
   }
 

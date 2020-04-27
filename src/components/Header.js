@@ -22,9 +22,9 @@ class Header extends Component {
   constructor(props) {
     super(props);
     const { locale } = props.settings;
-    this.dispatch = props.dispatch;
+    // this.dispatch = props.dispatch;
     this.t = props.t;
-    this.auth = props.auth;
+    // this.auth = props.auth;
     this.state = {
       visible: false,
       items: [
@@ -73,19 +73,19 @@ class Header extends Component {
             <i className="pi pi-bars" />
           </Link>
           {
-            this.props.database.get() ?
-              (
-                <Link to="/" className="logo">
-                  <img className="logo-img" alt="logo" title="logo" src={logo} />
-                  <span className="logo-title">POEHoS</span>
-                </Link>
-              ) :
-              (
-                <a href="/" className="logo">
-                  <img className="logo-img" alt="logo" title="logo" src={logo} />
-                  <span className="logo-title">POEHoS</span>
-                </a>
-              )
+            // this.props.database.get() ?
+            //   (
+            //     <Link to="/" className="logo">
+            //       <img className="logo-img" alt="logo" title="logo" src={logo} />
+            //       <span className="logo-title">POEHoS</span>
+            //     </Link>
+            //   ) :
+            (
+              <a href="/" className="logo">
+                <img className="logo-img" alt="logo" title="logo" src={logo} />
+                <span className="logo-title">POEHoS</span>
+              </a>
+            )
           }
           <div className="mobile-menu">
             <Menu model={this.state.items} popup={true} ref={el => this.menu = el} />
@@ -125,9 +125,9 @@ Header.propTypes = {}
 
 const mapStateToProps = state => {
   return {
-    settings: state.settings,
-    database: state.database,
-    auth: state.auth,
+    // settings: state.settings,
+    // database: state.database,
+    // auth: state.auth,
   }
 }
 
