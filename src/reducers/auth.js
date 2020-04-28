@@ -1,10 +1,16 @@
-import Auth from '../models/Auth';
+export const LOGIN_GOOGLE = 'LOGIN_GOOGLE';
 
-const auth = (state = Auth, action) => {
+const initialState = {
+  isLogin: false,
+  profile: {},
+};
+
+export default (state = initialState, action) => {
   switch (action.type) {
+    case LOGIN_GOOGLE:
+      return { ...state, user: action.payload, isLogin: true };
     default:
       return state;
   }
 }
 
-export default auth;

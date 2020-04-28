@@ -24,3 +24,5 @@ export const storage = firebase.storage();
 export const db = firebase.database();
 export const hideoutsRef = firebase.database().ref(`hideouts${REF_PICK}`);
 export const usersRef = firebase.database().ref(`users${REF_PICK}`);
+
+export const provider = new firebase.auth.GoogleAuthProvider();

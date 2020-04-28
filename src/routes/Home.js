@@ -17,8 +17,9 @@ import ContentLayout from '../layout/ContentLayout';
 import HomeMenu from '../components/HomeMenu';
 
 function Home() {
-  const [first] = useState(0);
-  const [rows] = useState(20);
+  const first = 0;
+  const rows = 20;
+
   const [breadcrumb] = useState([{ label: 'hideouts', url: '/' }]);
 
   const { hideouts, users } = useSelector(state => state.database);
@@ -33,32 +34,31 @@ function Home() {
       ) ? listsByPage.push(value) : null);
 
     return listsByPage.map((hideout, index) => {
-      const { uname } = users.getById(hideout.authorId);
+      const { uname } = users.find(u => u.uid === hideout.authorId) || { uname: 'Unknown' };
+
       return (
         <div className="p-xl-3 p-lg-4 p-md-6 p-sm-12" key={`card-${index}-${hideout.id}`}>
-          <DeferredContent>
-            <Card
-              className="card-item"
-              title={hideout.title}
-              subTitle={uname}
-              header={renderCardHeader(hideout)}
-            >
-              <div className="card-counts">
-                <div>
-                  <FaEye />
-                  <span>{hideout.views}</span>
-                </div>
-                <div>
-                  <FaDownload />
-                  <span>{hideout.download}</span>
-                </div>
-                <div>
-                  <FaHeart />
-                  <span>{hideout.favorite}</span>
-                </div>
+          <Card
+            className="card-item"
+            title={hideout.title}
+            subTitle={uname}
+            header={renderCardHeader(hideout)}
+          >
+            <div className="card-counts">
+              <div>
+                <FaEye />
+                <span>{hideout.views}</span>
               </div>
-            </Card>
-          </DeferredContent>
+              <div>
+                <FaDownload />
+                <span>{hideout.download}</span>
+              </div>
+              <div>
+                <FaHeart />
+                <span>{hideout.favorite}</span>
+              </div>
+            </div>
+          </Card>
         </div>
       );
     });

@@ -1,6 +1,7 @@
-import { hideoutsRef, usersRef } from '../config/firebase';
+import { hideoutsRef, usersRef, auth, provider } from '../config/firebase';
 
 import { FETCH_HIDEOUTS, FETCH_USERS } from '../reducers/database';
+import { LOGIN_GOOGLE } from '../reducers/auth';
 
 export const setLocal = locale => ({
   type: 'SET_LOCALE',
@@ -32,16 +33,14 @@ export const fetchUsers = () => async dispatch => {
   });
 };
 
-// DEMO ===========================
-// let nextTodoId = 0
-// export const addTodo = text => ({
-//   type: 'ADD_TODO',
-//   id: nextTodoId++,
-//   text,
-// })
-
-// export const toggleTodo = id => ({
-//   type: 'TOGGLE_TODO',
-//   id,
-// })
-// DEMO ===========================
+export const loginUser = () => async dispatch => {
+  auth.signInWithRedirect(provider)
+    .then(result => {
+      console.log(result);
+      dispatch({
+        type: LOGIN_GOOGLE,
+        payload: result,
+      })
+    })
+    .catch(error => console.error('onSignInByGoogle', error));
+}

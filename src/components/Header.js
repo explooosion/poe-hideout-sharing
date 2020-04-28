@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import './Header.scss';
 
-import { withTranslation } from 'react-i18next';
-import { connect } from 'react-redux';
-import { Link, withRouter } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { Link, withRouter, useHistory } from 'react-router-dom';
 import { MdNoteAdd } from 'react-icons/md';
 import { IoLogoGithub } from 'react-icons/io';
 import { GiExitDoor, GiEntryDoor } from 'react-icons/gi';
@@ -17,45 +17,31 @@ import Session from '../service/Session';
 import { setLocal } from '../actions';
 import logo from '../images/logo.svg';
 
-class Header extends Component {
+function Header() {
+  const { locale } = useSelector(state => state.settings);
+  const { isLogin, profile } = useSelector(state => state.auth);
+  const { t } = useTranslation();
+  const history = useHistory();
+  const [visible, setVisible] = useState(false);
+  const [items, setItems] = useState([
+    { label: 'Create', icon: 'pi pi-fw pi-plus', command: () => history.push('/create') },
+    { label: 'Github', icon: 'pi pi-fw pi-star', command: () => { window.open('https://github.com/explooosion/poe-hideout-sharing'); } },
+  ]);
+  const locales = [
+    { label: 'EN', value: 'en', icon: 'us' },
+    { label: 'TW', value: 'zhTW', icon: 'tw' },
+    { label: 'CN', value: 'zhCN', icon: 'cn' },
+  ]
 
-  constructor(props) {
-    super(props);
-    const { locale } = props.settings;
-    // this.dispatch = props.dispatch;
-    this.t = props.t;
-    // this.auth = props.auth;
-    this.state = {
-      visible: false,
-      items: [
-        { label: 'Create', icon: 'pi pi-fw pi-plus', command: () => this.props.history.push('/create') },
-        { label: 'Github', icon: 'pi pi-fw pi-star', command: () => { window.open('https://github.com/explooosion/poe-hideout-sharing'); } },
-        // { label: 'Login', icon: 'pi pi-fw pi-globe', command: () => this.props.history.push('/loginn') },
-      ],
-      locale: locale,
-      locales: [
-        { label: 'EN', value: 'en', icon: 'us' },
-        { label: 'TW', value: 'zhTW', icon: 'tw' },
-        { label: 'CN', value: 'zhCN', icon: 'cn' },
-      ],
-    };
+  const onLogout = () => {
+    console.log('onLogout');
   }
 
-  componentWillMount() {
-    this.onChangeLanguage(this.state.locale);
+  const onChangeLanguage = value => {
+    console.log('onChangeLanguage', value);
   }
 
-  onChangeLanguage(value) {
-    this.dispatch(setLocal(value));
-    this.setState({ locale: value });
-  }
-
-  async onLogout() {
-    await this.auth.onLogout();
-    window.location.href = '/';
-  }
-
-  renderFlagTemplate(option) {
+  const renderFlagTemplate = option => {
     return (
       <div className="p-clearfix flag-group">
         <span className={`flag-icon flag-icon-${option.icon}`}></span>
@@ -64,71 +50,173 @@ class Header extends Component {
     );
   }
 
-  render() {
-    const auth = Session.get('auth');
-    return (
-      <nav className="nav">
-        <header className="header">
-          <Link to="/" className="menu-button" onClick={() => this.setState({ visible: true })}>
-            <i className="pi pi-bars" />
-          </Link>
+  return (
+    <nav className="nav">
+      <header className="header">
+        <Link to="/" className="menu-button" onClick={() => setVisible(true)}>
+          <i className="pi pi-bars" />
+        </Link>
+        {
+          // this.props.database.get() ?
+          //   (
+          //     <Link to="/" className="logo">
+          //       <img className="logo-img" alt="logo" title="logo" src={logo} />
+          //       <span className="logo-title">POEHoS</span>
+          //     </Link>
+          //   ) :
+          (
+            <a href="/" className="logo">
+              <img className="logo-img" alt="logo" title="logo" src={logo} />
+              <span className="logo-title">POEHoS</span>
+            </a>
+          )
+        }
+        <div className="mobile-menu">
+          <Menu model={items} popup={true} /* ref={el => this.menu = el} */ />
+          <Button className="p-button-secondary" icon="pi pi-bars" /* onClick={(event) => this.menu.toggle(event)} */ />
+        </div>
+        <ul className="topbar-menu">
           {
-            // this.props.database.get() ?
-            //   (
-            //     <Link to="/" className="logo">
-            //       <img className="logo-img" alt="logo" title="logo" src={logo} />
-            //       <span className="logo-title">POEHoS</span>
-            //     </Link>
-            //   ) :
-            (
-              <a href="/" className="logo">
-                <img className="logo-img" alt="logo" title="logo" src={logo} />
-                <span className="logo-title">POEHoS</span>
-              </a>
-            )
+            isLogin
+              ? <li><Link to={`/profile/${profile.uid}`}><img src={profile.avatar} style={{ width: '30px', borderRadius: '100%' }} alt={profile.uname} title={profile.uname} /></Link></li>
+              : null
           }
-          <div className="mobile-menu">
-            <Menu model={this.state.items} popup={true} ref={el => this.menu = el} />
-            <Button className="p-button-secondary" icon="pi pi-bars" onClick={(event) => this.menu.toggle(event)} />
-          </div>
-          <ul className="topbar-menu">
-            {
-              auth
-                ? <li><Link to={`/profile/${auth.uid}`}><img src={auth.avatar} style={{ width: '30px', borderRadius: '100%' }} alt={auth.uname} title={auth.uname} /></Link></li>
-
-                : null
-            }
-            <li><Link to="/create" alt={this.t('HeaderCreate')} title={this.t('HeaderCreate')}><MdNoteAdd size="2rem" /></Link></li>
-            {
-              auth
-                ? <li><a href="#logout" onClick={() => this.onLogout()} alt={this.t('HeaderLogout')} title={this.t('HeaderLogout')}><GiExitDoor size="2rem" /></a></li>
-                : <li><Link to="/login" alt={this.t('HeaderLogin')} title={this.t('HeaderLogin')}><GiEntryDoor size="2rem" /></Link></li>
-            }
-            <li><a href="https://github.com/explooosion/poe-hideout-sharing" target="_blank" rel="noopener noreferrer" alt={this.t('HeaderGithub')} title={this.t('HeaderGithub')}><IoLogoGithub size="2rem" /></a></li>
-            <li style={{ paddingLeft: '1rem', height: 'auto' }}>
-              <Dropdown
-                value={this.state.locale}
-                options={this.state.locales}
-                onChange={e => this.onChangeLanguage(e.value)}
-                itemTemplate={this.renderFlagTemplate}
-              />
-            </li>
-          </ul>
-        </header>
-        <Sidebar visible={this.state.visible} onHide={() => this.setState({ visible: false })}></Sidebar>
-      </nav>
-    );
-  }
+          <li><Link to="/create" alt={t('HeaderCreate')} title={t('HeaderCreate')}><MdNoteAdd size="2rem" /></Link></li>
+          {
+            isLogin
+              ? <li><a href="#logout" onClick={() => onLogout()} alt={t('HeaderLogout')} title={t('HeaderLogout')}><GiExitDoor size="2rem" /></a></li>
+              : <li><Link to="/login" alt={t('HeaderLogin')} title={t('HeaderLogin')}><GiEntryDoor size="2rem" /></Link></li>
+          }
+          <li><a href="https://github.com/explooosion/poe-hideout-sharing" target="_blank" rel="noopener noreferrer" alt={t('HeaderGithub')} title={t('HeaderGithub')}><IoLogoGithub size="2rem" /></a></li>
+          <li style={{ paddingLeft: '1rem', height: 'auto' }}>
+            <Dropdown
+              value={locale}
+              options={locales}
+              onChange={e => onChangeLanguage(e.value)}
+              itemTemplate={renderFlagTemplate}
+            />
+          </li>
+        </ul>
+      </header>
+      <Sidebar visible={visible} onHide={() => setVisible(false)}></Sidebar>
+    </nav>
+  );
 }
 
-Header.propTypes = {}
+export default Header;
 
-const mapStateToProps = state => {
-  return {
-    // settings: state.settings,
-    // database: state.database,
-    // auth: state.auth,
-  }
-}
+// class Header extends Component {
 
-export default withTranslation()(connect(mapStateToProps)(withRouter(Header)));
+//   constructor(props) {
+//     super(props);
+//     const { locale } = props.settings;
+//     // this.dispatch = props.dispatch;
+//     t = props.t;
+//     // this.auth = props.auth;
+//     this.state = {
+//       visible: false,
+//       items: [
+//         { label: 'Create', icon: 'pi pi-fw pi-plus', command: () => this.props.history.push('/create') },
+//         { label: 'Github', icon: 'pi pi-fw pi-star', command: () => { window.open('https://github.com/explooosion/poe-hideout-sharing'); } },
+//         // { label: 'Login', icon: 'pi pi-fw pi-globe', command: () => this.props.history.push('/loginn') },
+//       ],
+//       locale: locale,
+//       locales: [
+//         { label: 'EN', value: 'en', icon: 'us' },
+//         { label: 'TW', value: 'zhTW', icon: 'tw' },
+//         { label: 'CN', value: 'zhCN', icon: 'cn' },
+//       ],
+//     };
+//   }
+
+//   componentWillMount() {
+//     this.onChangeLanguage(locale);
+//   }
+
+//   onChangeLanguage(value) {
+//     this.dispatch(setLocal(value));
+//     this.setState({ locale: value });
+//   }
+
+//   async onLogout() {
+//     await this.auth.onLogout();
+//     window.location.href = '/';
+//   }
+
+//   renderFlagTemplate(option) {
+//     return (
+//       <div className="p-clearfix flag-group">
+//         <span className={`flag-icon flag-icon-${option.icon}`}></span>
+//         <span className="flag-name">{option.label}</span>
+//       </div>
+//     );
+//   }
+
+//   render() {
+//     const auth = Session.get('auth');
+//     return (
+//       <nav className="nav">
+//         <header className="header">
+//           <Link to="/" className="menu-button" onClick={() => this.setState({ visible: true })}>
+//             <i className="pi pi-bars" />
+//           </Link>
+//           {
+//             // this.props.database.get() ?
+//             //   (
+//             //     <Link to="/" className="logo">
+//             //       <img className="logo-img" alt="logo" title="logo" src={logo} />
+//             //       <span className="logo-title">POEHoS</span>
+//             //     </Link>
+//             //   ) :
+//             (
+//               <a href="/" className="logo">
+//                 <img className="logo-img" alt="logo" title="logo" src={logo} />
+//                 <span className="logo-title">POEHoS</span>
+//               </a>
+//             )
+//           }
+//           <div className="mobile-menu">
+//             <Menu model={items} popup={true} ref={el => this.menu = el} />
+//             <Button className="p-button-secondary" icon="pi pi-bars" onClick={(event) => this.menu.toggle(event)} />
+//           </div>
+//           <ul className="topbar-menu">
+//             {
+//               auth
+//                 ? <li><Link to={`/profile/${auth.uid}`}><img src={auth.avatar} style={{ width: '30px', borderRadius: '100%' }} alt={auth.uname} title={auth.uname} /></Link></li>
+
+//                 : null
+//             }
+//             <li><Link to="/create" alt={t('HeaderCreate')} title={t('HeaderCreate')}><MdNoteAdd size="2rem" /></Link></li>
+//             {
+//               auth
+//                 ? <li><a href="#logout" onClick={() => this.onLogout()} alt={t('HeaderLogout')} title={t('HeaderLogout')}><GiExitDoor size="2rem" /></a></li>
+//                 : <li><Link to="/login" alt={t('HeaderLogin')} title={t('HeaderLogin')}><GiEntryDoor size="2rem" /></Link></li>
+//             }
+//             <li><a href="https://github.com/explooosion/poe-hideout-sharing" target="_blank" rel="noopener noreferrer" alt={t('HeaderGithub')} title={t('HeaderGithub')}><IoLogoGithub size="2rem" /></a></li>
+//             <li style={{ paddingLeft: '1rem', height: 'auto' }}>
+//               <Dropdown
+//                 value={locale}
+//                 options={locales}
+//                 onChange={e => this.onChangeLanguage(e.value)}
+//                 itemTemplate={this.renderFlagTemplate}
+//               />
+//             </li>
+//           </ul>
+//         </header>
+//         <Sidebar visible={visible} onHide={() => this.setState({ visible: false })}></Sidebar>
+//       </nav>
+//     );
+//   }
+// }
+
+// Header.propTypes = {}
+
+// const mapStateToProps = state => {
+//   return {
+//     settings: state.settings,
+//     // database: state.database,
+//     // auth: state.auth,
+//   }
+// }
+
+// export default withTranslation()(connect(mapStateToProps)(withRouter(Header)));
