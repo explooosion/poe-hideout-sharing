@@ -84,11 +84,13 @@ function Home() {
 
   return (
     <div className="home">
-      {/* <HomeMenu
-        hideouts={[]}
-      // onSortChange={(key, value) => this.onSortChange(key, value)}
-      // onFilterChange={(key, value) => this.onFilterChange(key, value)}
-     />*/}
+      {
+        <HomeMenu
+          hideouts={[]}
+        // onSortChange={(key, value) => this.onSortChange(key, value)}
+        // onFilterChange={(key, value) => this.onFilterChange(key, value)}
+        />
+      }
       <ContentLayout breadcrumb={breadcrumb}>
         {
           hideouts.length === 0

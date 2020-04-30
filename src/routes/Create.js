@@ -27,7 +27,7 @@ import Editor from '../components/Editor';
 import MasterLayout from '../layout/MasterLayout';
 import HideoutList from '../interface/HideoutList';
 import Session from '../service/Session';
-import { formatImgTagFromContent } from '../utils/format';
+import { formatImgTagFromContent } from '../utils/Format';
 
 // const defaultModelImg = 'https://via.placeholder.com/392x220?text=Path+Of+Exile';
 import defaultModelImg from '../images/default-thumbnail.jpg';

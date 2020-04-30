@@ -1,19 +1,17 @@
-import Cookies from 'js-cookie';
+import { SET_LOCALE } from '../actions';
 
-import Settings from '../models/Settings';
-import i18n from '../i18n';
+import { COOKIE_I18N, getCookie } from '../utils/Cookie';
 
-const settings = (state = Settings, action) => {
+const initialState = {
+  locale: getCookie(COOKIE_I18N) || 'US',
+}
+
+export default (state = initialState, action) => {
   switch (action.type) {
-    case 'SET_LOCALE':
-      i18n.changeLanguage(action.locale);
-      Cookies.set('locale', action.locale);
-      return {
-        locale: action.locale,
-      };
+    case SET_LOCALE:
+      return { ...state, locale: action.payload };
     default:
       return state;
   }
 }
 
-export default settings;

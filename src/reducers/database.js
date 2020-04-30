@@ -1,5 +1,4 @@
-export const FETCH_HIDEOUTS = 'FETCH_HIDEOUTS';
-export const FETCH_USERS = 'FETCH_USERS';
+import { FETCH_HIDEOUTS, FETCH_USERS } from '../actions';
 
 const initialState = {
   hideouts: [],

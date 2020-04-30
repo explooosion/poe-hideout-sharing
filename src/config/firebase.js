@@ -17,8 +17,10 @@ const config = {
 }
 
 firebase.initializeApp(config);
+firebase.auth().useDeviceLanguage();
 
 export const auth = firebase.auth();
+
 export const storage = firebase.storage();
 
 export const db = firebase.database();

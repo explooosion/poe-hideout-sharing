@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './Header.scss';
 
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Link, withRouter, useHistory } from 'react-router-dom';
 import { MdNoteAdd } from 'react-icons/md';
 import { IoLogoGithub } from 'react-icons/io';
@@ -13,33 +13,34 @@ import { Button } from 'primereact/button';
 import { Menu } from 'primereact/menu';
 import { Dropdown } from 'primereact/dropdown';
 
-import Session from '../service/Session';
-import { setLocal } from '../actions';
+import { setLocal, logoutUser } from '../actions';
 import logo from '../images/logo.svg';
 
 function Header() {
-  const { locale } = useSelector(state => state.settings);
-  const { isLogin, profile } = useSelector(state => state.auth);
   const { t } = useTranslation();
   const history = useHistory();
+
+  const { locale } = useSelector(state => state.settings);
+  const { isLogin, user } = useSelector(state => state.auth);
+
+  const dispatch = useDispatch();
+
   const [visible, setVisible] = useState(false);
-  const [items, setItems] = useState([
+
+  const items = [
     { label: 'Create', icon: 'pi pi-fw pi-plus', command: () => history.push('/create') },
     { label: 'Github', icon: 'pi pi-fw pi-star', command: () => { window.open('https://github.com/explooosion/poe-hideout-sharing'); } },
-  ]);
+  ];
+
   const locales = [
-    { label: 'EN', value: 'en', icon: 'us' },
-    { label: 'TW', value: 'zhTW', icon: 'tw' },
-    { label: 'CN', value: 'zhCN', icon: 'cn' },
+    { label: 'EN', value: 'US', icon: 'us' },
+    { label: 'TW', value: 'TW', icon: 'tw' },
+    { label: 'CN', value: 'CN', icon: 'cn' },
   ]
 
-  const onLogout = () => {
-    console.log('onLogout');
-  }
+  const onLogout = () =>  dispatch(logoutUser());
 
-  const onChangeLanguage = value => {
-    console.log('onChangeLanguage', value);
-  }
+  const onChangeLanguage = value => dispatch(setLocal(value));
 
   const renderFlagTemplate = option => {
     return (
@@ -56,21 +57,10 @@ function Header() {
         <Link to="/" className="menu-button" onClick={() => setVisible(true)}>
           <i className="pi pi-bars" />
         </Link>
-        {
-          // this.props.database.get() ?
-          //   (
-          //     <Link to="/" className="logo">
-          //       <img className="logo-img" alt="logo" title="logo" src={logo} />
-          //       <span className="logo-title">POEHoS</span>
-          //     </Link>
-          //   ) :
-          (
-            <a href="/" className="logo">
-              <img className="logo-img" alt="logo" title="logo" src={logo} />
-              <span className="logo-title">POEHoS</span>
-            </a>
-          )
-        }
+        <a href="/" className="logo">
+          <img className="logo-img" alt="logo" title="logo" src={logo} />
+          <span className="logo-title">POEHoS</span>
+        </a>
         <div className="mobile-menu">
           <Menu model={items} popup={true} /* ref={el => this.menu = el} */ />
           <Button className="p-button-secondary" icon="pi pi-bars" /* onClick={(event) => this.menu.toggle(event)} */ />
@@ -78,7 +68,7 @@ function Header() {
         <ul className="topbar-menu">
           {
             isLogin
-              ? <li><Link to={`/profile/${profile.uid}`}><img src={profile.avatar} style={{ width: '30px', borderRadius: '100%' }} alt={profile.uname} title={profile.uname} /></Link></li>
+              ? <li><Link to={`/user/${user.uid}`}><img src={user.photoURL} style={{ width: '30px', borderRadius: '100%' }} alt={user.displayName} title={user.displayName} /></Link></li>
               : null
           }
           <li><Link to="/create" alt={t('HeaderCreate')} title={t('HeaderCreate')}><MdNoteAdd size="2rem" /></Link></li>
@@ -182,7 +172,7 @@ export default Header;
 //           <ul className="topbar-menu">
 //             {
 //               auth
-//                 ? <li><Link to={`/profile/${auth.uid}`}><img src={auth.avatar} style={{ width: '30px', borderRadius: '100%' }} alt={auth.uname} title={auth.uname} /></Link></li>
+//                 ? <li><Link to={`/user/${auth.uid}`}><img src={auth.avatar} style={{ width: '30px', borderRadius: '100%' }} alt={auth.uname} title={auth.uname} /></Link></li>
 
 //                 : null
 //             }

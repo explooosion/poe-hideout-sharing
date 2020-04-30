@@ -1,23 +1,42 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './Login.scss';
 
 import { useSelector, useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import { FaGooglePlusG } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
 import MasterLayout from '../layout/MasterLayout';
-import Session from '../service/Session';
 
-import { loginUser } from '../actions';
+import { loginUser, LOGIN_GOOGLE } from '../actions';
+
+import { COOKIE_USER, COOKIE_CREDENTIAL, getCookie } from '../utils/Cookie';
 
 function Login() {
   const { t } = useTranslation();
-  const { isLogin } = useSelector(state => state.auth);
+  const auth = useSelector(state => state.auth);
   const dispatch = useDispatch();
+  const history = useHistory();
 
   const signInByGoogle = () => {
-    console.log('login')
     dispatch(loginUser());
   }
+
+  useEffect(() => {
+
+    const user = getCookie(COOKIE_USER);
+    const credential = getCookie(COOKIE_CREDENTIAL);
+
+    if (auth.isLogin && user && credential) {
+      console.log('login success');
+      history.push('/');
+    } else if (user && credential) {
+      console.log('update redux');
+      dispatch({
+        type: LOGIN_GOOGLE,
+        payload: { credential, user },
+      });
+    }
+  });
 
   return (
     <MasterLayout>
@@ -35,78 +54,3 @@ function Login() {
 }
 
 export default Login;
-
-// class Login extends Component {
-
-//   constructor(props) {
-//     super(props);
-//     this.dispatch = props.dispatch;
-//     this.auth = props.auth;
-//     this.users = props.users;
-//     this.t = props.t;
-//     this.isCheckOk = false;
-//   }
-
-//   async onCheckAuth() {
-//     if (Session.get('auth-google') || Session.get('auth')) {
-//       // Google login susessful
-//       if (!Session.get('auth')) {
-//         // New user
-//         await this.users.onCreateUser(Session.get('auth-google'));
-//       }
-//       else if (Object.keys(this.users.getById(Session.get('auth').uid).length === 0)) {
-//         // New user
-//         await this.users.onCreateUser(Session.get('auth-google'));
-//       } else {
-//         // Old user
-//         const user = this.users.getById(Session.get('auth').uid);
-//         Session.set(user);
-//       }
-//       // Not login in google
-//       this.props.history.push('/');
-//     }
-//     this.isCheckOk = Session.get('auth-google') ? false : true;
-//   }
-
-//   async signInByGoogle() {
-//     await this.auth.onSignInByGoogle();
-//     this.onCheckAuth();
-//     this.props.history.push('/');
-//   }
-
-//   render() {
-//     // Before render, should wait for loading users data
-//     this.users = this.props.users;
-//     if (this.users.get().length > 0) this.onCheckAuth();
-
-//     return (
-//       <MasterLayout>
-//         <div className="login">
-//           {
-//             this.isCheckOk ?
-//               (
-//                 <div className="login-form">
-//                   <h1 className="login-title">{this.t('LoginTitle')}</h1>
-//                   <div className="login-google" onClick={() => this.signInByGoogle()}>
-//                     <FaGooglePlusG className="login-google-icon" />
-//                     <span className="login-google-text">{this.t('LoginButton')}</span>
-//                   </div>
-//                 </div>
-//               ) : null
-//           }
-//         </div>
-//       </MasterLayout>
-//     );
-//   }
-// }
-
-// Login.propTypes = {}
-
-// const mapStateToProps = state => {
-//   return {
-//     auth: state.auth,
-//     users: state.users,
-//   }
-// }
-
-// export default withTranslation()(connect(mapStateToProps)(Login));

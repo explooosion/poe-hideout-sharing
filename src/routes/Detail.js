@@ -24,7 +24,7 @@ import ContentLayout from '../layout/ContentLayout';
 import DetailMenu from '../components/DetailMenu';
 import HideoutList from '../interface/HideoutList';
 import Session from '../service/Session';
-import { formatHideoutObject, formatHideoutFromFileContent } from '../utils/format';
+import { formatHideoutObject, formatHideoutFromFileContent } from '../utils/Format';
 
 class Detail extends Component {
 

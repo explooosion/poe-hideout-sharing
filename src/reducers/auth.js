@@ -1,14 +1,17 @@
-export const LOGIN_GOOGLE = 'LOGIN_GOOGLE';
+import { LOGIN_GOOGLE, LOGOUT_GOOGLE } from '../actions';
 
 const initialState = {
   isLogin: false,
-  profile: {},
+  user: null,
+  credential: null,
 };
 
 export default (state = initialState, action) => {
   switch (action.type) {
     case LOGIN_GOOGLE:
-      return { ...state, user: action.payload, isLogin: true };
+      return { ...state, ...action.payload, isLogin: true };
+    case LOGOUT_GOOGLE:
+      return { ...initialState };
     default:
       return state;
   }
