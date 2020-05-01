@@ -13,7 +13,6 @@ import { Growl } from 'primereact/growl';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 
-import Session from '../service/Session';
 import MasterLayout from '../layout/MasterLayout';
 
 import HideoutAPI from '../service/HideoutAPI';
@@ -27,15 +26,17 @@ function Profile() {
   const { hideouts } = useSelector(state => state.firebase);
   const { isLogin, user } = useSelector(state => state.auth);
 
-  let growl;
-
   const [name, setName] = useState('');
   const [nameEdit, setNameEdit] = useState(false);
   const [avatar, setAvatar] = useState('');
   const [avatarEdit, setAvatarEdit] = useState(false);
 
-  const targetId = id === user.uid ? user.uid : id;
-  const isOwner = id === user.uid;
+  let targetId = id;
+  if (isLogin && id === user.uid || _.isUndefined(id)) {
+    targetId = user.uid;
+  }
+
+  const isOwner = targetId === user.uid;
   const userHideouts = hideouts.filter(h => h.authorId === targetId);
 
   console.log(hideouts);
@@ -83,7 +84,14 @@ function Profile() {
           </div>
           <div className="profile-avatar">
             <img src={user.photoURL} style={{ height: '70px', borderRadius: '100%' }} alt={user.displayName} title={user.displayName} />
-            <FaEdit size="1.3rem" /* onClick={() => this.setState({ avatarEdit: true, nameEdit: false, avatar: user.photoURL })} */ />
+            <FaEdit
+              size="1.3rem"
+              onClick={() => {
+                setAvatar(user.photoURL);
+                setAvatarEdit(true);
+                setNameEdit(false);
+              }}
+            />
           </div>
         </div>
       ) :
@@ -97,7 +105,14 @@ function Profile() {
       (
         <h4 className="profile-name" style={{ marginLeft: '1.5rem' }}>
           {user.displayName}
-          <FaEdit size="1.3rem" /* onClick={() => this.setState({ nameEdit: true, avatarEdit: false, name: user.displayName })} */ />
+          <FaEdit
+            size="1.3rem"
+            onClick={() => {
+              setName(user.displayName);
+              setNameEdit(true);
+              setAvatarEdit(false);
+            }}
+          />
           <div className="profile-name-edit" style={!nameEdit ? { display: 'none' } : {}}>
             <InputText
               value={name}
@@ -200,7 +215,6 @@ function Profile() {
           }
         </div>
       </div>
-      <Growl ref={(el) => growl = el} />
     </MasterLayout>
   );
 }
