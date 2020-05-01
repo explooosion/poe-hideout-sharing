@@ -18,24 +18,25 @@ class HideoutAPI {
    * @param {string} locale
    */
   get(locale = 'US') {
-    let LocaleData = [];
+    let currentData = [];
     // Ref: src/i18n.js resources
     switch (locale) {
       default:
-      case 'US': LocaleData = this.hideouts.data || []; break;
-      case 'TW': LocaleData = this.hideoutszhTW.data || []; break;
-      case 'CN': LocaleData = this.hideoutszhCN.data || []; break;
+      case 'US': currentData = this.hideouts.data || []; break;
+      case 'TW': currentData = this.hideoutszhTW.data || []; break;
+      case 'CN': currentData = this.hideoutszhCN.data || []; break;
     }
 
     // Default
-    if (locale === 'US') return LocaleData;
+    if (locale === 'US') return currentData;
 
     return this.hideouts.data.map(h => {
-      const res = LocaleData.find(tw => tw.Name === h.Name);
+      const res = currentData.find(c => c.Name === h.Name);
       if (res) {
         return {
           ...h,
-          Name: res.CName.replace('藏身處-', ''),
+          // Name: res.CName.replace('藏身處-', ''),
+          Name: res.CName,
         }
       } else {
         console.warn('faild to change hideout type locale', h);

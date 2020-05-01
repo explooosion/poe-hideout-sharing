@@ -68,7 +68,7 @@ function Header() {
         <ul className="topbar-menu">
           {
             isLogin
-              ? <li><Link to={`/user/${user.uid}`}><img src={user.photoURL} style={{ width: '30px', borderRadius: '100%' }} alt={user.displayName} title={user.displayName} /></Link></li>
+              ? <li><Link to={`/profile/${user.uid}`}><img src={user.photoURL} style={{ width: '30px', borderRadius: '100%' }} alt={user.displayName} title={user.displayName} /></Link></li>
               : null
           }
           <li><Link to="/create" alt={t('HeaderCreate')} title={t('HeaderCreate')}><MdNoteAdd size="2rem" /></Link></li>
@@ -204,7 +204,7 @@ export default Header;
 // const mapStateToProps = state => {
 //   return {
 //     settings: state.settings,
-//     // database: state.database,
+//     // firebase: state.firebase,
 //     // auth: state.auth,
 //   }
 // }

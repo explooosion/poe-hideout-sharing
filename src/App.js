@@ -44,7 +44,7 @@ function App() {
           <Route exact path="/login" component={Login} />
           <Route exact path="/create" component={Create} />
           {auth.isLogin ? <Route exact path="/edit/:id" component={Create} /> : null}
-          {auth.isLogin ? <Route exact path="/detail/:id" component={Detail} /> : null}
+          <Route exact path="/detail/:id" component={Detail} />
         </Switch>
       </div>
     </Router>

@@ -22,7 +22,7 @@ function Home() {
 
   const [breadcrumb] = useState([{ label: 'hideouts', url: '/' }]);
 
-  const { hideouts, users } = useSelector(state => state.database);
+  const { hideouts, users } = useSelector(state => state.firebase);
 
   const renderCards = (lists = []) => {
     // Lists by pages
@@ -278,7 +278,7 @@ export default Home;
 
 // const mapStateToProps = state => {
 //   return {
-//     database: state.database,
+//     firebase: state.firebase,
 //     users: state.users,
 //   }
 // }

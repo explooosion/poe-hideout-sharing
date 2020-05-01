@@ -2,7 +2,14 @@ import { LOGIN_GOOGLE, LOGOUT_GOOGLE } from '../actions';
 
 const initialState = {
   isLogin: false,
-  user: null,
+  user: {
+    uid: null,
+    displayName: null,
+    photoURL: null,
+    email: null,
+    phoneNumber: null,
+    providerId: null,
+  },
   credential: null,
 };
 

@@ -357,7 +357,7 @@ ReCreate.propTypes = {}
 const mapStateToProps = state => {
   return {
     auth: state.auth,
-    database: state.database,
+    firebase: state.firebase,
     users: state.users,
   }
 }
