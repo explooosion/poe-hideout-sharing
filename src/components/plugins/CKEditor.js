@@ -35,7 +35,7 @@ class CKEditor extends React.Component {
     }
   }
 
-  componentWillReceiveProps(props) {
+  UNSAFE_componentWillReceiveProps(props) {
     const editor = this.editorInstance;
     if (editor && editor.getData() !== props.content) {
       editor.setData(props.content);

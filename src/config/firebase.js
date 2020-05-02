@@ -6,7 +6,7 @@ import 'firebase/storage';
 
 // Mode
 console.info(`[${process.env.NODE_ENV.toUpperCase()} MODE]`);
-const REF_PICK = process.env.NODE_ENV === 'development' ? '_dev' : '';
+export const REF_PICK = process.env.NODE_ENV === 'development' ? '_dev' : '';
 
 const config = {
   apiKey: process.env.REACT_APP_API_KEY,

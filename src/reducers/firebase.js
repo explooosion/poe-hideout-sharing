@@ -1,4 +1,7 @@
-import { FETCH_HIDEOUTS, FETCH_USERS } from '../actions';
+import {
+  FETCH_HIDEOUTS,
+  FETCH_USERS,
+} from '../actions';
 
 const initialState = {
   hideouts: [],

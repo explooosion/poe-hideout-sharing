@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import './Profile.scss';
 
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router-dom';
 import { FaHeart, FaEye, FaDownload, FaEdit } from 'react-icons/fa';
@@ -17,11 +17,14 @@ import MasterLayout from '../layout/MasterLayout';
 
 import HideoutAPI from '../service/HideoutAPI';
 
+import { deleteHideout } from '../actions';
+
 const hideoutAPI = new HideoutAPI();
 
 function Profile() {
   const { t, i18n } = useTranslation();
   const { id } = useParams();
+  const dispatch = useDispatch();
 
   const { hideouts } = useSelector(state => state.firebase);
   const { isLogin, user } = useSelector(state => state.auth);
@@ -52,6 +55,7 @@ function Profile() {
 
   const onDeleteHideout = h => {
     console.log('onDeleteHideout', h);
+    dispatch(deleteHideout(h));
   }
 
   const renderAvatar = () => {

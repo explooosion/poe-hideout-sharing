@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import './Create.scss';
 
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { TiFeather } from "react-icons/ti";
-import { Link, useParams, useHistory } from 'react-router-dom';
+import { Redirect, Link, useParams, useHistory } from 'react-router-dom';
 import Files from 'react-files';
 import HideoutParse from 'hideout-parse';
 import { v1 as uuid } from 'uuid';
@@ -30,10 +30,13 @@ import { formatImgTagFromContent } from '../utils/Format';
 // const defaultModelImg = 'https://via.placeholder.com/392x220?text=Path+Of+Exile';
 import defaultModelImg from '../images/default-thumbnail.jpg';
 
+import { updateHideout, createHideout } from '../actions';
+
 function Create() {
   const { t } = useTranslation();
   const { id } = useParams();
   const history = useHistory();
+  const dispatch = useDispatch();
   const { isLogin, user } = useSelector(state => state.auth);
   const { hideouts } = useSelector(state => state.firebase);
 
@@ -45,7 +48,7 @@ function Create() {
   const [description, setDescription] = useState('thhis is an hideout');
   const [version, setVersion] = useState(1);
   const [formContent, setFormContent] = useState('');
-  const [thumbnail, setThumbnail] = defaultModelImg;
+  const [thumbnail, setThumbnail] = useState(defaultModelImg);
   const [thumbnails, setThumbnails] = useState([]);
   const [file, setFile] = useState(null);
   const [fileContent, setFileContent] = useState('');
@@ -56,18 +59,19 @@ function Create() {
   // Preload
   useEffect(() => {
     if (id) {
-      const h = hideouts.find(({ uid }) => uid === id);
-      if (!h) return;
-      // this.setState({
-      //   title: h.title,
-      //   description: h.description,
-      //   version: h.version,
-      //   formContent: h.formContent,
-      //   thumbnail: h.thumbnail,
-      //   fileContent: h.fileContent,
-      // }, () => this.onThumbnailsUpdate(formContent));
+      const h = hideouts.find(hideout => hideout.id === id);
+      console.log('load exiest by id', id);
+      if (h) {
+        setTitle(h.title);
+        setDescription(h.description);
+        setVersion(h.version);
+        setFormContent(h.formContent);
+        setThumbnail(h.thumbnail);
+        setFileContent(h.fileContent);
+        onThumbnailsUpdate(h.formContent);
+      }
     }
-  });
+  }, [hideouts, id]);
 
   const onCancelCreate = () => {
     console.log('onCancelCreate');
@@ -101,8 +105,8 @@ function Create() {
 
   const onEditorUpdate = value => {
     console.log('onEditorUpdate');
-    onThumbnailsUpdate(value);
     setFormContent(value);
+    // onThumbnailsUpdate(value);
     // Backup formContent
     // Cookies.set('formContent', value);
   }
@@ -150,7 +154,7 @@ function Create() {
     else onPublish();
   }
 
-  const onUpdate = async () => {
+  const onUpdate = () => {
     console.log('onUpdate');
     const List = {};
     List.id = id;
@@ -175,8 +179,8 @@ function Create() {
 
     if (valid) {
       setFileProgressShow(true);
-      // TODO: refactor update
-      // await this.database.onUpdateHideout(List);
+      console.log('update', List);
+      dispatch(updateHideout(List));
       setFileProgressShow(false);
       growl.show({
         severity: 'success',
@@ -219,8 +223,7 @@ function Create() {
 
     if (valid) {
       setFileProgressShow(true);
-      // TODO: refacotr create hideout
-      // await this.database.onCreateHideout(List);
+      dispatch(createHideout(List));
       setFileProgressShow(false);
       growl.show({
         severity: 'success',
@@ -313,6 +316,7 @@ function Create() {
     }
   }
 
+  if (!isLogin) return <Redirect to="/login" replace />;
   return (
     <MasterLayout>
       <div className="create">
