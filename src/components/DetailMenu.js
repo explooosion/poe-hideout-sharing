@@ -13,7 +13,8 @@ import HideoutAPI from '../service/HideoutAPI';
 
 const hideoutAPI = new HideoutAPI();
 
-moment.suppressDeprecationWarnings = true;
+
+// moment.suppressDeprecationWarnings = true;
 
 function DetailMenu(props) {
   const { hideout, cost } = props;

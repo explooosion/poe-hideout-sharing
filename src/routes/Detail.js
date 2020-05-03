@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Detail.scss';
 
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { FaHeart, FaEye, FaDownload, FaEdit } from 'react-icons/fa';
 import { Link, useParams, useHistory } from 'react-router-dom';
 import NumberFormat from 'react-number-format';
@@ -21,8 +21,14 @@ import { TabMenu } from 'primereact/tabmenu';
 import ContentLayout from '../layout/ContentLayout';
 import DetailMenu from '../components/DetailMenu';
 import HideoutList from '../interface/HideoutList';
-import Session from '../service/Session';
+// import Session from '../service/Session';
 import { formatHideoutObject, formatHideoutFromFileContent } from '../utils/Format';
+
+import {
+  updateHideoutViews,
+  updateHideoutFavorite,
+  updateHideoutDownload,
+} from '../actions';
 
 import HideoutAPI from '../service/HideoutAPI';
 
@@ -32,6 +38,7 @@ function Detail() {
   const { t } = useTranslation();
   const { id } = useParams();
   const history = useHistory();
+  const dispatch = useDispatch();
   const { hideouts, users } = useSelector(state => state.firebase);
   const { isLogin, user } = useSelector(state => state.auth);
 
@@ -67,6 +74,12 @@ function Detail() {
   let hideout = new HideoutList();
   hideout = hideouts.find(h => h.id === id);
 
+  useEffect(() => {
+    if (!_.isUndefined(hideout)) {
+      updateHideoutViews(hideout);
+    }
+  }, [hideout]);
+
   if (_.isUndefined(hideout)) return null;
 
   const { title, views, download, favorite, authorId, update, description, fileContent } = hideout;
@@ -85,27 +98,26 @@ function Detail() {
   /**
    * Update favorite counter
    */
-  const onFavoriteClick = async () => {
+  const onFavoriteClick = () => {
     console.log('onFavoriteClick');
-    // await this.database.onUpdateHideoutFavorite(this.id);
+    dispatch(updateHideoutFavorite(hideout));
     growl.show({ severity: 'success', summary: 'Favorite Hideout', detail: 'Add successfully.' });
   }
 
   /**
    * Download file and update counter
    */
-  const onDownloadFileClick = async (_fileContent = '') => {
+  const onDownloadFileClick = (_fileContent = '') => {
     console.log('onDownloadFileClick');
     growl.show({ severity: 'info', summary: 'Download Hideout', detail: 'Start to download...' });
     jsFileDownload(formatHideoutFromFileContent(fileContent), `${title}.hideout`);
-    // await this.database.onUpdateHideoutDownload(this.id);
+    dispatch(updateHideoutDownload(hideout));
   }
 
-
   /**
- * Switch active tab content
- * @param {object} param0
- */
+   * Switch active tab content
+   * @param {object} h
+   */
   const renderDetail = h => {
     switch (activeItem.label) {
       default:
@@ -248,7 +260,7 @@ function Detail() {
         {renderDetail(hideout)}
 
         <div className="detail-footer">
-          <Button label={t('DetailBack')} icon="pi pi-arrow-left" iconPos="left" onClick={() => history.push('/')} />
+          <Button label={t('DetailBack')} icon="pi pi-arrow-left" iconPos="left" onClick={() => history.goBack()} />
         </div>
       </ContentLayout>
     </article>

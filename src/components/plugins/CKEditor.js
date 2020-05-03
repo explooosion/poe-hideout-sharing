@@ -1,7 +1,6 @@
 /* eslint-disable react/no-find-dom-node */
 /* eslint-disable guard-for-in */
 import React from 'react';
-import { connect } from 'react-redux';
 import { withTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';

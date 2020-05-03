@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Profile.scss';
 
 import { useSelector, useDispatch } from 'react-redux';
@@ -17,45 +17,50 @@ import MasterLayout from '../layout/MasterLayout';
 
 import HideoutAPI from '../service/HideoutAPI';
 
-import { deleteHideout } from '../actions';
+import { deleteHideout, updateUser } from '../actions';
 
 const hideoutAPI = new HideoutAPI();
+
+let growl;
 
 function Profile() {
   const { t, i18n } = useTranslation();
   const { id } = useParams();
   const dispatch = useDispatch();
 
-  const { hideouts } = useSelector(state => state.firebase);
-  const { isLogin, user } = useSelector(state => state.auth);
+  const { hideouts, users } = useSelector(state => state.firebase);
+  const { isLogin, user: USER } = useSelector(state => state.auth);
 
-  const [name, setName] = useState('');
-  const [nameEdit, setNameEdit] = useState(false);
+  const [uname, setUName] = useState('');
+  const [unameEdit, setUNameEdit] = useState(false);
   const [avatar, setAvatar] = useState('');
   const [avatarEdit, setAvatarEdit] = useState(false);
 
   let targetId = id;
-  if (isLogin && id === user.uid || _.isUndefined(id)) {
-    targetId = user.uid;
+  if (isLogin && (id === USER.uid || _.isUndefined(id))) {
+    targetId = USER.uid;
   }
 
-  const isOwner = targetId === user.uid;
+  const isOwner = targetId === USER.uid;
+  const user = users.find(u => u.uid === targetId) || { uname: '', avatar: '' };
+
   const userHideouts = hideouts.filter(h => h.authorId === targetId);
 
-  console.log(hideouts);
-  console.log(userHideouts);
+  useEffect(() => {
+    setUName(user.uname);
+    setAvatar(user.avatar);
+  }, [user]);
 
-  const onUpdateProfileName = _name => {
-    console.log('onUpdateProfileName', _name);
+  const onUpdateProfile = () => {
+    const payload = { ...user, uname, avatar };
+    console.log('onUpdateProfile', payload);
+    dispatch(updateUser(payload));
   }
 
-  const onUpdateProfileAvatar = _avatar => {
-    console.log('onUpdateProfileAvatar', _avatar);
-  }
-
-  const onDeleteHideout = h => {
-    console.log('onDeleteHideout', h);
-    dispatch(deleteHideout(h));
+  const onDeleteHideout = hideout => {
+    console.log('onDeleteHideout', hideout);
+    dispatch(deleteHideout(hideout));
+    growl.show({ severity: 'success', summary: 'Delete Hideout', detail: 'Delete successfully.' });
   }
 
   const renderAvatar = () => {
@@ -69,7 +74,7 @@ function Profile() {
               onChange={(e) => setAvatar(e.target.value)}
               onKeyPress={(e) => {
                 if (e.charCode === 13 && avatar.length > 0) {
-                  onUpdateProfileAvatar(avatar);
+                  onUpdateProfile();
                   setAvatarEdit(false);
                 }
               }}
@@ -79,7 +84,7 @@ function Profile() {
               style={{ margin: '0 .15rem 0 .25rem' }}
               onClick={() => {
                 if (avatar.length > 0) {
-                  onUpdateProfileAvatar(avatar);
+                  onUpdateProfile();
                   setAvatarEdit(false);
                 }
               }}
@@ -87,20 +92,20 @@ function Profile() {
             <Button icon="pi pi-times" style={{ margin: '0 .15rem' }} onClick={() => setAvatarEdit(false)} />
           </div>
           <div className="profile-avatar">
-            <img src={user.photoURL} style={{ height: '70px', borderRadius: '100%' }} alt={user.displayName} title={user.displayName} />
+            <img src={user.avatar} style={{ height: '70px', borderRadius: '100%' }} alt={user.uname} title={user.uname} />
             <FaEdit
               size="1.3rem"
               onClick={() => {
-                setAvatar(user.photoURL);
+                setAvatar(user.avatar);
                 setAvatarEdit(true);
-                setNameEdit(false);
+                setUNameEdit(false);
               }}
             />
           </div>
         </div>
       ) :
       (
-        <img src={user.photoURL} style={{ height: '70px', borderRadius: '100%' }} alt={user.displayName} title={user.displayName} />
+        <img src={user.avatar} style={{ height: '70px', borderRadius: '100%' }} alt={user.uname} title={user.uname} />
       )
   }
 
@@ -108,23 +113,23 @@ function Profile() {
     return isOwner ?
       (
         <h4 className="profile-name" style={{ marginLeft: '1.5rem' }}>
-          {user.displayName}
+          {user.uname}
           <FaEdit
             size="1.3rem"
             onClick={() => {
-              setName(user.displayName);
-              setNameEdit(true);
+              setUName(user.uname);
+              setUNameEdit(true);
               setAvatarEdit(false);
             }}
           />
-          <div className="profile-name-edit" style={!nameEdit ? { display: 'none' } : {}}>
+          <div className="profile-name-edit" style={!unameEdit ? { display: 'none' } : {}}>
             <InputText
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              value={uname}
+              onChange={(e) => setUName(e.target.value)}
               onKeyPress={(e) => {
-                if (e.charCode === 13 && name.length > 0) {
-                  onUpdateProfileName(name);
-                  setNameEdit(false);
+                if (e.charCode === 13 && uname.length > 0) {
+                  onUpdateProfile();
+                  setUNameEdit(false);
                 }
               }}
             />
@@ -132,18 +137,18 @@ function Profile() {
               icon="pi pi-check"
               style={{ margin: '0 .15rem 0 .25rem' }}
               onClick={() => {
-                if (name.length > 0) {
-                  onUpdateProfileName(name);
-                  setNameEdit(false);
+                if (uname.length > 0) {
+                  onUpdateProfile();
+                  setUNameEdit(false);
                 }
               }}
             />
-            <Button icon="pi pi-times" style={{ margin: '0 .15rem' }} onClick={() => setNameEdit(false)} />
+            <Button icon="pi pi-times" style={{ margin: '0 .15rem' }} onClick={() => setUNameEdit(false)} />
           </div>
         </h4>
       ) :
       (
-        <h4 className="profile-name">{user.displayName}</h4>
+        <h4 className="profile-name">{user.uname}</h4>
       )
   }
 
@@ -190,35 +195,33 @@ function Profile() {
     <MasterLayout>
       <div className="profile">
         <div className="profile-form">
-          {isLogin ? renderAvatar() : null}
-          {isLogin ? renderName() : null}
+          {renderAvatar()}
+          {renderName()}
           {
-            userHideouts.length > 0 ?
-              (
-                <div className="profile-list-container">
-                  <table className="profile-list">
-                    <thead>
-                      <tr>
-                        <th>#</th>
-                        <th>{t('ProfileThumbnail')}</th>
-                        <th>{t('ProfileType')}</th>
-                        <th>{t('ProfileTitle')}</th>
-                        <th><FaEye size="1.3rem" /></th>
-                        <th><FaDownload size="1.2rem" /></th>
-                        <th><FaHeart size="1rem" /></th>
-                        <th>{t('ProfileUpdate')}</th>
-                        <th style={{ width: isOwner ? '130px' : '50px' }}>{t('ProfileActoin')}</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {renderHideouts()}
-                    </tbody>
-                  </table>
-                </div>
-              ) : null
+            <div className="profile-list-container">
+              <table className="profile-list">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>{t('ProfileThumbnail')}</th>
+                    <th>{t('ProfileType')}</th>
+                    <th>{t('ProfileTitle')}</th>
+                    <th><FaEye size="1.3rem" /></th>
+                    <th><FaDownload size="1.2rem" /></th>
+                    <th><FaHeart size="1rem" /></th>
+                    <th>{t('ProfileUpdate')}</th>
+                    <th style={{ width: isOwner ? '130px' : '50px' }}>{t('ProfileActoin')}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {renderHideouts()}
+                </tbody>
+              </table>
+            </div>
           }
         </div>
       </div>
+      <Growl ref={(el) => growl = el} />
     </MasterLayout>
   );
 }
@@ -241,7 +244,7 @@ export default Profile;
 //       user: null,
 //       Hideouts: [],
 //       name: '',
-//       nameEdit: false,
+//       unameEdit: false,
 //       avatar: '',
 //       avatarEdit: false,
 //     }
@@ -351,13 +354,13 @@ export default Profile;
 //             <Button icon="pi pi-times" style={{ margin: '0 .15rem' }} onClick={() => this.setState({ avatarEdit: false })} />
 //           </div>
 //           <div className="profile-avatar">
-//             <img src={user.photoURL} style={{ height: '70px', borderRadius: '100%' }} alt={user.displayName} title={user.displayName} />
-//             <FaEdit size="1.3rem" onClick={() => this.setState({ avatarEdit: true, nameEdit: false, avatar: user.photoURL })} />
+//             <img src={user.photoURL} style={{ height: '70px', borderRadius: '100%' }} alt={user.uname} title={user.uname} />
+//             <FaEdit size="1.3rem" onClick={() => this.setState({ avatarEdit: true, unameEdit: false, avatar: user.photoURL })} />
 //           </div>
 //         </div>
 //       ) :
 //       (
-//         <img src={user.photoURL} style={{ height: '70px', borderRadius: '100%' }} alt={user.displayName} title={user.displayName} />
+//         <img src={user.photoURL} style={{ height: '70px', borderRadius: '100%' }} alt={user.uname} title={user.uname} />
 //       )
 //   }
 
@@ -369,16 +372,16 @@ export default Profile;
 //     return this.isOwner ?
 //       (
 //         <h4 className="profile-name" style={{ marginLeft: '1.5rem' }}>
-//           {user.displayName}
-//           <FaEdit size="1.3rem" onClick={() => this.setState({ nameEdit: true, avatarEdit: false, name: user.displayName })} />
-//           <div className="profile-name-edit" style={!this.state.nameEdit ? { display: 'none' } : {}}>
+//           {user.uname}
+//           <FaEdit size="1.3rem" onClick={() => this.setState({ unameEdit: true, avatarEdit: false, name: user.uname })} />
+//           <div className="profile-name-edit" style={!this.state.unameEdit ? { display: 'none' } : {}}>
 //             <InputText
 //               value={this.state.name}
 //               onChange={(e) => this.setState({ name: e.target.value })}
 //               onKeyPress={(e) => {
 //                 if (e.charCode === 13 && this.state.name.length > 0) {
 //                   this.onUpdateProfile({ uname: this.state.name });
-//                   this.setState({ nameEdit: false });
+//                   this.setState({ unameEdit: false });
 //                 }
 //               }}
 //             />
@@ -388,16 +391,16 @@ export default Profile;
 //               onClick={() => {
 //                 if (this.state.name.length > 0) {
 //                   this.onUpdateProfile({ uname: this.state.name });
-//                   this.setState({ nameEdit: false });
+//                   this.setState({ unameEdit: false });
 //                 }
 //               }}
 //             />
-//             <Button icon="pi pi-times" style={{ margin: '0 .15rem' }} onClick={() => this.setState({ nameEdit: false })} />
+//             <Button icon="pi pi-times" style={{ margin: '0 .15rem' }} onClick={() => this.setState({ unameEdit: false })} />
 //           </div>
 //         </h4>
 //       ) :
 //       (
-//         <h4 className="profile-name">{user.displayName}</h4>
+//         <h4 className="profile-name">{user.uname}</h4>
 //       )
 //   }
 

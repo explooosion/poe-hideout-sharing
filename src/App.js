@@ -15,7 +15,7 @@ import { fetchHideouts, fetchUsers, LOGIN_GOOGLE } from './actions';
 import { COOKIE_USER, COOKIE_CREDENTIAL, getCookie } from './utils/Cookie';
 
 function App() {
-  const auth = useSelector(state => state.auth);
+  const { isLogin } = useSelector(state => state.auth);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -25,13 +25,13 @@ function App() {
     dispatch(fetchHideouts());
     dispatch(fetchUsers());
 
-    if (auth.isLogin === false && user && credential) {
+    if (isLogin === false && user && credential) {
       dispatch({
         type: LOGIN_GOOGLE,
         payload: { credential, user },
       });
     }
-  }, [dispatch, auth]);
+  }, [dispatch, isLogin]);
 
   return (
     <Router>
@@ -39,11 +39,11 @@ function App() {
         <Header />
         <Switch>
           <Route exact path="/" component={Home} />
-          {auth.isLogin ? <Route exact path="/profile" component={Profile} /> : null}
+          {isLogin ? <Route exact path="/profile" component={Profile} /> : null}
           <Route exact path="/profile/:id" component={Profile} />
           <Route exact path="/login" component={Login} />
           <Route exact path="/create" component={Create} />
-          {auth.isLogin ? <Route exact path="/edit/:id" component={Create} /> : null}
+          {isLogin ? <Route exact path="/edit/:id" component={Create} /> : null}
           <Route exact path="/detail/:id" component={Detail} />
         </Switch>
       </div>

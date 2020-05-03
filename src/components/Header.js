@@ -3,7 +3,7 @@ import './Header.scss';
 
 import { useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from 'react-redux';
-import { Link, withRouter, useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { MdNoteAdd } from 'react-icons/md';
 import { IoLogoGithub } from 'react-icons/io';
 import { GiExitDoor, GiEntryDoor } from 'react-icons/gi';
@@ -38,7 +38,7 @@ function Header() {
     { label: 'CN', value: 'CN', icon: 'cn' },
   ]
 
-  const onLogout = () =>  dispatch(logoutUser());
+  const onLogout = () => dispatch(logoutUser(history));
 
   const onChangeLanguage = value => dispatch(setLocal(value));
 

@@ -9,9 +9,9 @@ import Files from 'react-files';
 import HideoutParse from 'hideout-parse';
 import { v1 as uuid } from 'uuid';
 import moment from 'moment';
-import Cookies from 'js-cookie';
+// import Cookies from 'js-cookie';
 import HTML from 'html-parse-stringify';
-import _ from 'lodash';
+// import _ from 'lodash';
 // import LZ4 from 'lz4';
 
 import { InputText } from 'primereact/inputtext';
@@ -24,7 +24,7 @@ import { Growl } from 'primereact/growl';
 import Editor from '../components/Editor';
 import MasterLayout from '../layout/MasterLayout';
 import HideoutList from '../interface/HideoutList';
-import Session from '../service/Session';
+// import Session from '../service/Session';
 import { formatImgTagFromContent } from '../utils/Format';
 
 // const defaultModelImg = 'https://via.placeholder.com/392x220?text=Path+Of+Exile';
@@ -50,7 +50,7 @@ function Create() {
   const [formContent, setFormContent] = useState('');
   const [thumbnail, setThumbnail] = useState(defaultModelImg);
   const [thumbnails, setThumbnails] = useState([]);
-  const [file, setFile] = useState(null);
+  // const [file, setFile] = useState(null);
   const [fileContent, setFileContent] = useState('');
   const [fileChoose, setFileChoose] = useState('');
   const [fileProgressShow, setFileProgressShow] = useState(false);
@@ -75,11 +75,11 @@ function Create() {
 
   const onCancelCreate = () => {
     console.log('onCancelCreate');
-    if (formContent === '') return history.push('/');
+    if (formContent === '') return history.goBack();
     return window.confirm('Leave without saving changes?')
-      ? history.push('/')
+      ? history.goBack()
       // Remove backup
-      // ? Cookies.remove('formContent') & history.push('/')
+      // ? Cookies.remove('formContent') & history.goBack()
       : null;
   }
 
@@ -132,7 +132,7 @@ function Create() {
         try { setFileContent(JSON.stringify(HideoutParse(e.target.result))); /* jsFileDownload(e.target.result, 'app.hideout'); */ }
         catch (err) { console.error('HideoutParse', err); }
       }
-      setFile(_file);
+      // setFile(_file);
       setFileChoose(_file.name);
     } catch (err) { console.error('onFilesChange', err); }
   }
@@ -316,7 +316,8 @@ function Create() {
     }
   }
 
-  if (!isLogin) return <Redirect to="/login" replace />;
+  if (!isLogin) return <Redirect to="/login" />;
+
   return (
     <MasterLayout>
       <div className="create">

@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import './HomeMenu.scss';
 
-import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { Dropdown } from 'primereact/dropdown';
 import { SelectButton } from 'primereact/selectbutton';
 import { Fieldset } from 'primereact/fieldset';
-import _ from 'lodash';
+// import _ from 'lodash';
 
 import MenuLayout from '../layout/MenuLayout';
 
@@ -16,14 +15,13 @@ const hideoutAPI = new HideoutAPI();
 
 function HomeMenu() {
   const { t, i18n } = useTranslation();
-  const dispatch = useDispatch();
 
   const [panelCollapsed, setPanelCollapsed] = useState(true);
 
-  const [type, setType] = useState('');
-  const [download, setDownload] = useState('');
-  const [views, setViews] = useState('');
-  const [favorite, setFavorite] = useState('');
+  const [type] = useState('');
+  const [download] = useState('');
+  const [views] = useState('');
+  const [favorite] = useState('');
 
   const [mtx, setMtx] = useState(null);
   const [miniRating, setMiniRating] = useState(null);

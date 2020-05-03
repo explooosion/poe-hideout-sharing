@@ -28,7 +28,7 @@ function Login() {
 
     if (auth.isLogin && user && credential) {
       console.log('login success');
-      history.push('/');
+      history.goBack();
     } else if (user && credential) {
       console.log('update redux');
       dispatch({

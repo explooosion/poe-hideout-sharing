@@ -4,14 +4,14 @@ import './Home.scss';
 
 import { Link } from 'react-router-dom';
 import { FaHeart, FaEye, FaDownload } from 'react-icons/fa';
-import { withTranslation } from 'react-i18next';
+// import { withTranslation } from 'react-i18next';
 // import PropTypes from 'prop-types';
 
-import { Button } from 'primereact/button';
+// import { Button } from 'primereact/button';
 import { Card } from 'primereact/card';
 import { ProgressBar } from 'primereact/progressbar';
 import { Paginator } from 'primereact/paginator';
-import { DeferredContent } from 'primereact/deferredcontent';
+// import { DeferredContent } from 'primereact/deferredcontent';
 
 import ContentLayout from '../layout/ContentLayout';
 import HomeMenu from '../components/HomeMenu';

@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-fragments */
 import React, { Component, Fragment } from 'react';
 import './MasterLayout.scss';
 
