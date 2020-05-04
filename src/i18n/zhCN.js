@@ -1,6 +1,14 @@
 export default {
   translation: {
     "title": "欢迎到 POE HIDEOUT",
+
+    "RouteRoot": "",
+    "RouteProfile": "作者小屋",
+    "RouteLogin": "登入",
+    "RouteCreate": "建立",
+    "RouteEdit": "编辑",
+    "RouteDetail": "详细",
+
     "HeaderHome": "首页",
     "HeaderAbout": "关于",
     "HeaderGithub": "GITHUB",

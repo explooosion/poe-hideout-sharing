@@ -1,6 +1,9 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Switch, BrowserRouter as Router, Route } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { Helmet } from 'react-helmet';
+import _ from 'lodash';
 
 import Routes from './routes';
 
@@ -12,6 +15,7 @@ import { COOKIE_USER, COOKIE_CREDENTIAL, getCookie } from './utils/Cookie';
 
 function App() {
   const { isLogin } = useSelector(state => state.auth);
+  const { t } = useTranslation();
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -31,6 +35,9 @@ function App() {
 
   const renderRoute = route => {
     const { key, path, exact, component: Component, title, auth } = route;
+    const prefixLine = path === '/' ? '' : ' - ';
+    const prefixTitle = 'POEHos';
+
     if (auth === true && isLogin === false) {
       return null;
     } else {
@@ -39,8 +46,15 @@ function App() {
           key={key}
           exact={exact}
           path={path}
-          component={Component}
           title={title}
+          render={props => (
+            <div>
+              <Helmet>
+                <title>{prefixTitle}{prefixLine}{t(title)}</title>
+              </Helmet>
+              <Component {...props} />
+            </div>
+          )}
         />
       );
     }
