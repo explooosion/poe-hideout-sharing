@@ -41,6 +41,7 @@
     "load-script": "^1.0.0",
     "lodash": "^4.17.15",
     "moment": "2.24.0",
+    "polished": "^3.6.0",
     "primeflex": "^1.0.0",
     "primeicons": "^2.0.0",
     "primereact": "^4.2.0",

@@ -1,28 +1,153 @@
 import React, { useState } from 'react';
+import styled from 'styled-components';
+import { rgba, transitions } from 'polished';
 import { useSelector } from 'react-redux';
-import './Home.scss';
-
 import { Link } from 'react-router-dom';
 import { FaHeart, FaEye, FaDownload } from 'react-icons/fa';
-// import { withTranslation } from 'react-i18next';
-// import PropTypes from 'prop-types';
 
-// import { Button } from 'primereact/button';
 import { Card } from 'primereact/card';
 import { ProgressBar } from 'primereact/progressbar';
 import { Paginator } from 'primereact/paginator';
-// import { DeferredContent } from 'primereact/deferredcontent';
 
 import ContentLayout from '../layout/ContentLayout';
+
 import HomeMenu from '../components/HomeMenu';
 
+import bg from '../images/bg.jpg';
+
+const Main = styled.div`
+  *:not(.pi) {
+    font-family: ${p => p.theme.globalFont};
+  }
+  display: flex;
+  margin-top: ${p => p.theme.headerHeight};
+  width: 100vw;
+  height: calc(100vh - ${p => p.theme.headerHeight});
+  background-image: url(${bg});
+  background-repeat: no-repeat;
+  background-position: center top;
+  background-size: cover;
+
+  .p-card {
+    overflow: hidden;
+    border: 2px solid ${p => p.theme.gray};
+    background-color: ${p => p.theme.lightBlack};
+  }
+
+  .p-card-content {
+    display: flex;
+    flex-flow: row-reverse;
+  }
+
+  .p-card-title {
+    overflow: hidden;
+    color: ${p => p.theme.lightWarning};
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .p-card-subtitle {
+    overflow: hidden;
+    color: #fff;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    opacity: 1;
+
+    &::before {
+      content: '@';
+    }
+  }
+
+  .p-paginator {
+    background-color: transparent;
+    border: none;
+
+    .p-disabled {
+      color: #fff;
+      opacity: .8;
+    }
+  }
+`;
+
+const Group = styled.div`
+  padding: .75rem;
+  background-color: ${p => rgba(p.theme.dark, .85)};
+  border: 2px solid ${p => p.theme.black};
+`;
+
+const Image = styled.div`
+  position: relative;
+  height: 150px;
+  background-repeat: no-repeat;
+  background-position: center top;
+  background-size: cover;
+  ${transitions('opacity', '.2s ease-in-out')};
+
+  &:hover {
+    opacity: .85;
+  }
+`;
+
+const Counters = styled.div`
+  display: flex;
+
+  div {
+    display: flex;
+    align-items: center;
+    margin-right: .5rem;
+    color: #fff;
+  }
+
+  span {
+    margin: 0 .15rem 0 .25rem;
+  }
+`;
+
 function Home() {
-  const first = 0;
-  const rows = 20;
 
   const [breadcrumb] = useState([{ label: 'hideouts', url: '/' }]);
-
+  const [first, setFirst] = useState(0);
+  const [rows, setRows] = useState(20);
   const { hideouts, users } = useSelector(state => state.firebase);
+
+  const onPageChange = event => {
+    setFirst(event.first);
+    setRows(event.rows);
+  }
+
+  /**
+   * Sort hideouts
+   * @param {string} key
+   * @param {string} value
+   */
+  const onSortChange = (key, value) => {
+    console.log('onSortChange')
+    // const hideouts = this.state.hideouts;
+    // this.setState({
+    //   hideouts: value === 'Increment'
+    //     ? hideouts.sort((a, b) => {
+    //       return a[key] - b[key];
+    //     })
+    //     : hideouts.sort((a, b) => {
+    //       return b[key] - a[key];
+    //     }),
+    // });
+  }
+
+  /**
+   * Filter hideouts
+   * @param {string} key
+   * @param {string} value
+   */
+  const onFilterChange = (key, value) => {
+    console.log('onFilterChange')
+    // this.setState({
+    //   hideouts: this.database.get().filter(hideout => {
+    //     if (value) return hideout[key] === `${value} Hideout`;
+    //     return hideout;
+    //   }),
+    // });
+  }
 
   const renderCards = (lists = []) => {
     // Lists by pages
@@ -39,12 +164,11 @@ function Home() {
       return (
         <div className="p-xl-3 p-lg-4 p-md-6 p-sm-12" key={`card-${index}-${hideout.id}`}>
           <Card
-            className="card-item"
             title={hideout.title}
             subTitle={uname}
             header={renderCardHeader(hideout)}
           >
-            <div className="card-counts">
+            <Counters>
               <div>
                 <FaEye />
                 <span>{hideout.views}</span>
@@ -57,7 +181,7 @@ function Home() {
                 <FaHeart />
                 <span>{hideout.favorite}</span>
               </div>
-            </div>
+            </Counters>
           </Card>
         </div>
       );
@@ -68,27 +192,18 @@ function Home() {
     const { id, thumbnail, title } = hideout;
     return (
       <Link to={`/detail/${id}`} alt={title} title={title}>
-        <div className="card-image" style={{ backgroundImage: `url(${thumbnail})` }} />
+        <Image style={{ backgroundImage: `url(${thumbnail})` }} />
       </Link>
     );
   }
 
-  // const renderCardFooter = () => {
-  //   return (
-  //     <span>
-  //       <Button label="Save" icon="pi pi-check" style={{ marginRight: '.25em' }} />
-  //       <Button label="Cancel" icon="pi pi-times" className="p-button-secondary" />
-  //     </span>
-  //   );
-  // }
-
   return (
-    <div className="home">
+    <Main>
       {
         <HomeMenu
-          hideouts={[]}
-        // onSortChange={(key, value) => this.onSortChange(key, value)}
-        // onFilterChange={(key, value) => this.onFilterChange(key, value)}
+          hideouts={hideouts}
+          onSortChange={onSortChange}
+          onFilterChange={onFilterChange}
         />
       }
       <ContentLayout breadcrumb={breadcrumb}>
@@ -97,7 +212,7 @@ function Home() {
             ? <ProgressBar mode="indeterminate" style={{ height: '10px' }} />
             :
             (
-              <div className="card-group">
+              <Group>
                 <div className="p-grid">{renderCards(hideouts)}</div>
                 <br />
                 <Paginator
@@ -105,182 +220,15 @@ function Home() {
                   rows={rows}
                   rowsPerPageOptions={[20, 40, 60]}
                   totalRecords={hideouts.length}
-                // onPageChange={e => this.onPageChange(e)}
+                  onPageChange={onPageChange}
                 >
                 </Paginator>
-              </div>
+              </Group>
             )
         }
       </ContentLayout>
-    </div>
+    </Main>
   );
 }
 
 export default Home;
-
-// class Home extends Component {
-
-//   constructor(props) {
-//     super(props);
-//     // this.dispatch = props.dispatch;
-//     // this.database = props.database;
-//     // this.users = props.users;
-//     // this.t = props.t;
-//     // this.state = {
-//     //   first: 0,
-//     //   rows: 20,
-//     //   breadcrumb: [
-//     //     { label: 'hideouts', url: '/' },
-//     //   ],
-//     //   hideouts: this.database.get(),
-//     // }
-//   }
-
-//   /**
-//    * Sort hideouts
-//    * @param {string} key
-//    * @param {string} value
-//    */
-//   onSortChange(key, value) {
-//     const hideouts = this.state.hideouts;
-//     this.setState({
-//       hideouts: value === 'Increment'
-//         ? hideouts.sort((a, b) => {
-//           return a[key] - b[key];
-//         })
-//         : hideouts.sort((a, b) => {
-//           return b[key] - a[key];
-//         }),
-//     });
-//   }
-
-//   /**
-//    * Filter hideouts
-//    * @param {string} key
-//    * @param {string} value
-//    */
-//   onFilterChange(key, value) {
-//     this.setState({
-//       hideouts: this.database.get().filter(hideout => {
-//         if (value) return hideout[key] === `${value} Hideout`;
-//         return hideout;
-//       }),
-//     });
-//   }
-
-//   onPageChange(event) {
-//     this.setState({
-//       first: event.first,
-//       rows: event.rows,
-//     });
-//   }
-
-//   renderCards(lists = []) {
-//     // Lists by pages
-//     const listsByPage = [];
-//     lists.forEach((value, index) =>
-//       (
-//         index >= this.state.first &&
-//         index < (this.state.first + this.state.rows)
-//       ) ? listsByPage.push(value) : null);
-
-//     return listsByPage.map((hideout, index) => {
-//       const { uname } = this.props.users.getById(hideout.authorId);
-//       return (
-//         <div className="p-xl-3 p-lg-4 p-md-6 p-sm-12" key={`card-${index}-${hideout.id}`}>
-//           <DeferredContent>
-//             <Card
-//               className="card-item"
-//               title={hideout.title}
-//               subTitle={uname}
-//               header={this.renderCardHeader(hideout)}
-//             >
-//               <div className="card-counts">
-//                 <div>
-//                   <FaEye />
-//                   <span>{hideout.views}</span>
-//                 </div>
-//                 <div>
-//                   <FaDownload />
-//                   <span>{hideout.download}</span>
-//                 </div>
-//                 <div>
-//                   <FaHeart />
-//                   <span>{hideout.favorite}</span>
-//                 </div>
-//               </div>
-//             </Card>
-//           </DeferredContent>
-//         </div>
-//       );
-//     });
-//   }
-
-//   renderCardHeader(hideout = {}) {
-//     const { id, thumbnail, title } = hideout;
-//     return (
-//       <Link to={`/detail/${id}`} alt={title} title={title}>
-//         <div className="card-image" style={{ backgroundImage: `url(${thumbnail})` }} />
-//       </Link>
-//     );
-//   }
-
-//   renderCardFooter() {
-//     return (
-//       <span>
-//         <Button label="Save" icon="pi pi-check" style={{ marginRight: '.25em' }} />
-//         <Button label="Cancel" icon="pi pi-times" className="p-button-secondary" />
-//       </span>
-//     );
-//   }
-
-//   render() {
-//     this.users = this.props.users;
-//     this.database = this.props.database;
-//     const Hideouts = this.state.hideouts;
-
-//     // Fake Data
-//     // let Hideouts = this.props.database.get();
-//     // const ALists = [];
-//     // const FAKETOTAL = 100;
-//     // if (Lists.length > 0) {
-//     //   for (let i = 0; i < FAKETOTAL; i++) ALists[i] = Lists[0];
-//     //   Lists = ALists;
-//     // }
-
-//     return (
-//       <div className="home">
-//         <HomeMenu
-//           hideouts={Hideouts || []}
-//           onSortChange={(key, value) => this.onSortChange(key, value)}
-//           onFilterChange={(key, value) => this.onFilterChange(key, value)}
-//         />
-//         <ContentLayout breadcrumb={this.state.breadcrumb}>
-//           {
-//             this.database.get().length === 0
-//               ? <ProgressBar mode="indeterminate" style={{ height: '10px' }} />
-//               :
-//               (
-//                 <div className="card-group">
-//                   <div className="p-grid">{this.renderCards(Hideouts)}</div>
-//                   <br />
-//                   <Paginator first={this.state.first} rows={this.state.rows} rowsPerPageOptions={[20, 40, 60]} totalRecords={Hideouts.length} onPageChange={e => this.onPageChange(e)}></Paginator>
-//                 </div>
-//               )
-//           }
-//         </ContentLayout>
-//       </div>
-//     );
-//   }
-// }
-
-// Home.propTypes = {}
-
-// const mapStateToProps = state => {
-//   return {
-//     firebase: state.firebase,
-//     users: state.users,
-//   }
-// }
-
-// export default withTranslation()(connect(mapStateToProps)(Home));

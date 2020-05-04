@@ -103,25 +103,32 @@ export const loginUser = () => async dispatch => {
       delCookie(COOKIE_USER);
     });
 
-  const credential = _.pick(result.credential, ['accessToken', 'providerId']);
-  const user = { ...result.user.providerData[0] };
-  setCookie(COOKIE_CREDENTIAL, credential);
-  setCookie(COOKIE_USER, user);
+  if (_.isUndefined(result) === false) {
+    const credential = _.pick(result.credential, ['accessToken', 'providerId']);
+    const user = { ...result.user.providerData[0] };
+    setCookie(COOKIE_CREDENTIAL, credential);
+    setCookie(COOKIE_USER, user);
 
-  const payload = { credential, user };
-  dispatch({ type: LOGIN_GOOGLE, payload });
+    const payload = { credential, user };
+    await dispatch({ type: LOGIN_GOOGLE, payload });
 
-  try {
-    if (result.additionalUserInfo.isNewUser) {
-      const profile = {
-        uid: user.uid,
-        uname: user.displayName,
-        avatar: user.photoURL,
+    try {
+      if (result.additionalUserInfo.isNewUser) {
+        const profile = {
+          uid: user.uid,
+          uname: user.displayName,
+          avatar: user.photoURL,
+        }
+        await createUser(profile);
+        await dispatch(fetchUsers());
       }
-      await createUser(profile);
-      dispatch(fetchUsers());
-    }
-  } catch (e) { console.error('create user failed'); }
+    } catch (e) { console.error('create user failed'); }
+
+    return true;
+
+  } else {
+    return false;
+  }
 }
 
 export const logoutUser = history => async dispatch => {

@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Switch, BrowserRouter as Router, Route } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Helmet } from 'react-helmet';
-import _ from 'lodash';
 
 import Routes from './routes';
 
