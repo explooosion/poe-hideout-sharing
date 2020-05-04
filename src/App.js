@@ -2,13 +2,9 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Switch, BrowserRouter as Router, Route } from 'react-router-dom';
 
-import Header from './components/Header';
+import Routes from './routes';
 
-import Home from './routes/Home';
-import Detail from './routes/Detail';
-import Login from './routes/Login';
-import Create from './routes/Create';
-import Profile from './routes/Profile';
+import Header from './components/Header';
 
 import { fetchHideouts, fetchUsers, LOGIN_GOOGLE } from './actions';
 
@@ -33,18 +29,29 @@ function App() {
     }
   }, [dispatch, isLogin]);
 
+  const renderRoute = route => {
+    const { key, path, exact, component: Component, title, auth } = route;
+    if (auth === true && isLogin === false) {
+      return null;
+    } else {
+      return (
+        <Route
+          key={key}
+          exact={exact}
+          path={path}
+          component={Component}
+          title={title}
+        />
+      );
+    }
+  }
+
   return (
     <Router>
       <div>
         <Header />
         <Switch>
-          <Route exact path="/" component={Home} />
-          {isLogin ? <Route exact path="/profile" component={Profile} /> : null}
-          <Route exact path="/profile/:id" component={Profile} />
-          <Route exact path="/login" component={Login} />
-          <Route exact path="/create" component={Create} />
-          {isLogin ? <Route exact path="/edit/:id" component={Create} /> : null}
-          <Route exact path="/detail/:id" component={Detail} />
+          {Routes.map(renderRoute)}
         </Switch>
       </div>
     </Router>
