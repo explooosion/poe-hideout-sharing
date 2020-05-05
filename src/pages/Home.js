@@ -115,13 +115,8 @@ function Home() {
     setRows(event.rows);
   }
 
-  /**
-   * Sort hideouts
-   * @param {string} key
-   * @param {string} value
-   */
-  const onSortChange = (key, value) => {
-    console.log('onSortChange')
+  const onSortChange = event => {
+    console.log('onSortChange', event)
     // const hideouts = this.state.hideouts;
     // this.setState({
     //   hideouts: value === 'Increment'
@@ -134,13 +129,8 @@ function Home() {
     // });
   }
 
-  /**
-   * Filter hideouts
-   * @param {string} key
-   * @param {string} value
-   */
-  const onFilterChange = (key, value) => {
-    console.log('onFilterChange')
+  const onFilterChange = event => {
+    console.log('onFilterChange', event)
     // this.setState({
     //   hideouts: this.database.get().filter(hideout => {
     //     if (value) return hideout[key] === `${value} Hideout`;
@@ -202,8 +192,8 @@ function Home() {
       {
         <HomeMenu
           hideouts={hideouts}
-          onSortChange={onSortChange}
-          onFilterChange={onFilterChange}
+          onSortChange={onSortChange.bind(this)}
+          onFilterChange={onFilterChange.bind(this)}
         />
       }
       <ContentLayout breadcrumb={breadcrumb}>

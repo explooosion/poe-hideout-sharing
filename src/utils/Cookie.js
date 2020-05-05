@@ -4,6 +4,7 @@ import _ from 'lodash';
 export const COOKIE_I18N = 'i18n';
 export const COOKIE_USER = 'user';
 export const COOKIE_CREDENTIAL = 'credential';
+export const COOKIE_FORMCONTENT = 'formcontent';
 
 /**
  * Set Cookie

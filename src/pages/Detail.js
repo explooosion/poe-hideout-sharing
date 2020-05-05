@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { rgba } from 'polished';
 import { useTranslation } from 'react-i18next';
@@ -52,26 +52,26 @@ const Author = styled(Toolbar)`
     border: none;
     color: #fff;
     background-color: transparent;
-  }
 
-  a:first-child {
-    &::before {
-      content: '@';
+    a:first-child {
+      &::before {
+        content: '@';
+      }
+      color: ${p => p.theme.warning};
+
+      &:hover {
+        text-decoration: underline;
+      }
     }
-    color: ${p => p.theme.warning};
 
-    &:hover {
-      text-decoration: underline;
-    }
-  }
+    .p-toolbar-group-right {
+      display: flex;
+      align-items: center;
 
-  .p-toolbar-group-right {
-    display: flex;
-    align-items: center;
-
-    span {
-      display: block;
-      margin: 0 .75rem 0 .25rem;
+      span {
+        display: block;
+        margin: 0 .75rem 0 .25rem;
+      }
     }
   }
 `;
@@ -89,7 +89,7 @@ const Title = styled(Toolbar)`
     color: ${p => p.theme.warning};
     background-color: ${p => rgba(p.theme.dark, .85)};
     border: 2px solid ${p => p.theme.black};
-    font-family:${p => p.theme.headerFont};
+    font-family: ${p => p.theme.headerFont};
     z-index: 100;
   }
 
@@ -123,21 +123,20 @@ const TabMenu = styled(PTabMenu)`
     overflow: hidden;
     padding: 0;
     margin-top: 1.5rem;
-  }
 
-  .p-tabmenu-nav {
-    border: 0;
+    .p-tabmenu-nav {
+      border: 0;
 
-    .p-tabmenuitem .p-menuitem-link:focus,
-    .p-tabmenuitem .p-menuitem-link:active {
-      box-shadow: none;
+      .p-tabmenuitem .p-menuitem-link:focus,
+      .p-tabmenuitem .p-menuitem-link:active {
+        box-shadow: none;
+      }
     }
   }
 `;
 
 const Content = styled.div`
-  margin: 1.5rem 0;
-  padding: .5rem 2rem;
+  padding: 1rem 2rem .5rem;
   color: #fff;
   background-color: ${p => rgba(p.theme.dark, .85)};
   border: 2px solid ${p => p.theme.black};
@@ -209,37 +208,37 @@ const Footer = styled.div`
 function Detail() {
   const { t } = useTranslation();
   const { id } = useParams();
+  const growl = useRef(null);
   const history = useHistory();
   const dispatch = useDispatch();
   const { hideouts, users } = useSelector(state => state.firebase);
   const { isLogin, user } = useSelector(state => state.auth);
 
-  let growl;
   let FileContent = { Objects: [] };
 
   const shareButtonItems = [
     {
       label: 'FaceBook',
-      icon: 'pi pi-star-o',
+      // icon: 'pi pi-star-o',
       command: () => window.open(`https://www.facebook.com/sharer/sharer.php?u=${document.URL}`, '_blank'),
     },
     {
       label: 'Google',
-      icon: 'pi pi-star-o',
+      // icon: 'pi pi-star-o',
       command: () => window.open(`https://plus.google.com/share?url=${document.URL}`, '_blank'),
     },
     {
       label: 'Twitter',
-      icon: 'pi pi-star-o',
+      // icon: 'pi pi-star-o',
       command: () => window.open(`https://twitter.com/intent/tweet?text=${document.URL}`, '_blank'),
     },
   ];
 
-  const tabMenu = [
+  const [tabMenu, setTabMenu] = useState([
     { label: t('DetailPreview'), icon: 'pi pi-images' },
     { label: t('DetailItems'), icon: 'pi pi-list' },
     { label: t('DetailCode'), icon: 'pi pi-file' },
-  ];
+  ]);
 
   const [activeItem, setActiveItem] = useState(0);
 
@@ -250,7 +249,14 @@ function Detail() {
     if (!_.isUndefined(hideout)) {
       updateHideoutViews(hideout);
     }
-  }, [hideout]);
+
+    setTabMenu([
+      { label: t('DetailPreview'), icon: 'pi pi-images' },
+      { label: t('DetailItems'), icon: 'pi pi-list' },
+      { label: t('DetailCode'), icon: 'pi pi-file' },
+    ]);
+
+  }, [hideout, t]);
 
   if (_.isUndefined(hideout)) return null;
 
@@ -270,9 +276,9 @@ function Detail() {
   /**
    * Update favorite counter
    */
-  const onFavoriteClick = () => {
+  const onFavoriteClick = async () => {
     console.log('onFavoriteClick');
-    dispatch(updateHideoutFavorite(hideout));
+    await dispatch(updateHideoutFavorite(hideout));
     growl.show({ severity: 'success', summary: 'Favorite Hideout', detail: 'Add successfully.' });
   }
 
@@ -286,17 +292,12 @@ function Detail() {
     dispatch(updateHideoutDownload(hideout));
   }
 
-  /**
-   * Switch active tab content
-   * @param {object} h
-   */
-  const renderDetail = h => {
-    switch (activeItem.label) {
-      default:
-      case t('DetailPreview'): return renderForm(h.formContent);
-      case t('DetailItems'): return renderItems(h.fileContent);
-      case t('DetailCode'): return renderCode(h.fileContent);
-    }
+  const renderForm = (formContent = '') => {
+    return (
+      <ContentForm style={{ display: (activeItem === 0 || activeItem.label === t('DetailPreview')) ? 'block' : 'none' }}>
+        {ReactHtmlParser(formContent)}
+      </ContentForm>
+    );
   }
 
   /**
@@ -305,7 +306,7 @@ function Detail() {
   const renderItems = () => {
     const c = FileContent;
     return (
-      <ContentItems>
+      <ContentItems style={{ display: activeItem.label === t('DetailItems') ? 'block' : 'none' }}>
         <table>
           <thead>
             <tr>
@@ -350,7 +351,7 @@ function Detail() {
   const renderCode = () => {
     const c = FileContent;
     return (
-      <ContentCode>
+      <ContentCode style={{ display: activeItem.label === t('DetailCode') ? 'block' : 'none' }}>
         <p><b>Language</b><code>{c.Language}</code></p>
         <p><b>Hideout Hash</b><code>{_.get(c, 'Hideout Hash')}</code></p>
         <p><b>Hideout Name</b><code>{_.get(c, 'Hideout Name')}</code></p>
@@ -369,14 +370,6 @@ function Detail() {
         }
       </ContentCode>
     )
-  }
-
-  const renderForm = (formContent = '') => {
-    return (
-      <ContentForm>
-        {ReactHtmlParser(formContent)}
-      </ContentForm>
-    );
   }
 
   return (
@@ -411,7 +404,7 @@ function Detail() {
           <div className="p-toolbar-group-right">
             <Button label={t('DetailDownload')} icon="pi pi-download" style={{ marginRight: '.25em' }} onClick={() => onDownloadFileClick(fileContent)} />
             <Button icon="pi pi-star" className="p-button-success" style={{ marginRight: '.25em' }} onClick={() => onFavoriteClick()} />
-            <Button icon="pi pi-exclamation-triangle" className="p-button-danger" style={{ marginRight: '.25em' }} />
+            {/** <Button icon="pi pi-exclamation-triangle" className="p-button-danger" style={{ marginRight: '.25em' }} /> */}
             <SplitButton icon="pi pi-share-alt" className="p-button-warning" style={{ marginRight: '.25em' }} model={shareButtonItems}></SplitButton>
           </div>
         </Title>
@@ -426,9 +419,11 @@ function Detail() {
           onTabChange={(e) => onTabChange(e.value)}
         />
 
-        <Growl ref={(el) => growl = el} />
+        <Growl ref={growl} />
 
-        {renderDetail(hideout)}
+        {renderForm(hideout.formContent)}
+        {renderItems(hideout.fileContent)}
+        {renderCode(hideout.fileContent)}
 
         <Footer>
           <Button

@@ -63,6 +63,7 @@ export default {
     "CreateNext": "下一步",
     "CreatePrevious": "上一步",
     "CreateCancel": "取消",
+    "CreateCancelMessage": "尚未儲存，確定要離開嗎？",
     "CreateFinish": "完成",
     "CreatePublish": "發佈",
     "CreateTitle": "名稱",

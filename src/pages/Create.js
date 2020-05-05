@@ -1,18 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import './Create.scss';
-
+import React, { useState, useEffect, useRef, Fragment } from 'react';
+import styled from 'styled-components';
+import { rgba } from 'polished';
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { TiFeather } from "react-icons/ti";
-import { Redirect, Link, useParams, useHistory } from 'react-router-dom';
-import Files from 'react-files';
+import { useParams, useHistory, Redirect, Link } from 'react-router-dom';
+import ReactFiles from 'react-files';
 import HideoutParse from 'hideout-parse';
+import HTML from 'html-parse-stringify';
 import { v1 as uuid } from 'uuid';
 import moment from 'moment';
-// import Cookies from 'js-cookie';
-import HTML from 'html-parse-stringify';
-// import _ from 'lodash';
-// import LZ4 from 'lz4';
+import _ from 'lodash';
 
 import { InputText } from 'primereact/inputtext';
 import { Spinner } from 'primereact/spinner';
@@ -22,26 +20,188 @@ import { Captcha } from 'primereact/captcha';
 import { Growl } from 'primereact/growl';
 
 import Editor from '../components/Editor';
+
 import MasterLayout from '../layout/MasterLayout';
+
 import HideoutList from '../interface/HideoutList';
-// import Session from '../service/Session';
+
+import { getCookie, setCookie, delCookie, COOKIE_FORMCONTENT } from '../utils/Cookie';
+
 import { formatImgTagFromContent } from '../utils/Format';
 
-// const defaultModelImg = 'https://via.placeholder.com/392x220?text=Path+Of+Exile';
-import defaultModelImg from '../images/default-thumbnail.jpg';
-
 import { updateHideout, createHideout } from '../actions';
+
+import defaultModelImg from '../images/default-thumbnail.jpg';
+import bg from '../images/bg.jpg';
+
+const Main = styled.div`
+  overflow: auto;
+  position: relative;
+  display: block;
+  width: 100vw;
+  min-height: 100vh;
+  background-image: url(${bg});
+  background-repeat: no-repeat;
+  background-position: center top;
+  background-size: cover;
+
+  /* overwrite */
+  .p-grid {
+    margin: 0 0 1.5rem;
+    padding: 0 1.5rem;
+    max-width: 100%;
+  }
+
+  .p-editor-container {
+    width: 100%;
+
+    /* Edit content basic style */
+    .p-editor-content.ql-container,
+    .ql-editor {
+      font-size: 17px;
+      line-height: 1.7;
+    }
+  }
+`;
+
+const Form = styled.div`
+  margin: 2rem auto 3rem;
+  padding: 1rem 0 0;
+  width: ${p => p.theme.screenLg};
+  color: #fff;
+  background-color: ${p => rgba(p.theme.dark, .85)};
+  border: 2px solid ${p => p.theme.gray};
+
+  @media only screen and (max-width: ${p => p.theme.screenMd}) {
+    width: 90vw;
+  }
+
+  .require::after {
+    content: '*';
+    margin-left: .15rem;
+    color: ${p => p.theme.danger};
+    font-family: ${p => p.theme.headerFont};
+  }
+`;
+
+const Title = styled.h1`
+  margin-bottom: 2rem;
+  padding: .5rem 0 1rem;
+  text-align: center;
+  font-family: ${p => p.theme.headerFont};
+  color: #fff;
+  border-bottom: 1px solid ${p => p.theme.gray};
+`;
+
+const Thumbnails = styled.div`
+  margin-top: 1rem;
+  width: 100%;
+
+  img {
+    margin: 0 .5rem;
+    height: 80px;
+    border: 2px solid transparent;
+    opacity: .5;
+    transition: all .2s ease;
+    cursor: pointer;
+
+    &:hover {
+      opacity: 1;
+    }
+
+    &.selected {
+      border: 2px solid ${p => p.theme.lightWarning};
+      opacity: 1;
+    }
+  }
+`;
+
+const Item = styled.div`
+  margin-bottom: 1.75rem;
+
+  > h2 {
+    font-size: 20px;
+    width: 100%;
+    margin-bottom: .5rem;
+    font-family: ${p => p.theme.globalFont};
+  }
+
+  > input {
+    padding: .65rem .5rem;
+    font-size: 16px;
+    font-family: ${p => p.theme.inputFont};
+  }
+`;
+
+const Buttons = styled.div`
+  justify-content: center;
+  border-top: 1px solid ${p => p.theme.gray};
+
+  button {
+    margin-top: 1.5rem;
+    width: 200px;
+    height: 40px;
+    font-family: ${p => p.theme.globalFont};
+
+    &:first-child {
+      margin-right: 1rem;
+    }
+  }
+`;
+
+const Message = styled.span`
+  display: block;
+  margin: 1rem 0 .5rem;
+  color: ${p => p.theme.warning};
+
+  &::before {
+    content: '【 ';
+  }
+
+  &::after {
+    content: ' 】';
+  }
+`;
+
+const Files = styled(ReactFiles)`
+
+  &&& {
+    margin: 1rem 0;
+    text-align: center;
+    cursor: pointer;
+  }
+
+  .files-title {
+    overflow: hidden;
+    padding: 2rem;
+    max-width: 365px;
+    width: 365px;
+    font-size: 17px;
+    text-overflow: ellipsis;
+    background-color: ${p => rgba(p.theme.dark, .85)};
+    color: #fff;
+    letter-spacing: 1px;
+    border: 1px solid ${p => p.theme.gray};
+    border-radius: .5rem;
+    white-space: nowrap;
+    transition: all .2s ease-in-out;
+
+    &:hover {
+      background-color: ${p => rgba(p.theme.gray, .55)};
+    }
+  }
+`;
+
+const stepForPublish = 4;
 
 function Create() {
   const { t } = useTranslation();
   const { id } = useParams();
+  const growl = useRef(null);
   const history = useHistory();
   const dispatch = useDispatch();
   const { isLogin, user } = useSelector(state => state.auth);
   const { hideouts } = useSelector(state => state.firebase);
-
-  const stepForPublish = 4;
-  let growl;
 
   const [step, setStep] = useState(1);
   const [title, setTitle] = useState('my hideout');
@@ -58,9 +218,16 @@ function Create() {
 
   // Preload
   useEffect(() => {
+
+    const _formContent = getCookie(COOKIE_FORMCONTENT);
+    if (_.isNull(_formContent) === false) {
+      setFormContent(_formContent);
+    }
+
     if (id) {
       const h = hideouts.find(hideout => hideout.id === id);
       console.log('load exiest by id', id);
+
       if (h) {
         setTitle(h.title);
         setDescription(h.description);
@@ -70,17 +237,19 @@ function Create() {
         setFileContent(h.fileContent);
         onThumbnailsUpdate(h.formContent);
       }
+
     }
   }, [hideouts, id]);
 
   const onCancelCreate = () => {
     console.log('onCancelCreate');
-    if (formContent === '') return history.goBack();
-    return window.confirm('Leave without saving changes?')
-      ? history.goBack()
-      // Remove backup
-      // ? Cookies.remove('formContent') & history.goBack()
-      : null;
+    if (_.isEmpty(formContent)) {
+      return history.goBack();
+    } else {
+      return window.confirm(t('CreateCancelMessage'))
+        ? delCookie(COOKIE_FORMCONTENT) & history.goBack()
+        : null;
+    }
   }
 
   const onNextStep = () => {
@@ -104,11 +273,11 @@ function Create() {
   }
 
   const onEditorUpdate = value => {
-    console.log('onEditorUpdate');
+    console.log('onEditorUpdate', value);
     setFormContent(value);
-    // onThumbnailsUpdate(value);
+    onThumbnailsUpdate(value);
     // Backup formContent
-    // Cookies.set('formContent', value);
+    setCookie(COOKIE_FORMCONTENT, value);
   }
 
   const onThumbnailUpdate = e => {
@@ -156,7 +325,7 @@ function Create() {
 
   const onUpdate = () => {
     console.log('onUpdate');
-    const List = {};
+    const List = new HideoutList();
     List.id = id;
     List.title = title;
     List.description = description;
@@ -188,6 +357,7 @@ function Create() {
         detail: title,
       });
       setStep(stepForPublish);
+      delCookie(COOKIE_FORMCONTENT);
     }
   }
 
@@ -230,52 +400,50 @@ function Create() {
         summary: 'Success Publish',
         detail: title,
       });
-      // Cookies.remove('formContent');
+      delCookie(COOKIE_FORMCONTENT);
       setStep(stepForPublish);
       // id = List.id;
     }
   }
 
   const renderStep = () => {
-    switch (step) {
-      default:
-      case 1: return (
-        <div>
-          <div className="p-grid create-item">
+    return (
+      <Fragment key={'create-step'}>
+
+        <div style={{ display: step === 1 ? 'block' : 'none' }}>
+          <Item className="p-grid">
             <h2 className="require">{t('CreateTitle')}</h2>
             <InputText className="p-col-12" value={title} onChange={(e) => setTitle(e.target.value)} placeholder={t('CreateTitleInput')} autoFocus />
-          </div>
-          <div className="p-grid create-item">
+          </Item>
+          <Item className="p-grid">
             <h2>{t('CreateDescription')}</h2>
             <InputText className="p-col-12" value={description} onChange={(e) => setDescription(e.target.value)} placeholder={t('CreateDescriptionInput')} autoFocus />
-          </div>
-          <div className="p-grid create-item">
+          </Item>
+          <Item className="p-grid">
             <h2 className="require">{t('CreateVersion')}</h2>
             <Spinner keyfilter="int" min={1} max={100} step={1} value={version} onChange={(e) => setVersion(e.target.value)} />
-          </div>
-          <div className="p-grid create-item">
+          </Item>
+          <Item className="p-grid">
             <h2 className="require">{t('CreateContent')}</h2>
             <Editor className="create-editor-panel" value={formContent} onChange={onEditorUpdate} />
             <h4 style={{ marginTop: '.5rem', width: '100%' }}><TiFeather size="1rem" style={{ marginRight: '.25rem' }} />{t('CreateContentTipImage')}</h4>
             <h4 style={{ marginTop: '.5rem', width: '100%' }}><TiFeather size="1rem" style={{ marginRight: '.25rem' }} />{t('CreateContentTipUpload')} <a href="https://imgur.com/" target="_blank" rel="noopener noreferrer">imgur</a></h4>
-          </div>
-          <div className="p-grid create-item">
+          </Item>
+          <Item className="p-grid">
             <h2 className="require">{t('CreateThumbnail')}</h2>
             <span>{t('CreateThumbnailInfo')}</span>
-            <div className="create-thumbnails">{thumbnails.map((tn, index) => (<img src={tn} alt={tn} title={tn} className={thumbnail === tn ? 'selected' : ''} key={`thumbnail-${index}`} onClick={onThumbnailUpdate} />))}</div>
-          </div>
-          <div className="p-grid create-button" style={{ marginTop: '1rem' }}>
+            <Thumbnails>{thumbnails.map((tn, index) => (<img src={tn} alt={tn} title={tn} className={thumbnail === tn ? 'selected' : ''} key={`thumbnail-${index}`} onClick={onThumbnailUpdate} />))}</Thumbnails>
+          </Item>
+          <Buttons className="p-grid" style={{ marginTop: '1rem' }}>
             <Button label={t('CreateCancel')} className="p-button-secondary p-button-raised" onClick={onCancelCreate} />
             <Button label={t('CreateNext')} icon="pi pi-arrow-right" iconPos="right" className="p-button-raised" onClick={onNextStep} />
-          </div>
+          </Buttons>
         </div>
-      );
-      case 2: return (
-        <div>
+
+        <div style={{ display: step === 2 ? 'block' : 'none' }}>
           <div className="p-grid p-justify-center p-align-center p-dir-col">
             <h2 className={id ? null : 'require'}>{t('CreateUploadTitle')}</h2>
             <Files
-              className="create-file"
               onChange={onFilesChange}
               onError={onFilesError}
               accepts={['.hideout', 'hideout/*']}
@@ -287,380 +455,47 @@ function Create() {
                 {fileChoose.length === 0 ? t('CreateUploadFile') : fileChoose}
               </div>
             </Files>
-            <span className="files-message">{id ? t('CreateUploadAlertIgnore') : t('CreateUploadAlert')}</span>
+            <Message>{id ? t('CreateUploadAlertIgnore') : t('CreateUploadAlert')}</Message>
             {fileProgressShow ? <ProgressBar mode="indeterminate" style={{ height: '10px', marginTop: '1rem', borderRadius: '.25rem' }} /> : null}
           </div>
-          <div className="p-grid create-button" style={{ marginTop: '1rem' }}>
+          <Buttons className="p-grid" style={{ marginTop: '1rem' }}>
             <Button label={t('CreatePrevious')} icon="pi pi-arrow-left" iconPos="left" className="p-button-secondary p-button-raised" onClick={onPreviousStep} disabled={fileProgressShow} />
             <Button label={t('CreateNext')} icon="pi pi-arrow-right" iconPos="right" className="p-button-raised" onClick={onNextStep} />
-          </div>
+          </Buttons>
         </div>
-      );
-      case 3: return (
-        <div>
+
+        <div style={{ display: step === 3 ? 'block' : 'none' }}>
           <div className="p-grid p-justify-center p-align-center p-dir-col">
             <Captcha style={{ background: '#fff' }} siteKey={process.env.REACT_APP_CAPTCHA_KEY} onResponse={onResponseCaptcha}></Captcha>
           </div>
-          <div className="p-grid create-button" style={{ marginTop: '1rem' }}>
+          <Buttons className="p-grid" style={{ marginTop: '1rem' }}>
             <Button label={t('CreatePrevious')} icon="pi pi-arrow-left" iconPos="left" className="p-button-secondary p-button-raised" onClick={onPreviousStep} disabled={fileProgressShow} />
             <Button label={t('CreatePublish')} icon="pi pi-arrow-right" iconPos="right" className="p-button-raised" onClick={onNextStep} />
-          </div>
+          </Buttons>
         </div>
-      );
-      case 4: return (
-        <div className="p-grid p-justify-center p-align-center" style={{ flexFlow: 'column' }}>
+
+        <div className="p-grid p-justify-center p-align-center" style={{ flexFlow: 'column', display: step === 4 ? 'block' : 'none' }}>
           <h2 style={{ marginBottom: '1rem' }}>{t('CreateResultSuccess')}</h2>
           <Link to="/"><Button label={t('CreateFinish')} /></Link>
         </div>
-      );
-    }
+
+      </Fragment>
+    );
   }
 
-  if (!isLogin) return <Redirect to="/login" />;
+  // if (!isLogin) return <Redirect to="/login" />;
 
   return (
     <MasterLayout>
-      <div className="create">
-        <div className="create-form">
-          <h1 className="create-title">{t('CreatePageTitle')}</h1>
+      <Main>
+        <Form>
+          <Title>{t('CreatePageTitle')}</Title>
           {renderStep()}
-        </div>
-      </div>
-      <Growl ref={(el) => growl = el} />
+        </Form>
+      </Main>
+      <Growl ref={growl} />
     </MasterLayout>
   );
 }
 
 export default Create;
-
-// class ReCreate extends Component {
-
-//   constructor(props) {
-//     super(props);
-//     this.dispatch = props.dispatch;
-//     t = props.t;
-//     this.id = props.match.params.id;
-//     this.database = props.database;
-//     this.auth = props.auth;
-//     this.users = props.users;
-//     this.state = {
-//       step: 1,
-//       stepForPublish: 4,
-//       title: 'my hideout ',
-//       description: 'this is an hideout.',
-//       version: 1,
-//       formContent: Cookies.get('formContent') || '',
-//       thumbnail: defaultModelImg,
-//       thumbnails: [],
-//       fileContent: '',
-//       fileChoose: '',
-//       fileProgressShow: false,
-//       captcha: process.env.NODE_ENV === 'development',
-//     };
-//   }
-
-//   componentWillMount() {
-//     if (!Session.get('auth')) this.props.history.push('/login');
-//   }
-
-//   componentDidMount() {
-//     if (this.id) {
-//       const h = this.database.getById(this.id);
-//       if (!h) return;
-//       this.setState({
-//         title: h.title,
-//         description: h.description,
-//         version: h.version,
-//         formContent: h.formContent,
-//         thumbnail: h.thumbnail,
-//         fileContent: h.fileContent,
-//       }, () => this.onThumbnailsUpdate(formContent));
-//     }
-//   }
-
-//   componentWillReceiveProps() {
-//     this.id = this.props.match.params.id;
-//   }
-
-//   onThumbnailUpdate = (e) => {
-//     this.setState({ thumbnail: e.target.getAttribute('src') });
-//   }
-
-//   onThumbnailsUpdate(formContent = '') {
-//     const thumbnail = formatImgTagFromContent(formContent);
-//     if (thumbnail.length > 0) {
-//       this.setState({
-//         thumbnails: HTML.parse(thumbnail.join('')).map(t => t.attrs.src),
-//       });
-//     }
-//   }
-
-//   /**
-//    * Update editor formContent
-//    * @param {string} value
-//    */
-//   onEditorUpdate = value => {
-//     this.onThumbnailsUpdate(value);
-//     this.setState({ formContent: value });
-//     // Backup formContent
-//     Cookies.set('formContent', value);
-//   }
-
-//   /**
-//    * Choose files
-//    * @param {array} files
-//    */
-//   onFilesChange(files = []) {
-//     try {
-//       const r = new FileReader();
-//       const file = files[0];
-//       r.readAsText(file);
-//       r.onload = (e) => {
-//         try {
-//           this.setState({ fileContent: JSON.stringify(HideoutParse(e.target.result)) });
-//           // jsFileDownload(e.target.result, 'app.hideout');
-//         } catch (err) { console.error('HideoutParse', err); }
-//       }
-//       this.setState({ file: file, fileChoose: file.name });
-//     } catch (err) { console.error('onFilesChange', err); }
-//   }
-
-//   /**
-//    * File error handler
-//    * @param {object} error
-//    * @param {objecgt} file
-//    */
-//   onFilesError(error, file) {
-//     this.growl.show({ severity: 'error', summary: 'Oops!', detail: error.message });
-//     console.error('error code ' + error.code + ': ' + error.message, file);
-//   }
-
-//   /**
-//    * Pass Captcha
-//    * @param {object} response
-//    */
-//   onResponseCaptcha(response) {
-//     if (response) this.setState({ captcha: true });
-//   }
-
-//   /**
-//    * Cancel for create hideout
-//    */
-//   onCancelCreate() {
-//     if (formContent === '') return this.props.history.push('/');
-//     return window.confirm('Leave without saving changes?')
-//       ? Cookies.remove('formContent') & this.props.history.push('/')
-//       : null;
-//   }
-
-//   onNextStep() {
-//     const step = step + 1;
-//     if (step === stepForPublish) this.onCheckMode();
-//     else this.setState({ step: step }, () => window.scrollTo(0, 0));
-//   }
-
-//   onPreviousStep() {
-//     const step = step - 1;
-//     if (step <= 0) return;
-//     else this.setState({ step: step }, () => window.scrollTo(0, 0));
-//   }
-
-//   /**
-//    * Check data is create or update
-//    */
-//   onCheckMode() {
-//     if (!captcha) this.growl.show({ severity: 'warn', summary: 'Oops!', detail: 'Please check the captcha.' });
-//     else if (this.id) this.onUpdate();
-//     else this.onPublish();
-//   }
-
-//   async onUpdate() {
-//     const List = {};
-//     List.id = this.id;
-//     List.title = title;
-//     List.description = description;
-//     List.thumbnail = thumbnail;
-//     List.version = version;
-
-//     const date = moment();
-//     List.update = date.toString();
-//     List.formContent = formContent;
-
-
-//     if (fileChoose !== '') List.fileContent = fileContent;
-
-//     // Check payload
-//     let valid = true;
-//     Object.keys(List).forEach(key => {
-//       if (List[key].length === 0) {
-//         valid = false;
-//         console.warn('Invalid:', key);
-//         this.growl.show({ severity: 'warn', summary: 'Oops!', detail: `Missing ${key}` });
-//       }
-//     });
-
-//     if (valid) {
-//       this.setState({ fileProgressShow: true });
-//       await this.database.onUpdateHideout(List);
-//       this.setState({ fileProgressShow: false });
-//       this.growl.show({
-//         severity: 'success',
-//         summary: 'Success Update',
-//         detail: title,
-//       });
-//       this.setState({ step: stepForPublish });
-//     }
-//   }
-
-//   async onPublish() {
-//     const List = new HideoutList();
-//     List.id = uuid();
-//     List.title = title;
-//     List.description = description;
-//     List.authorId = _.get(Session.get('auth'), 'uid') || {};
-//     List.thumbnail = thumbnail;
-//     List.version = version;
-
-//     const date = moment();
-//     List.update = date.toString();
-//     List.create = date.toString();
-//     List.timestamp = date.format('X');
-
-//     List.download = 0; // Math.floor(Math.random() * 500);  // Fake
-//     List.views = 0; // Math.floor(Math.random() * 3000);    // Fake
-//     List.favorite = 0; // Math.floor(Math.random() * 300);  // Fake
-
-//     List.formContent = formContent;
-//     List.fileContent = fileContent;
-
-//     // Check payload
-//     let valid = true;
-//     Object.keys(List).forEach(key => {
-//       if (List[key].length === 0) {
-//         valid = false;
-//         console.warn('Invalid:', key);
-//         this.growl.show({ severity: 'warn', summary: 'Oops!', detail: `Missing ${key}` });
-//       }
-//     });
-
-//     if (valid) {
-//       this.setState({ fileProgressShow: true });
-//       await this.database.onCreateHideout(List);
-//       this.setState({ fileProgressShow: false });
-//       this.growl.show({
-//         severity: 'success',
-//         summary: 'Success Publish',
-//         detail: title,
-//       });
-//       Cookies.remove('formContent');
-//       this.setState({ step: stepForPublish });
-//       this.id = List.id;
-//     }
-//   }
-
-//   renderStep() {
-//     switch (step) {
-//       default:
-//       case 1: return (
-//         <div>
-//           <div className="p-grid create-item">
-//             <h2 className="require">{t('CreateTitle')}</h2>
-//             <InputText className="p-col-12" value={title} onChange={(e) => this.setState({ title: e.target.value })} placeholder={t('CreateTitleInput')} autoFocus />
-//           </div>
-//           <div className="p-grid create-item">
-//             <h2>{t('CreateDescription')}</h2>
-//             <InputText className="p-col-12" value={description} onChange={(e) => this.setState({ description: e.target.value })} placeholder={t('CreateDescriptionInput')} autoFocus />
-//           </div>
-//           <div className="p-grid create-item">
-//             <h2 className="require">{t('CreateVersion')}</h2>
-//             <Spinner keyfilter="int" min={1} max={100} step={1} value={version} onChange={(e) => this.setState({ version: e.target.value })} />
-//           </div>
-//           <div className="p-grid create-item">
-//             <h2 className="require">{t('CreateContent')}</h2>
-//             <Editor className="create-editor-panel" value={formContent} onChange={this.onEditorUpdate} />
-//             <h4 style={{ marginTop: '.5rem', width: '100%' }}><TiFeather size="1rem" style={{ marginRight: '.25rem' }} />{t('CreateContentTipImage')}</h4>
-//             <h4 style={{ marginTop: '.5rem', width: '100%' }}><TiFeather size="1rem" style={{ marginRight: '.25rem' }} />{t('CreateContentTipUpload')} <a href="https://imgur.com/" target="_blank" rel="noopener noreferrer">imgur</a></h4>
-//           </div>
-//           <div className="p-grid create-item">
-//             <h2 className="require">{t('CreateThumbnail')}</h2>
-//             <span>{t('CreateThumbnailInfo')}</span>
-//             <div className="create-thumbnails">{thumbnails.map((t, index) => (<img src={t} alt={t} title={t} className={thumbnail === t ? 'selected' : ''} key={`thumbnail-${index}`} onClick={this.onThumbnailUpdate} />))}</div>
-//           </div>
-//           <div className="p-grid create-button" style={{ marginTop: '1rem' }}>
-//             <Button label={t('CreateCancel')} className="p-button-secondary p-button-raised" onClick={() => this.onCancelCreate()} />
-//             <Button label={t('CreateNext')} icon="pi pi-arrow-right" iconPos="right" className="p-button-raised" onClick={() => this.onNextStep()} />
-//           </div>
-//         </div>
-//       );
-//       case 2: return (
-//         <div>
-//           <div className="p-grid p-justify-center p-align-center p-dir-col">
-//             <h2 className={this.id ? null : 'require'}>{t('CreateUploadTitle')}</h2>
-//             <Files
-//               className="create-file"
-//               onChange={files => this.onFilesChange(files)}
-//               onError={(error, file) => this.onFilesError(error, file)}
-//               accepts={['.hideout', 'hideout/*']}
-//               multiple={false}
-//               minFileSize={0}
-//               maxFileSize={200 * 1024}
-//             >
-//               <div className="files-title">
-//                 {fileChoose.length === 0 ? t('CreateUploadFile') : fileChoose}
-//               </div>
-//             </Files>
-//             <span className="files-message">{this.id ? t('CreateUploadAlertIgnore') : t('CreateUploadAlert')}</span>
-//             {fileProgressShow ? <ProgressBar mode="indeterminate" style={{ height: '10px', marginTop: '1rem', borderRadius: '.25rem' }} /> : null}
-//           </div>
-//           <div className="p-grid create-button" style={{ marginTop: '1rem' }}>
-//             <Button label={t('CreatePrevious')} icon="pi pi-arrow-left" iconPos="left" className="p-button-secondary p-button-raised" onClick={() => this.onPreviousStep()} disabled={fileProgressShow} />
-//             <Button label={t('CreateNext')} icon="pi pi-arrow-right" iconPos="right" className="p-button-raised" onClick={() => this.onNextStep()} />
-//           </div>
-//         </div>
-//       );
-//       case 3: return (
-//         <div>
-//           <div className="p-grid p-justify-center p-align-center p-dir-col">
-//             <Captcha style={{ background: '#fff' }} siteKey={process.env.REACT_APP_CAPTCHA_KEY} onResponse={res => this.onResponseCaptcha(res)}></Captcha>
-//           </div>
-//           <div className="p-grid create-button" style={{ marginTop: '1rem' }}>
-//             <Button label={t('CreatePrevious')} icon="pi pi-arrow-left" iconPos="left" className="p-button-secondary p-button-raised" onClick={() => this.onPreviousStep()} disabled={fileProgressShow} />
-//             <Button label={t('CreatePublish')} icon="pi pi-arrow-right" iconPos="right" className="p-button-raised" onClick={() => this.onNextStep()} />
-//           </div>
-//         </div>
-//       );
-//       case 4: return (
-//         <div className="p-grid p-justify-center p-align-center" style={{ flexFlow: 'column' }}>
-//           <h2 style={{ marginBottom: '1rem' }}>{t('CreateResultSuccess')}</h2>
-//           <Link to="/"><Button label={t('CreateFinish')} /></Link>
-//         </div>
-//       );
-//     }
-//   }
-
-//   render() {
-//     return (
-//       <MasterLayout>
-//         <div className="create">
-//           <div className="create-form">
-//             <h1 className="create-title">{t('CreatePageTitle')}</h1>
-//             {this.renderStep()}
-//           </div>
-//         </div>
-//         <Growl ref={(el) => this.growl = el} />
-//       </MasterLayout>
-//     );
-//   }
-// }
-
-// ReCreate.propTypes = {}
-
-// const mapStateToProps = state => {
-//   return {
-//     auth: state.auth,
-//     firebase: state.firebase,
-//     users: state.users,
-//   }
-// }
-
-// export default withTranslation()(connect(mapStateToProps)(ReCreate));
