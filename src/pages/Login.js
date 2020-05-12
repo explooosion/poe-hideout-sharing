@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { rgba, lighten, transitions } from 'polished';
 import { useSelector, useDispatch } from 'react-redux';
@@ -77,12 +77,13 @@ const Button = styled.div`
   }
 `;
 
+let growl;
+
 function Login() {
   const { t } = useTranslation();
   const auth = useSelector(state => state.auth);
   const dispatch = useDispatch();
   const history = useHistory();
-  const growl = useRef(null);
 
   const signInByGoogle = async () => {
     const result = await dispatch(loginUser());
@@ -118,7 +119,7 @@ function Login() {
           </Button>
         </Form>
       </Main>
-      <Growl ref={growl} />
+      <Growl ref={el => growl = el} />
     </MasterLayout>
   );
 }

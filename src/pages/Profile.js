@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { rgba, transitions } from 'polished';
 import { useSelector, useDispatch } from 'react-redux';
@@ -168,11 +168,12 @@ const NameEdit = styled.div`
   left: 40%;
 `;
 
+let growl;
+
 function Profile() {
   const { t, i18n } = useTranslation();
   const { id } = useParams();
   const dispatch = useDispatch();
-  const growl = useRef(null);
 
   const { hideouts, users } = useSelector(state => state.firebase);
   const { isLogin, user: USER } = useSelector(state => state.auth);
@@ -199,12 +200,12 @@ function Profile() {
 
   const onUpdateProfile = () => {
     const payload = { ...user, uname, avatar };
-    console.log('onUpdateProfile', payload);
+    // console.log('onUpdateProfile', payload);
     dispatch(updateUser(payload));
   }
 
   const onDeleteHideout = hideout => {
-    console.log('onDeleteHideout', hideout);
+    // console.log('onDeleteHideout', hideout);
     dispatch(deleteHideout(hideout));
     growl.show({ severity: 'success', summary: 'Delete Hideout', detail: 'Delete successfully.' });
   }
@@ -367,7 +368,7 @@ function Profile() {
           }
         </Form>
       </Main>
-      <Growl ref={growl} />
+      <Growl ref={el => growl = el} />
     </MasterLayout>
   );
 }

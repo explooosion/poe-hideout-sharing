@@ -29,8 +29,9 @@ export default class HideoutList {
 
   /**
    * Version
+   * @deprecated
    */
-  version = 1;
+  // version = 1;
 
   /**
    * Update
@@ -71,4 +72,9 @@ export default class HideoutList {
    * timestamp
    */
   timestamp = null;
+
+  /**
+   * Enable Visible
+   */
+  enable = true;
 }

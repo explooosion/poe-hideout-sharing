@@ -34,7 +34,7 @@ const Main = styled.div`
 
 function DetailMenu(props) {
   const { hideout, cost } = props;
-  const { fileContent, version, update, create, authorId } = hideout;
+  const { fileContent, update, create, authorId } = hideout;
 
   const { t, i18n } = useTranslation();
 
@@ -62,17 +62,21 @@ function DetailMenu(props) {
           <h4 className="item-title">{t('DetailAuthor')}</h4>
           <h4 className="item-value">{uname}</h4>
         </div>
-        <div className="item">
+        {
+          /**
+          <div className="item">
           <h4 className="item-title">{t('DetailVersion')}</h4>
           <h4 className="item-value">{version}</h4>
+          </div>
+          */
+        }
+        <div className="item">
+          <h4 className="item-title">{t('DetailCreate')}</h4>
+          <h4 className="item-value">{moment(create).format('YYYY/MM/DD HH:mm:ss')}</h4>
         </div>
         <div className="item">
           <h4 className="item-title">{t('DetailUpdate')}</h4>
           <h4 className="item-value">{moment(update).format('YYYY/MM/DD HH:mm:ss')}</h4>
-        </div>
-        <div className="item">
-          <h4 className="item-title">{t('DetailCreate')}</h4>
-          <h4 className="item-value">{moment(create).format('YYYY/MM/DD HH:mm:ss')}</h4>
         </div>
       </Main>
     </MenuLayout>

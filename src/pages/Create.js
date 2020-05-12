@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useRef, Fragment } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import styled from 'styled-components';
 import { rgba } from 'polished';
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { TiFeather } from "react-icons/ti";
-import { useParams, useHistory, Redirect, Link } from 'react-router-dom';
+import { useParams, useHistory, Link } from 'react-router-dom';
 import ReactFiles from 'react-files';
 import HideoutParse from 'hideout-parse';
 import HTML from 'html-parse-stringify';
@@ -13,7 +13,7 @@ import moment from 'moment';
 import _ from 'lodash';
 
 import { InputText } from 'primereact/inputtext';
-import { Spinner } from 'primereact/spinner';
+// import { Spinner } from 'primereact/spinner';
 import { Button } from 'primereact/button';
 import { ProgressBar } from 'primereact/progressbar';
 import { Captcha } from 'primereact/captcha';
@@ -194,10 +194,12 @@ const Files = styled(ReactFiles)`
 
 const stepForPublish = 4;
 
+let growl;
+
 function Create() {
+
   const { t } = useTranslation();
   const { id } = useParams();
-  const growl = useRef(null);
   const history = useHistory();
   const dispatch = useDispatch();
   const { isLogin, user } = useSelector(state => state.auth);
@@ -206,7 +208,7 @@ function Create() {
   const [step, setStep] = useState(1);
   const [title, setTitle] = useState('my hideout');
   const [description, setDescription] = useState('thhis is an hideout');
-  const [version, setVersion] = useState(1);
+  // const [version, setVersion] = useState(1);
   const [formContent, setFormContent] = useState('');
   const [thumbnail, setThumbnail] = useState(defaultModelImg);
   const [thumbnails, setThumbnails] = useState([]);
@@ -231,7 +233,7 @@ function Create() {
       if (h) {
         setTitle(h.title);
         setDescription(h.description);
-        setVersion(h.version);
+        // setVersion(h.version);
         setFormContent(h.formContent);
         setThumbnail(h.thumbnail);
         setFileContent(h.fileContent);
@@ -273,7 +275,6 @@ function Create() {
   }
 
   const onEditorUpdate = value => {
-    console.log('onEditorUpdate', value);
     setFormContent(value);
     onThumbnailsUpdate(value);
     // Backup formContent
@@ -285,7 +286,6 @@ function Create() {
   }
 
   const onThumbnailsUpdate = (content = '') => {
-    console.log('onThumbnailsUpdate');
     const _thumbnail = formatImgTagFromContent(content);
     if (_thumbnail.length > 0) {
       setThumbnails(HTML.parse(_thumbnail.join('')).map(_t => _t.attrs.src));
@@ -323,16 +323,17 @@ function Create() {
     else onPublish();
   }
 
-  const onUpdate = () => {
-    console.log('onUpdate');
-    const List = new HideoutList();
+  const onUpdate = async () => {
+    const List = {};
     List.id = id;
     List.title = title;
     List.description = description;
     List.thumbnail = thumbnail;
-    List.version = version;
+    // List.version = version;
     List.update = moment().toString();
     List.formContent = formContent;
+
+    console.log('onUpdate', List);
 
     if (fileChoose !== '') List.fileContent = fileContent;
 
@@ -349,7 +350,7 @@ function Create() {
     if (valid) {
       setFileProgressShow(true);
       console.log('update', List);
-      dispatch(updateHideout(List));
+      await dispatch(updateHideout(List));
       setFileProgressShow(false);
       growl.show({
         severity: 'success',
@@ -361,17 +362,16 @@ function Create() {
     }
   }
 
-  const onPublish = () => {
-    console.log('onPublish');
+  const onPublish = async () => {
     const List = new HideoutList();
     List.id = uuid();
     List.title = title;
     List.description = description;
     List.authorId = user.uid;
     List.thumbnail = thumbnail;
-    List.version = version;
-    List.update = moment().toString();
+    // List.version = version;
     List.create = moment().toString();
+    List.update = List.create;
     List.timestamp = moment().format('X');
 
     List.download = 0; // Math.floor(Math.random() * 500);  // Fake
@@ -380,6 +380,8 @@ function Create() {
 
     List.formContent = formContent;
     List.fileContent = fileContent;
+
+    console.log('onPublish', List);
 
     // Check payload
     let valid = true;
@@ -393,7 +395,7 @@ function Create() {
 
     if (valid) {
       setFileProgressShow(true);
-      dispatch(createHideout(List));
+      await dispatch(createHideout(List));
       setFileProgressShow(false);
       growl.show({
         severity: 'success',
@@ -402,7 +404,6 @@ function Create() {
       });
       delCookie(COOKIE_FORMCONTENT);
       setStep(stepForPublish);
-      // id = List.id;
     }
   }
 
@@ -419,10 +420,14 @@ function Create() {
             <h2>{t('CreateDescription')}</h2>
             <InputText className="p-col-12" value={description} onChange={(e) => setDescription(e.target.value)} placeholder={t('CreateDescriptionInput')} autoFocus />
           </Item>
-          <Item className="p-grid">
+          {
+            /**
+            <Item className="p-grid">
             <h2 className="require">{t('CreateVersion')}</h2>
             <Spinner keyfilter="int" min={1} max={100} step={1} value={version} onChange={(e) => setVersion(e.target.value)} />
-          </Item>
+            </Item>
+            */
+          }
           <Item className="p-grid">
             <h2 className="require">{t('CreateContent')}</h2>
             <Editor className="create-editor-panel" value={formContent} onChange={onEditorUpdate} />
@@ -474,7 +479,7 @@ function Create() {
           </Buttons>
         </div>
 
-        <div className="p-grid p-justify-center p-align-center" style={{ flexFlow: 'column', display: step === 4 ? 'block' : 'none' }}>
+        <div className="p-grid p-justify-center p-align-center" style={{ flexFlow: 'column', display: step === 4 ? 'flex' : 'none' }}>
           <h2 style={{ marginBottom: '1rem' }}>{t('CreateResultSuccess')}</h2>
           <Link to="/"><Button label={t('CreateFinish')} /></Link>
         </div>
@@ -493,7 +498,7 @@ function Create() {
           {renderStep()}
         </Form>
       </Main>
-      <Growl ref={growl} />
+      <Growl ref={el => growl = el} />
     </MasterLayout>
   );
 }

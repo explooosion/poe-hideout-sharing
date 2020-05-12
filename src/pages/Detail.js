@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { rgba } from 'polished';
 import { useTranslation } from 'react-i18next';
@@ -205,10 +205,11 @@ const Footer = styled.div`
   text-align: center;
 `;
 
+let growl;
+
 function Detail() {
   const { t } = useTranslation();
   const { id } = useParams();
-  const growl = useRef(null);
   const history = useHistory();
   const dispatch = useDispatch();
   const { hideouts, users } = useSelector(state => state.firebase);
@@ -419,8 +420,6 @@ function Detail() {
           onTabChange={(e) => onTabChange(e.value)}
         />
 
-        <Growl ref={growl} />
-
         {renderForm(hideout.formContent)}
         {renderItems(hideout.fileContent)}
         {renderCode(hideout.fileContent)}
@@ -433,6 +432,7 @@ function Detail() {
             onClick={() => history.goBack()}
           />
         </Footer>
+        <Growl ref={el => growl = el} />
       </ContentLayout>
     </Main>
   );
