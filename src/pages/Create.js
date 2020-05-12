@@ -4,7 +4,7 @@ import { rgba } from 'polished';
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { TiFeather } from "react-icons/ti";
-import { useParams, useHistory, Link } from 'react-router-dom';
+import { useParams, useHistory, Link, Redirect } from 'react-router-dom';
 import ReactFiles from 'react-files';
 import HideoutParse from 'hideout-parse';
 import HTML from 'html-parse-stringify';
@@ -207,7 +207,7 @@ function Create() {
 
   const [step, setStep] = useState(1);
   const [title, setTitle] = useState('my hideout');
-  const [description, setDescription] = useState('thhis is an hideout');
+  const [description, setDescription] = useState('this is an hideout');
   // const [version, setVersion] = useState(1);
   const [formContent, setFormContent] = useState('');
   const [thumbnail, setThumbnail] = useState(defaultModelImg);
@@ -333,8 +333,6 @@ function Create() {
     List.update = moment().toString();
     List.formContent = formContent;
 
-    console.log('onUpdate', List);
-
     if (fileChoose !== '') List.fileContent = fileContent;
 
     // Check payload
@@ -349,7 +347,6 @@ function Create() {
 
     if (valid) {
       setFileProgressShow(true);
-      console.log('update', List);
       await dispatch(updateHideout(List));
       setFileProgressShow(false);
       growl.show({
@@ -380,8 +377,6 @@ function Create() {
 
     List.formContent = formContent;
     List.fileContent = fileContent;
-
-    console.log('onPublish', List);
 
     // Check payload
     let valid = true;
@@ -488,7 +483,7 @@ function Create() {
     );
   }
 
-  // if (!isLogin) return <Redirect to="/login" />;
+  if (!isLogin) return <Redirect to="/login" />;
 
   return (
     <MasterLayout>

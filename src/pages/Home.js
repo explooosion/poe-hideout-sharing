@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { rgba, transitions } from 'polished';
 import { useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { FaHeart, FaEye, FaDownload } from 'react-icons/fa';
+import _ from 'lodash';
 
 import { Card } from 'primereact/card';
-import { ProgressBar } from 'primereact/progressbar';
+// import { ProgressBar } from 'primereact/progressbar';
 import { Paginator } from 'primereact/paginator';
 
 import ContentLayout from '../layout/ContentLayout';
@@ -14,6 +16,10 @@ import ContentLayout from '../layout/ContentLayout';
 import HomeMenu from '../components/HomeMenu';
 
 import bg from '../images/bg.jpg';
+
+import HideoutAPI from '../service/HideoutAPI';
+
+const hideoutAPI = new HideoutAPI();
 
 const Main = styled.div`
   *:not(.pi) {
@@ -104,11 +110,16 @@ const Counters = styled.div`
 `;
 
 function Home() {
-
+  const { i18n } = useTranslation();
   const [breadcrumb] = useState([{ label: 'hideouts', url: '/' }]);
   const [first, setFirst] = useState(0);
   const [rows, setRows] = useState(20);
+  const [_hideouts, _setHideouts] = useState([]);
   const { hideouts, users } = useSelector(state => state.firebase);
+
+  useEffect(() => {
+    _setHideouts(hideouts);
+  }, [hideouts]);
 
   const onPageChange = event => {
     setFirst(event.first);
@@ -116,27 +127,27 @@ function Home() {
   }
 
   const onSortChange = event => {
-    console.log('onSortChange', event)
-    // const hideouts = this.state.hideouts;
-    // this.setState({
-    //   hideouts: value === 'Increment'
-    //     ? hideouts.sort((a, b) => {
-    //       return a[key] - b[key];
-    //     })
-    //     : hideouts.sort((a, b) => {
-    //       return b[key] - a[key];
-    //     }),
-    // });
+    // console.log('onSortChange', event)
+    const { name: key } = event.target;
+    _setHideouts(
+      event.value === 'Increment'
+        ? [..._hideouts.sort((a, b) => a[key] - b[key])]
+        : [..._hideouts.sort((a, b) => b[key] - a[key])]
+    );
   }
 
   const onFilterChange = event => {
-    console.log('onFilterChange', event)
-    // this.setState({
-    //   hideouts: this.database.get().filter(hideout => {
-    //     if (value) return hideout[key] === `${value} Hideout`;
-    //     return hideout;
-    //   }),
-    // });
+    // console.log('onFilterChange', event)
+    let hash = null;
+    const { value } = event.target;
+    _setHideouts(
+      hideouts.filter(h => {
+        try { hash = _.get(JSON.parse(h.fileContent), 'Hideout Hash'); }
+        catch (e) { console.warn('renderHideouts', e); hash = null; }
+        if (_.isNull(hash) || _.isNull(value)) return true;
+        else return _.get(hideoutAPI.getByHash(hash, i18n.language), 'Name') === value;
+      })
+    );
   }
 
   const renderCards = (lists = []) => {
@@ -191,30 +202,30 @@ function Home() {
     <Main>
       {
         <HomeMenu
-          hideouts={hideouts}
+          hideouts={_hideouts}
           onSortChange={onSortChange.bind(this)}
           onFilterChange={onFilterChange.bind(this)}
         />
       }
       <ContentLayout breadcrumb={breadcrumb}>
         {
-          hideouts.length === 0
-            ? <ProgressBar mode="indeterminate" style={{ height: '10px' }} />
-            :
-            (
-              <Group>
-                <div className="p-grid">{renderCards(hideouts)}</div>
-                <br />
-                <Paginator
-                  first={first}
-                  rows={rows}
-                  rowsPerPageOptions={[20, 40, 60]}
-                  totalRecords={hideouts.length}
-                  onPageChange={onPageChange}
-                >
-                </Paginator>
-              </Group>
-            )
+          // _hideouts.length === 0
+          //   ? <ProgressBar mode="indeterminate" style={{ height: '10px' }} />
+          //   :
+          (
+            <Group>
+              <div className="p-grid">{renderCards(_hideouts)}</div>
+              <br />
+              <Paginator
+                first={first}
+                rows={rows}
+                rowsPerPageOptions={[20, 40, 60]}
+                totalRecords={_hideouts.length}
+                onPageChange={onPageChange}
+              >
+              </Paginator>
+            </Group>
+          )
         }
       </ContentLayout>
     </Main>

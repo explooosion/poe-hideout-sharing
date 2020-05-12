@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { rgba } from 'polished';
 import { useTranslation } from 'react-i18next';
+import _ from 'lodash';
 
 import { Dropdown } from 'primereact/dropdown';
 import { SelectButton } from 'primereact/selectbutton';
@@ -34,10 +35,10 @@ function HomeMenu(props) {
 
   const [panelCollapsed, setPanelCollapsed] = useState(true);
 
-  const [type] = useState('');
-  const [download] = useState('');
-  const [views] = useState('');
-  const [favorite] = useState('');
+  const [type, setType] = useState('');
+  const [download, setDownload] = useState('');
+  const [views, setViews] = useState('');
+  const [favorite, setFavorite] = useState('');
 
   const [mtx, setMtx] = useState(null);
   const [miniRating, setMiniRating] = useState(null);
@@ -45,8 +46,6 @@ function HomeMenu(props) {
   const [einharLevel, setEinharLevel] = useState(null);
   const [nikoLevel, setNikoLevel] = useState(null);
   const [zanaLevel, setZanaLevel] = useState(null);
-
-  const { onSortChange, onFilterChange } = props;
 
   const mtxs = [
     { label: t('HomeAll'), value: null },
@@ -107,11 +106,21 @@ function HomeMenu(props) {
     { label: '7', value: 7 },
   ];
 
+  const onSortChange = (event, setState) => {
+    if (!_.isNull(event.target.value)) setState(event.target.value);
+    props.onSortChange(event);
+  }
+
+  const onFilterChange = (event, setState) => {
+    setState(event.target.value);
+    props.onFilterChange(event);
+  }
+
   const getHideoutsType = () => {
     return hideoutAPI.get(i18n.language).map(({ Icon, Name }) => ({
       img: Icon,
       label: Name.replace('Hideout', '').trim(),
-      value: Name.replace('Hideout', '').trim(),
+      value: Name,
     }))
   }
 
@@ -137,11 +146,12 @@ function HomeMenu(props) {
         <div className="item">
           <h4 className="item-title">{t('HomeHideoutType')}</h4>
           <Dropdown
+            name="type"
             id="hideout-type"
             style={{ width: '100%' }}
             value={type}
             options={getHideoutsType()}
-            onChange={onFilterChange}
+            onChange={(e) => onFilterChange(e, setType)}
             filter={true}
             filterPlaceholder={`${t('HomeFilter')}...`}
             placeholder={t('HomeSelectType')}
@@ -150,6 +160,8 @@ function HomeMenu(props) {
           />
         </div>
         <Fieldset
+          /** TODO */
+          style={{ display: 'none' }}
           legend={`${t('HomeOptions')}(WIP)`}
           toggleable={true}
           collapsed={panelCollapsed}
@@ -219,30 +231,33 @@ function HomeMenu(props) {
         <div className="item">
           <h4 className="item-title">{t('HomeDownload')}</h4>
           <SelectButton
+            name="download"
             id="hideout-download"
             value={download}
             options={renderSelectButton()}
-            onChange={onSortChange}
+            onChange={(e) => onSortChange(e, setDownload)}
           >
           </SelectButton>
         </div>
         <div className="item">
           <h4 className="item-title">{t('HomeViews')}</h4>
           <SelectButton
+            name="views"
             id="hideout-views"
             value={views}
             options={renderSelectButton()}
-            onChange={onSortChange}
+            onChange={(e) => onSortChange(e, setViews)}
           >
           </SelectButton>
         </div>
         <div className="item">
           <h4 className="item-title">{t('HomeFavorite')}</h4>
           <SelectButton
+            name="favorite"
             id="hideout-favorite"
             value={favorite}
             options={renderSelectButton()}
-            onChange={onSortChange}
+            onChange={(e) => onSortChange(e, setFavorite)}
           >
           </SelectButton>
         </div>

@@ -111,6 +111,8 @@ const Description = styled.div`
   background-color: ${p => rgba(p.theme.dark, .85)};
   border: 2px solid ${p => p.theme.black};
   border-radius: 3px;
+  line-height: 20px;
+  letter-spacing: 0.5px;
 
   &:first-letter {
     text-transform: uppercase;

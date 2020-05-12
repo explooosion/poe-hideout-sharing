@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import './Header.scss';
 import styled from 'styled-components';
 import { rgba, transitions } from 'polished';
 import { useTranslation } from 'react-i18next';
