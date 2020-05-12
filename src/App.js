@@ -1,80 +1,121 @@
-import React, { Component } from 'react';
-import './App.scss';
-
+import React, { useEffect } from 'react';
+import styled from 'styled-components';
+import { useDispatch, useSelector } from 'react-redux';
 import { Switch, BrowserRouter as Router, Route } from 'react-router-dom';
-import { connect } from 'react-redux';
+import { useTranslation } from 'react-i18next';
+import { Helmet } from 'react-helmet';
+
+import Routes from './routes';
 
 import Header from './components/Header';
 import Loading from './components/Animation/Loading';
 
-import Home from './routes/Home';
-import Detail from './routes/Detail';
-import Login from './routes/Login';
-import Create from './routes/Create';
-import Profile from './routes/Profile';
+import { fetchHideouts, fetchUsers, LOGIN_GOOGLE } from './actions';
+
+import { COOKIE_USER, COOKIE_CREDENTIAL, getCookie } from './utils/Cookie';
 
 import loading from './images/loading.gif';
 
-class App extends Component {
+const Load = styled.div`
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  background-image: url('./images/loading.jpg');
+  background-repeat: no-repeat;
+  background-position: center top;
+  background-size: 100%;
+  background-color: #000;
 
-  constructor(props) {
-    super(props);
-    this.dispatch = props.dispatch;
-    this.database = props.database;
-    this.users = props.users;
-    this.database.onHideoutsSnapshot();
-    this.state = { time: 10 };
+  img {
+    width: 250px;
+    border-radius: .25rem;
   }
 
-  componentDidMount() {
-    this.load = setInterval(() => {
-      const l = this.state.time;
-      if (l === 0) clearInterval(this.load);
-      else this.setState({ time: l - 1 });
-    }, 1000);
+  h1 {
+    display: flex;
+    align-items: center;
+    margin-top: 1.5rem;
+    color: #fff;
+
+    &::before {
+      content: 'Loading';
+      padding-right: 1rem;
+      font-family: Lobster Two, cursive;
+    }
+  }
+`;
+
+function App() {
+  const { isLogin } = useSelector(state => state.auth);
+  const { hideouts, users } = useSelector(state => state.firebase);
+  const { t } = useTranslation();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const user = getCookie(COOKIE_USER);
+    const credential = getCookie(COOKIE_CREDENTIAL);
+
+    dispatch(fetchHideouts());
+    dispatch(fetchUsers());
+
+    if (isLogin === false && user && credential) {
+      dispatch({
+        type: LOGIN_GOOGLE,
+        payload: { credential, user },
+      });
+    }
+  }, [dispatch, isLogin]);
+
+  const renderRoute = route => {
+    const { key, path, exact, component: Component, title, auth } = route;
+    const prefixLine = path === '/' ? '' : ' - ';
+    const prefixTitle = 'POEHos';
+
+    if (auth === true && isLogin === false) {
+      return null;
+    } else {
+      return (
+        <Route
+          key={key}
+          exact={exact}
+          path={path}
+          title={title}
+          render={props => (
+            <div>
+              <Helmet>
+                <title>{prefixTitle}{prefixLine}{t(title)}</title>
+              </Helmet>
+              <Component {...props} />
+            </div>
+          )}
+        />
+      );
+    }
   }
 
-  render() {
-    this.database = this.props.database;
-    this.users = this.props.users;
+  if (hideouts.length > 0 && users.length > 0) {
     return (
       <Router>
-        {
-          /* Loading */
-          (this.database.get().length > 0 && this.users.get().length > 0) || this.state.time === 0
-            ? (
-              <div>
-                <Header />
-                <Switch>
-                  <Route exact path="/" component={Home} />
-                  <Route exact path="/profile" component={Profile} />
-                  <Route exact path="/profile/:id" component={Profile} />
-                  <Route exact path="/login" component={Login} />
-                  <Route exact path="/create" component={Create} />
-                  <Route exact path="/edit/:id" component={Create} />
-                  <Route exact path="/detail/:id" component={Detail} />
-                </Switch>
-              </div>
-            )
-            : (
-              <div className="loading-container">
-                <img src={loading} alt="loading" title="loading" style={{ width: '250px', borderRadius: '.25rem' }} />
-                <h1><Loading /></h1>
-              </div>
-            )
-        }
+        <div>
+          <Header />
+          <Switch>
+            {Routes.map(renderRoute)}
+          </Switch>
+        </div>
       </Router>
     );
+  } else {
+    return (
+      <Load>
+        <img src={loading} alt="loading" title="loading" />
+        <h1><Loading /></h1>
+      </Load>
+    )
   }
 }
 
-App.propTypes = {}
+export default App;
 
-const mapStateToProps = state => {
-  return {
-    database: state.database,
-    users: state.users,
-  }
-}
-
-export default connect(mapStateToProps)(App);

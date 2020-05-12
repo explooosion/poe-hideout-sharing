@@ -6,8 +6,8 @@ import 'firebase/storage';
 
 // Mode
 console.info(`[${process.env.NODE_ENV.toUpperCase()} MODE]`);
-const REF_PICK = process.env.NODE_ENV === 'development' ? '_dev' : '';
-
+// export const REF_PICK = process.env.NODE_ENV === 'development' ? '_dev' : '';
+export const REF_PICK = '';
 const config = {
   apiKey: process.env.REACT_APP_API_KEY,
   authDomain: process.env.REACT_APP_AUTH_DOMAIN,
@@ -17,9 +17,14 @@ const config = {
 }
 
 firebase.initializeApp(config);
+firebase.auth().useDeviceLanguage();
 
-const auth = firebase.auth();
-const storage = firebase.storage();
-const db = firebase.database();
+export const auth = firebase.auth();
 
-export { firebase, auth, storage, db, REF_PICK };
+export const storage = firebase.storage();
+
+export const db = firebase.database();
+export const hideoutsRef = firebase.database().ref(`hideouts${REF_PICK}`);
+export const usersRef = firebase.database().ref(`users${REF_PICK}`);
+
+export const provider = new firebase.auth.GoogleAuthProvider();

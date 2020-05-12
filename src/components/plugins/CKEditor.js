@@ -1,6 +1,7 @@
 /* eslint-disable react/no-find-dom-node */
 /* eslint-disable guard-for-in */
 import React from 'react';
+import { withTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import loadScript from 'load-script';
@@ -16,10 +17,9 @@ const youtubePluginScriptUrl = 'https://cdn.jsdelivr.net/npm/ckeditor-youtube-pl
 class CKEditor extends React.Component {
   constructor(props) {
     super(props);
-
+    this.props = props;
     // Bindings
     this.onLoad = this.onLoad.bind(this);
-
     // State initialization
     this.state = {
       isScriptLoaded: props.isScriptLoaded,
@@ -35,7 +35,7 @@ class CKEditor extends React.Component {
     }
   }
 
-  componentWillReceiveProps(props) {
+  UNSAFE_componentWillReceiveProps(props) {
     const editor = this.editorInstance;
     if (editor && editor.getData() !== props.content) {
       editor.setData(props.content);
@@ -61,6 +61,8 @@ class CKEditor extends React.Component {
     // Add youtube plugin
     window.CKEDITOR.plugins.addExternal('youtube', youtubePluginScriptUrl);
 
+    this.onSetLanguage();
+
     this.editorInstance = window.CKEDITOR.appendTo(
       ReactDOM.findDOMNode(this),
       this.props.config,
@@ -70,13 +72,31 @@ class CKEditor extends React.Component {
     // Register listener for custom events if any
     for (const event in this.props.events) {
       const eventHandler = this.props.events[event];
-
       this.editorInstance.on(event, eventHandler);
     }
   }
 
+  onSetLanguage() {
+    if (window.CKEDITOR) {
+      let language = '';
+      switch (this.props.i18n.language) {
+        default:
+        case 'US':
+          language = 'en';
+          break;
+        case 'TW':
+          language = 'zh';
+          break;
+        case 'CN':
+          language = 'zh-cn';
+          break;
+      }
+      window.CKEDITOR.config.language = language;
+    }
+  }
+
   render() {
-    return <div className={this.props.activeClass} />;
+    return <div className={this.props.class} style={this.props.style} />;
   }
 }
 
@@ -85,8 +105,9 @@ CKEditor.defaultProps = {
   config: {},
   isScriptLoaded: false,
   scriptUrl: defaultScriptUrl,
-  activeClass: '',
+  class: '',
   events: {},
+  style: {},
 };
 
 CKEditor.propTypes = {
@@ -94,8 +115,9 @@ CKEditor.propTypes = {
   config: PropTypes.object,
   isScriptLoaded: PropTypes.bool,
   scriptUrl: PropTypes.string,
-  activeClass: PropTypes.string,
+  class: PropTypes.string,
   events: PropTypes.object,
+  style: PropTypes.object,
 };
 
-export default CKEditor;
+export default withTranslation()(CKEditor);

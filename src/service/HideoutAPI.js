@@ -17,25 +17,26 @@ class HideoutAPI {
    * Get hideout place data
    * @param {string} locale
    */
-  get(locale = 'en') {
-    let LocaleData = [];
+  get(locale = 'US') {
+    let currentData = [];
     // Ref: src/i18n.js resources
     switch (locale) {
       default:
-      case 'en': LocaleData = this.hideouts.data || []; break;
-      case 'zhTW': LocaleData = this.hideoutszhTW.data || []; break;
-      case 'zhCN': LocaleData = this.hideoutszhCN.data || []; break;
+      case 'US': currentData = this.hideouts.data || []; break;
+      case 'TW': currentData = this.hideoutszhTW.data || []; break;
+      case 'CN': currentData = this.hideoutszhCN.data || []; break;
     }
 
     // Default
-    if (locale === 'en') return LocaleData;
+    if (locale === 'US') return currentData;
 
     return this.hideouts.data.map(h => {
-      const res = LocaleData.find(tw => tw.Name === h.Name);
+      const res = currentData.find(c => c.Name === h.Name);
       if (res) {
         return {
           ...h,
-          Name: res.CName.replace('藏身處-', ''),
+          // Name: res.CName.replace('藏身處-', ''),
+          Name: res.CName,
         }
       } else {
         console.warn('faild to change hideout type locale', h);
@@ -49,7 +50,7 @@ class HideoutAPI {
    * @param {string} hash
    * @param {string} locale
    */
-  getByHash(hash = '', locale = 'en') {
+  getByHash(hash = '', locale = 'US') {
     return this.get(locale).find(hd => String(hd.Hash) === String(hash)) || {};
   }
 

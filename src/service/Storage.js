@@ -2,6 +2,9 @@ import { v1 as uuid } from 'uuid';
 
 import { storage, REF_PICK } from './config';
 
+/**
+ * @deprecated
+ */
 class Storage {
   constructor() {
     this.storage = storage;
