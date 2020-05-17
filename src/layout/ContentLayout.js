@@ -1,11 +1,17 @@
-import React, { Component, Fragment } from 'react';
+/* eslint-disable react/jsx-fragments */
+import React, { Fragment, useRef } from 'react';
 import './ContentLayout.scss';
+
+import Gotop from '../components/Gotop';
 
 // import { BreadCrumb } from 'primereact/breadcrumb';
 
-class ContentLayout extends Component {
-  renderChildren() {
-    const { children, type } = this.props;
+export default function ContentLayout(props) {
+
+  const gotopRef = useRef(null);
+
+  const renderChildren = () => {
+    const { children, type } = props;
     const layoutClassName = type ? `layout-${type} ` : '';
     return React.Children.map(children, child => {
       let className;
@@ -20,19 +26,14 @@ class ContentLayout extends Component {
     });
   }
 
-  render() {
-    return (
-      <Fragment>
-        <div className="content">
-          <div className="block">
-
-            {this.renderChildren()}
-
-          </div>
+  return (
+    <Fragment>
+      <div className="content">
+        <div className="block" ref={gotopRef}>
+          {renderChildren()}
         </div>
-      </Fragment>
-    );
-  }
+      </div>
+      <Gotop element={gotopRef} />
+    </Fragment>
+  );
 }
-
-export default ContentLayout;

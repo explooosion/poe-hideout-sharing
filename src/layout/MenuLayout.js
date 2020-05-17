@@ -1,9 +1,10 @@
-import React, { Component, Fragment } from 'react';
+/* eslint-disable react/jsx-fragments */
+import React, { Fragment } from 'react';
 import './MenuLayout.scss';
 
-class MenuLayout extends Component {
-  renderChildren() {
-    const { children, type } = this.props;
+export default function MenuLayout(props) {
+  const renderChildren = () => {
+    const { children, type } = props;
     const layoutClassName = type ? `layout-${type} ` : '';
     return React.Children.map(children, child => {
       let className;
@@ -17,27 +18,22 @@ class MenuLayout extends Component {
       return React.cloneElement(child, { className });
     });
   }
-
-  render() {
-    return (
-      <Fragment>
-        <div className="menu">
-          <h2 className="menu-title">{this.props.title || 'Menu Title'}</h2>
-          {
-            /* Item Template */
-            /*
-            <div className="item">
-              <h4 className="item-title">Level</h4>
-              YOUR ITEM CONTENT
-            </div>
-            */
-            /* Item Template */
-          }
-          {this.renderChildren()}
-        </div>
-      </Fragment>
-    );
-  }
+  return (
+    <Fragment>
+      <div className="menu">
+        <h2 className="menu-title">{props.title || 'Menu Title'}</h2>
+        {
+          /* Item Template */
+          /*
+          <div className="item">
+            <h4 className="item-title">Level</h4>
+            YOUR ITEM CONTENT
+          </div>
+          */
+          /* Item Template */
+        }
+        {renderChildren()}
+      </div>
+    </Fragment>
+  );
 }
-
-export default MenuLayout;

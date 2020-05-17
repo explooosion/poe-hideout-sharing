@@ -1,10 +1,10 @@
 /* eslint-disable react/jsx-fragments */
-import React, { Component, Fragment } from 'react';
+import React, { Fragment } from 'react';
 import './MasterLayout.scss';
 
-class MasterLayout extends Component {
-  renderChildren() {
-    const { children, type } = this.props;
+export default function MasterLayout(props) {
+  const renderChildren = () => {
+    const { children, type } = props;
     const layoutClassName = type ? `layout-${type} ` : '';
     return React.Children.map(children, child => {
       let className;
@@ -19,17 +19,12 @@ class MasterLayout extends Component {
     });
   }
 
-  render() {
-    return (
-      <Fragment>
-        <div className="master">
-
-          {this.renderChildren()}
-
-        </div>
-      </Fragment>
-    );
-  }
+  return (
+    <Fragment>
+      <div className="master">
+        {renderChildren()}
+      </div>
+    </Fragment>
+  );
 }
 
-export default MasterLayout;
