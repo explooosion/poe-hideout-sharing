@@ -1,6 +1,9 @@
 import { SET_LOCALE } from '../actions';
 
 import { COOKIE_I18N, getCookie } from '../utils/Cookie';
+import { changeMomentLocale } from '../utils';
+
+changeMomentLocale();
 
 const initialState = {
   locale: getCookie(COOKIE_I18N) || 'US',

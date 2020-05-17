@@ -9,6 +9,8 @@ import {
   setCookie,
 } from '../utils/Cookie';
 
+import { changeMomentLocale } from '../utils';
+
 import {
   db,
   hideoutsRef,
@@ -35,6 +37,7 @@ export const SET_LOCALE = 'SET_LOCALE';
 
 export const setLocal = payload => dispatch => {
   i18n.changeLanguage(payload);
+  changeMomentLocale();
   setCookie(COOKIE_I18N, payload);
   dispatch({ type: SET_LOCALE, payload });
 };
