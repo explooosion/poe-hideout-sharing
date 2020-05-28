@@ -5,8 +5,15 @@ import 'firebase/database';
 import 'firebase/storage';
 
 // Mode
-console.info(`[${process.env.NODE_ENV.toUpperCase()} MODE]`);
-export const REF_PICK = process.env.NODE_ENV === 'development' ? '_dev' : '';
+console.info(`ENV: [${process.env.NODE_ENV.toUpperCase()}]`);
+console.info(`DB: [${process.env.REACT_APP_DATABASE_ENV}]`);
+
+export const REF_PICK =
+  process.env.REACT_APP_DATABASE_ENV === 'production'
+    ? ''
+    : process.env.NODE_ENV === 'development'
+      ? '_dev'
+      : '';
 
 const config = {
   apiKey: process.env.REACT_APP_API_KEY,
