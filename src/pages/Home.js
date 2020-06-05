@@ -41,8 +41,23 @@ const Main = styled.div`
   }
 
   .p-card-content {
-    display: flex;
-    flex-flow: row-reverse;
+    /* author link */
+    > a {
+      overflow: hidden;
+      color: #fff;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      opacity: 1;
+      outline: none;
+
+      &:hover {
+        color: ${p => p.theme.warning}
+      }
+
+      &::before {
+        content: '@';
+      }
+    }
   }
 
   .p-card-title {
@@ -50,18 +65,6 @@ const Main = styled.div`
     color: ${p => p.theme.lightWarning};
     text-overflow: ellipsis;
     white-space: nowrap;
-  }
-
-  .p-card-subtitle {
-    overflow: hidden;
-    color: #fff;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    opacity: 1;
-
-    &::before {
-      content: '@';
-    }
   }
 
   .p-paginator {
@@ -96,6 +99,8 @@ const Image = styled.div`
 
 const Counters = styled.div`
   display: flex;
+  justify-content: flex-end;
+  margin-top: .5rem;
 
   div {
     display: flex;
@@ -160,15 +165,15 @@ function Home() {
       ) ? listsByPage.push(value) : null);
 
     return listsByPage.map((hideout, index) => {
-      const { uname } = users.find(u => u.uid === hideout.authorId) || { uname: 'Unknown' };
+      const { uname } = users.find(u => u.uid === hideout.authorId) || { uname: 'Unknown', id: '' };
 
       return (
         <div className="p-xl-3 p-lg-4 p-md-6 p-sm-12" key={`card-${index}-${hideout.id}`}>
           <Card
             title={hideout.title}
-            subTitle={uname}
             header={renderCardHeader(hideout)}
           >
+            <Link to={`/profile/${hideout.authorId}`}>{uname}</Link>
             <Counters>
               <div>
                 <FaEye />

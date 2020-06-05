@@ -1,6 +1,10 @@
-/* eslint-disable react/jsx-fragments */
-import React, { Fragment } from 'react';
-import './MasterLayout.scss';
+import React from 'react';
+import styled from 'styled-components';
+
+const Main = styled.div`
+  display: flex;
+  margin-top: ${p => p.theme.headerHeight};
+`;
 
 export default function MasterLayout(props) {
   const renderChildren = () => {
@@ -20,11 +24,11 @@ export default function MasterLayout(props) {
   }
 
   return (
-    <Fragment>
-      <div className="master">
+    <>
+      <Main>
         {renderChildren()}
-      </div>
-    </Fragment>
+      </Main>
+    </>
   );
 }
 

@@ -382,7 +382,7 @@ function Detail() {
 
         <Author>
           <summary className="p-toolbar-group-left">
-            {t('DetailPostedby')} <Link to={`/profile/${authorId}`}>{uname}</Link> {moment().startOf('hour').from(update)}
+            {t('DetailPostedby')} <Link to={`/profile/${authorId}`}>{uname}</Link> {moment(update).startOf('hour').fromNow()}
             {
               /* Edit button */
               (isLogin ? (authorId === user.uid) : false)
