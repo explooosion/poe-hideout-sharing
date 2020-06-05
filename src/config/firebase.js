@@ -11,7 +11,7 @@ console.info(`DB: [${process.env.REACT_APP_DATABASE_ENV}]`);
 export const REF_PICK =
   process.env.REACT_APP_DATABASE_ENV === 'production'
     ? ''
-    : process.env.NODE_ENV === 'development'
+    : process.env.NODE_ENV === 'development' || process.env.REACT_APP_DATABASE_ENV === 'development'
       ? '_dev'
       : '';
 
